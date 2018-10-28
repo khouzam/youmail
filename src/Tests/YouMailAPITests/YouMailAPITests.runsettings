@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<RunSettings>
+  <!-- Parameters used by tests at runtime -->
+  <TestRunParameters>
+    <Parameter name="TestUsername" value="SetValue" />
+    <Parameter name="TestPassword" value="SetValue" />
+    <Parameter name="TestAuthToken" value="" />
+    <Parameter name="TestFullName" value="SetValue" />
+    <Parameter name="RealUsername" value="SetValue" />
+    <Parameter name="RealPassword" value="SetValue" />
+    <Parameter name="PrivateUsername" value="SetValue" />
+    <Parameter name="PrivatePassword" value="SetValue" />
+    <Parameter name="RealAuthToken" value="" />
+    <Parameter name="DefaultUserAgent" value="MagikInfo.YouMailAPITests" />
+    <Parameter name="AccountCreationEmail" value="SetValue" />
+  </TestRunParameters>
+</RunSettings>
