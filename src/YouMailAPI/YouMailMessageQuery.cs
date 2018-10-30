@@ -39,7 +39,6 @@ namespace MagikInfo.YouMailAPI
             {
                 case QueryType.GetMessages:
                     AddQueryItem(YMST.c_folderId, FolderId.ToString());
-                    AddQueryItem(YMST.c_maxResult, MaxResults.ToString());
                     AddQueryItem(YMST.c_dataFormat, ((int)DataFormat).ToString());
                     AddDefaultMessageParams();
                     break;

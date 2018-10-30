@@ -38,7 +38,7 @@ namespace MagikInfo.YouMailAPI.Tests
         }
 
         [TestMethod]
-        public async Task YouMail_CreateAccount()
+        public async Task CreateAccount()
         {
             string user = "0002091234";
             string password = "Abc12345";
@@ -81,19 +81,19 @@ namespace MagikInfo.YouMailAPI.Tests
         }
 
         [TestMethod]
-        public async Task YouMail_VerifyExistingAccount()
+        public async Task VerifyExistingAccount()
         {
             await VerifyAccountAsync(_testUsername, true);
         }
 
         [TestMethod]
-        public async Task YouMail_VerifyNonExistentAccount()
+        public async Task VerifyNonExistentAccount()
         {
             await VerifyAccountAsync("0000000000", false);
         }
 
         [TestMethod]
-        public async Task YouMail_VerifyInvalidAccount()
+        public async Task VerifyInvalidAccount()
         {
             bool exception = false;
             try

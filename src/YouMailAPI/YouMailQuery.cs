@@ -44,7 +44,7 @@ namespace MagikInfo.YouMailAPI
             _includeParams = new HashSet<string>();
             _itemIds = new List<long>();
             QueryType = type;
-            MaxResults = 0;
+            MaxResults = int.MaxValue;
             Offset = 0;
             PageLength = 100;
         }
@@ -177,8 +177,7 @@ namespace MagikInfo.YouMailAPI
             get
             {
                 var value = GetQueryItem(YMST.c_maxResult);
-                int result = 0;
-                int.TryParse(value, out result);
+                int.TryParse(value, out int result);
                 return result;
             }
             set { AddQueryItem(YMST.c_maxResult, value.ToString()); }

@@ -29,7 +29,7 @@ namespace MagikInfo.YouMailAPI.Tests
         private YouMailService service = YouMailTestService.Service;
 
         [TestMethod]
-        public async Task YouMail_Contacts()
+        public async Task Contacts()
         {
             try
             {
@@ -45,7 +45,7 @@ namespace MagikInfo.YouMailAPI.Tests
         }
 
         [TestMethod]
-        public async Task YouMail_UploadContacts()
+        public async Task UploadContacts()
         {
             try
             {

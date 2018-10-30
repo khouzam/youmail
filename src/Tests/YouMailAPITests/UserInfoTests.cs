@@ -29,7 +29,7 @@ namespace MagikInfo.YouMailAPI.Tests
         private YouMailService service = YouMailTestService.Service;
 
         [TestMethod]
-        public async Task YouMail_GetUserInfo()
+        public async Task GetUserInfo()
         {
             try
             {
@@ -43,7 +43,7 @@ namespace MagikInfo.YouMailAPI.Tests
         }
 
         [TestMethod]
-        public async Task YouMail_ChangePin()
+        public async Task ChangePin()
         {
             try
             {
@@ -58,7 +58,7 @@ namespace MagikInfo.YouMailAPI.Tests
         }
 
         [TestMethod]
-        public async Task YouMail_ChangePassword()
+        public async Task ChangePassword()
         {
             var newService = YouMailTestService.NewService;
             var userInfo = await newService.GetUserInfoAsync();

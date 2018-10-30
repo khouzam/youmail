@@ -320,6 +320,7 @@ namespace MagikInfo.YouMailAPI
         public const string c_primaryPhoneId = "primaryPhoneId";
         public const string c_createTime = "createTime";
         public const string c_includeList = "includeList";
+        public const string c_trash = "trash";
 
         public const string c_greetingImageUrl = "http://www.ymstat.com/dyn/community/img/{0}.png";
 
@@ -368,6 +369,7 @@ namespace MagikInfo.YouMailAPI
         public const string c_addProduct = c_server + "/api/v3/store/products/purchase/{0}";
         public const string c_createVoicemail = c_server + "/api/v4/messagebox/entry/create";
         public const string c_createFolder = c_server + "/api/v4/messagebox/folders";
+        public const string c_getFolder = c_server + "/api/v4/messagebox/folders";
 
         public const string c_createContact = c_server + "/api/v4/contacts";
         public const string c_updateContact = c_server + "/api/v4/contacts/{0}";

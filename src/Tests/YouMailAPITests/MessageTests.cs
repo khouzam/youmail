@@ -29,7 +29,7 @@ namespace MagikInfo.YouMailAPI.Tests
         YouMailService service = YouMailTestService.Service;
 
         [TestMethod]
-        public async Task YouMail_GetMessages()
+        public async Task GetMessages()
         {
             try
             {
@@ -123,7 +123,7 @@ namespace MagikInfo.YouMailAPI.Tests
         }
 
         [TestMethod]
-        public async Task YouMail_MessageHistory()
+        public async Task MessageHistory()
         {
             try
             {
@@ -144,5 +144,27 @@ namespace MagikInfo.YouMailAPI.Tests
             }
         }
 
+        [TestMethod]
+        public async Task DeleteMessage()
+        {
+            // TODO: Should simply create a new message and then delete it
+            const int numberofmessages = 3;
+            // Get 3 messages...
+            var messages = await service.GetMessagesAsync(YouMailService.InboxFolder, 200, DataFormat.MP3, numberofmessages);
+            Assert.IsTrue(messages.Data.Length <= numberofmessages);
+
+            // Delete a message
+            await service.DeleteMessageAsync(messages.Data[0].Id);
+
+            var message = await service.GetMessageAsync(messages.Data[0].Id, 200, DataFormat.MP3);
+            var folder = await service.GetFolderAsync(YMST.c_trash);
+            Assert.IsTrue(message.FolderId == folder.Id, $"The message was not deleted but moved to ${message.FolderId}");
+
+            // Move the message back to the inbox
+            await service.MoveMessageAsync(message.Id, YouMailService.InboxFolder.ToString());
+
+            message = await service.GetMessageAsync(message.Id, 200, DataFormat.MP3);
+            Assert.IsTrue(message.FolderId == YouMailService.InboxFolder);
+        }
     }
 }

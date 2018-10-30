@@ -32,7 +32,7 @@ namespace MagikInfo.YouMailAPI.Tests
         YouMailService Service = YouMailTestService.Service;
 
         [TestMethod]
-        public async Task YouMail_CarrierInfo()
+        public async Task CarrierInfo()
         {
             try
             {
@@ -75,7 +75,7 @@ namespace MagikInfo.YouMailAPI.Tests
         }
 
         [TestMethod]
-        public async Task YouMail_TestAllCarriers()
+        public async Task TestAllCarriers()
         {
             var carriers = await Service.GetSupportedCarriersAsync();
 

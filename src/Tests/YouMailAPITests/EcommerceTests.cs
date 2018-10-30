@@ -28,7 +28,7 @@ namespace MagikInfo.YouMailAPI.Tests
         YouMailService service = YouMailTestService.Service;
 
         [TestMethod]
-        public async Task YouMail_GetEcommerce()
+        public async Task GetEcommerce()
         {
             var commerce = await service.GetECommerceStatusAsync();
         }

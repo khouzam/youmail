@@ -698,7 +698,6 @@ namespace MagikInfo.YouMailAPI
         private YouMailAPICalls _disconnectedCalls = null;
         private AsyncSemaphore _disconnectedSemaphore = new AsyncSemaphore(1, 1);
 
-        public const int TrashFolder = 5322;
         public const int InboxFolder = 0;
         public const int DitchedCallerGreeting = 9132;
 

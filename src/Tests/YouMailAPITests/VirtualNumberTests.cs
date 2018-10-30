@@ -29,7 +29,7 @@ namespace MagikInfo.YouMailAPI.Tests
         YouMailService Service = YouMailTestService.Service;
 
         [TestMethod, Ignore]
-        public async Task YouMail_GetVirtualNumbers()
+        public async Task GetVirtualNumbers()
         {
             try
             {

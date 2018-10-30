@@ -28,7 +28,7 @@ namespace MagikInfo.YouMailAPI.Tests
         YouMailService service = YouMailTestService.Service;
 
         [TestMethod]
-        public async Task YouMail_GetFolderList()
+        public async Task GetFolderList()
         {
             var folders = await service.GetFolderListAsync();
             bool found = false;

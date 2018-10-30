@@ -29,7 +29,7 @@ namespace MagikInfo.YouMailAPI.Tests
         private YouMailService service = YouMailTestService.Service;
 
         [TestMethod]
-        public async Task YouMail_GetGreetings()
+        public async Task GetGreetings()
         {
             try
             {
@@ -45,7 +45,7 @@ namespace MagikInfo.YouMailAPI.Tests
         }
 
         [TestMethod]
-        public async Task YouMail_GetGreetingStatuses()
+        public async Task GetGreetingStatuses()
         {
             try
             {

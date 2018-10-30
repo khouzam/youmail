@@ -19,7 +19,6 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using Synchronization;
     using XmlSerializerExtensions;
     using System;
     using System.Collections.Generic;
@@ -30,8 +29,6 @@ namespace MagikInfo.YouMailAPI
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
-    using System.Text;
-    using System.Threading;
     using System.Threading.Tasks;
 #if UWP
     using Windows.Networking.Connectivity;
@@ -166,7 +163,7 @@ namespace MagikInfo.YouMailAPI
                     {
                         FolderId = folderId,
                         DataFormat = dataFormat,
-                        MaxResults = 0,
+                        MaxResults = maxMessages,
                         Offset = 0,
                         IncludePreview = true,
                         IncludeContactInfo = true,
@@ -176,7 +173,7 @@ namespace MagikInfo.YouMailAPI
                         Page = 1
                     };
 
-                    returnValue = await ExecuteMessageQueryAsync(query, maxMessages);
+                    returnValue = await ExecuteMessageQueryAsync(query);
                 }
                 return returnValue;
             }
@@ -186,7 +183,7 @@ namespace MagikInfo.YouMailAPI
             }
         }
 
-        private async Task<GetUpdateResult<YouMailMessage[]>> ExecuteMessageQueryAsync(YouMailQuery query, int maxMessages = int.MaxValue)
+        private async Task<GetUpdateResult<YouMailMessage[]>> ExecuteMessageQueryAsync(YouMailQuery query)
         {
             HttpResponseMessage response = null;
             List<YouMailMessage> list = new List<YouMailMessage>();
@@ -194,6 +191,11 @@ namespace MagikInfo.YouMailAPI
             do
             {
                 count = 0;
+                query.Offset = count;
+                if (query.MaxResults < query.PageLength)
+                {
+                    query.PageLength = query.MaxResults;
+                }
                 string queryString = query.GetQueryString();
 
                 using (response = await YouMailApiAsync(YMST.c_messageBoxEntryQuery + queryString, null, HttpMethod.Get))
@@ -210,16 +212,16 @@ namespace MagikInfo.YouMailAPI
                         {
                             count = messages.Messages.Length;
                             list.AddRange(messages.Messages);
-                            maxMessages -= count;
                         }
                     }
                     catch (Exception e)
                     {
                         Debug.WriteLine(e.ToString());
                     }
-                    query.Page++;
+                    query.Offset += count;
+                    query.MaxResults -= count;
                 }
-            } while (count == query.PageLength && maxMessages > 0);
+            } while (count == query.PageLength && query.MaxResults > 0);
 
             string date = null;
             date = response.Headers.Date.ToString();
@@ -307,6 +309,46 @@ namespace MagikInfo.YouMailAPI
         }
 
         /// <summary>
+        /// Get the details of a folder by name or id
+        /// </summary>
+        /// <param name="folderName">The folder</param>
+        /// <returns></returns>
+        public async Task<YouMailFolder> GetFolderAsync(string folderName)
+        {
+            try
+            {
+                AddPendingOp();
+                if (await LoginWaitAsync())
+                {
+                    // TODO: This should probably be converted to a Query format to support all the options
+                    var uri = $"{YMST.c_getFolder}?{YMST.c_folderId}={folderName}";
+                    using (var response = await YouMailApiAsync(uri, null, HttpMethod.Get))
+                    {
+                        // YouMail returns an array of folders, limit it to the folder we're
+                        // looking for
+                        var folders = response.GetResponseStream().FromXml<YouMailFolders>();
+                        if (folders != null && folders.Folders != null)
+                        {
+                            foreach (var folder in folders.Folders)
+                            {
+                                if (string.Compare(folder.Name, folderName, StringComparison.InvariantCultureIgnoreCase) == 0)
+                                {
+                                    return folder;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                RemovePendingOp();
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Get the list of available folders for the user
         /// </summary>
         /// <returns></returns>
@@ -364,7 +406,7 @@ namespace MagikInfo.YouMailAPI
                 AddPendingOp();
                 if (await LoginWaitAsync())
                 {
-                    await MoveMessageAsync(item, "trash");
+                    await MoveMessageAsync(item, YMST.c_trash);
                 }
             }
             finally
@@ -1270,7 +1312,7 @@ namespace MagikInfo.YouMailAPI
                 {
                     var query = new YouMailMessageQuery(QueryType.GetHistory)
                     {
-                        MaxResults = 0,
+                        MaxResults = int.MaxValue,
                         Offset = 0,
                         IncludeImageUrl = true,
                         UpdatedFrom = lastUpdated,
@@ -1306,7 +1348,7 @@ namespace MagikInfo.YouMailAPI
                 {
                     var query = new YouMailMessageQuery(QueryType.GetMessageHistory)
                     {
-                        MaxResults = 0,
+                        MaxResults = int.MaxValue,
                         Offset = 0,
                         IncludeImageUrl = true,
                         IncludeContactInfo = true,

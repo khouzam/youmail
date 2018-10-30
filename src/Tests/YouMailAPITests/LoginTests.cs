@@ -28,7 +28,7 @@ namespace MagikInfo.YouMailAPI.Tests
     public class LoginTests
     {
         [TestMethod]
-        public async Task YouMail_Login()
+        public async Task Login()
         {
             try
             {
@@ -47,7 +47,7 @@ namespace MagikInfo.YouMailAPI.Tests
         }
 
         [TestMethod]
-        public async Task YouMail_Private_Login()
+        public async Task Private_Login()
         {
             try
             {
@@ -63,7 +63,7 @@ namespace MagikInfo.YouMailAPI.Tests
         }
 
         [TestMethod]
-        public async Task YouMail_Login_Fail()
+        public async Task Login_Fail()
         {
             var service = new YouMailService("0000", "0000", null, YouMailTestService.UserAgent, true);
             try
@@ -79,7 +79,7 @@ namespace MagikInfo.YouMailAPI.Tests
         }
 
         [TestMethod]
-        public async Task YouMail_ValidateAuth()
+        public async Task ValidateAuth()
         {
             var service = YouMailTestService.NewService;
 
