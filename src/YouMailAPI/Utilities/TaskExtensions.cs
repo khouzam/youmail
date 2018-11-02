@@ -22,7 +22,7 @@ namespace MagikInfo.XmlSerializerExtensions
     using System;
     using System.Diagnostics;
     using System.Threading.Tasks;
-#if UWP
+#if WINDOWS_UWP
     using Windows.Foundation;
 #endif
 
@@ -47,7 +47,7 @@ namespace MagikInfo.XmlSerializerExtensions
                 TaskContinuationOptions.ExecuteSynchronously);
         }
 
-#if UWP
+#if WINDOWS_UWP
         public static void IgnoreException(this IAsyncAction action)
         {
             action.AsTask().IgnoreException();

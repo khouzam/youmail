@@ -26,10 +26,6 @@ namespace MagikInfo.YouMailAPI
     using System.Net.Http;
     using System.Threading.Tasks;
     using XmlSerializerExtensions;
-#if UWP
-    using Windows.Networking.Connectivity;
-    using Windows.Storage;
-#endif
 
     /// <summary>
     /// A Class to access the YouMail Service APIs

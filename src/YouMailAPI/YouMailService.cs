@@ -20,6 +20,7 @@
 namespace MagikInfo.YouMailAPI
 {
     using MagikInfo.Synchronization;
+    using MagikInfo.XmlSerializerExtensions;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -30,6 +31,11 @@ namespace MagikInfo.YouMailAPI
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
+
+#if WINDOWS_UWP
+    using Windows.Networking.Connectivity;
+    using Windows.Storage;
+#endif
 
     public partial class YouMailService
     {
@@ -131,7 +137,7 @@ namespace MagikInfo.YouMailAPI
             AuthToken = authToken;
 
             SecureConnections = secureConnections;
-#if UWP
+#if WINDOWS_UWP
             NetworkInformation.NetworkStatusChanged += NetworkStatusChanged;
 #endif
             _disconnectedCalls = new YouMailAPICalls();
@@ -140,7 +146,7 @@ namespace MagikInfo.YouMailAPI
 
         private void InvalidateNetworkStatus()
         {
-#if UWP
+#if WINDOWS_UWP
             _connected = false;
             var network = NetworkInformation.GetInternetConnectionProfile();
             if (network != null)
@@ -158,7 +164,7 @@ namespace MagikInfo.YouMailAPI
 #endif
         }
 
-#if UWP
+#if WINDOWS_UWP
         private async Task FlushCachedAPICallsAsync()
         {
             bool fReleaseSemaphore = false;
@@ -310,7 +316,7 @@ namespace MagikInfo.YouMailAPI
             }
 #endif
         }
-#if UWP
+#if WINDOWS_UWP
         /// <summary>
         /// Log an API call when offline
         /// </summary>
@@ -396,7 +402,7 @@ namespace MagikInfo.YouMailAPI
             IList<KeyValuePair<string, string>> extraHeaders = null,
             string forceProtocol = null)
         {
-#if UWP
+#if WINDOWS_UWP
             if (!IsConnected)
             {
                 await LogApiCallAsync(URL, data, verb, auth);
@@ -674,7 +680,7 @@ namespace MagikInfo.YouMailAPI
             get { return _password; }
         }
 
-#if UWP
+#if WINDOWS_UWP
         private string DisconnectedFileName
         {
             get { return $"YouMailAPIDisconnected{Username}.xml"; }
