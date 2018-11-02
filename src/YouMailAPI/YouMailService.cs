@@ -21,6 +21,7 @@ namespace MagikInfo.YouMailAPI
 {
     using MagikInfo.Synchronization;
     using MagikInfo.XmlSerializerExtensions;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -108,6 +109,7 @@ namespace MagikInfo.YouMailAPI
                 return GZipSupport;
             }
         }
+
         /// <summary>
         /// Create a new YouMail object
         /// </summary>
@@ -115,12 +117,20 @@ namespace MagikInfo.YouMailAPI
         /// <param name="password">The user's password</param>
         /// <param name="authToken">An authentication token to user</param>
         /// <param name="userAgent">The UserAgent to use for the web requests</param>
+        /// <param name="responseFormat">The format of the response, JSON or XML</param>
         /// <param name="secureConnections">Flag to specify if we use secure connections for our requests</param>
-        public YouMailService(string username, string password, string authToken, string userAgent, bool secureConnections = true)
+        public YouMailService(
+            string username,
+            string password,
+            string authToken,
+            string userAgent,
+            //ResponseFormat responseFormat = ResponseFormat.JSON,
+            bool secureConnections = false)
         {
             _username = username;
             _password = password;
             _userAgent = userAgent;
+            _responseFormat = ResponseFormat.JSON;
 
             // Create the HttpClient before setting the AuthToken
             var handler = new HttpClientHandler
@@ -129,6 +139,7 @@ namespace MagikInfo.YouMailAPI
             };
             _httpClient = new HttpClient(handler);
             _httpClient.DefaultRequestHeaders.Add("User-Agent", _userAgent);
+            _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
             if (s_gzipSupported)
             {
                 _httpClient.DefaultRequestHeaders.Add("Accept-Encoding", "gzip,defalte");
@@ -664,6 +675,54 @@ namespace MagikInfo.YouMailAPI
             }
         }
 
+        private T DeserializeObject<T>(Stream s) where T : class
+        {
+            T returnObject = null;
+            switch (_responseFormat)
+            {
+                case ResponseFormat.JSON:
+                    {
+                        var serializer = new JsonSerializer();
+
+                        using (var sr = new StreamReader(s))
+                        using (var jsonTextReader = new JsonTextReader(sr))
+                        {
+                            returnObject = (T)serializer.Deserialize(jsonTextReader, typeof(T));
+                        }
+                    }
+                    break;
+
+                case ResponseFormat.XML:
+                    returnObject = s.FromXml<T>();
+                    break;
+
+                default:
+                    throw new InvalidOperationException("Invalid conversion format");
+            }
+
+            return returnObject;
+        }
+
+        private string SerializeObject<T>(T obj) where T : class
+        {
+            string serializedObject = null;
+            switch (_responseFormat)
+            {
+                case ResponseFormat.JSON:
+                    serializedObject = JsonConvert.SerializeObject(obj);
+                    break;
+
+                case ResponseFormat.XML:
+                    serializedObject = obj.ToXml();
+                    break;
+
+                default:
+                    throw new InvalidOperationException("Invalid conversion format specified");
+            }
+
+            return serializedObject;
+        }
+
         /// <summary>
         /// The user's Username
         /// </summary>
@@ -687,6 +746,7 @@ namespace MagikInfo.YouMailAPI
         }
 #endif
 
+        private readonly ResponseFormat _responseFormat;
         private readonly string _username;
         private readonly string _password;
         private readonly string _userAgent;

@@ -71,7 +71,7 @@ namespace MagikInfo.YouMailAPI.Tests
             {
                 if (_myService == null)
                 {
-                    _myService = new YouMailService(_myUser, _myPwd, _myAuth, UserAgent, true);
+                    _myService = new YouMailService(_myUser, _myPwd, _myAuth, UserAgent);
                 }
 
                 return _myService;
@@ -87,14 +87,14 @@ namespace MagikInfo.YouMailAPI.Tests
         {
             get
             {
-                var service = new YouMailService(TestUser, TestPassword, _testAuth, UserAgent, true);
+                var service = new YouMailService(TestUser, TestPassword, _testAuth, UserAgent);
                 service.AuthenticationChanged += OnTestServiceAuthenticationChanged;
                 return service;
             }
         }
         private static void ResetService()
         {
-            _service = new YouMailService(TestUser, TestPassword, _testAuth, UserAgent, true);
+            _service = new YouMailService(TestUser, TestPassword, _testAuth, UserAgent);
             _service.AuthenticationChanged += OnTestServiceAuthenticationChanged;
         }
 

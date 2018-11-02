@@ -58,7 +58,7 @@ namespace MagikInfo.YouMailAPI.Tests
 
             await youmail.CreateAccountAsync(user, password, "Test", "Account", string.Format(_defaultEmail, user));
             {
-                var newService = new YouMailService(user, password, null, YouMailTestService.UserAgent, true);
+                var newService = new YouMailService(user, password, null, YouMailTestService.UserAgent);
                 await newService.DeleteAccountAsync();
 
                 // This should fail the second time

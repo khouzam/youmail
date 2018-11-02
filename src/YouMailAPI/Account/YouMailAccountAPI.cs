@@ -209,9 +209,7 @@ namespace MagikInfo.YouMailAPI
                     {
                         if (response != null)
                         {
-                            var s = response.GetResponseStream();
-                            var userId = s.FromXml<YouMailUserId>();
-
+                            var userId = DeserializeObject<YouMailUserId>(response.GetResponseStream());
                             returnValue = userId.UserId;
                         }
                     }

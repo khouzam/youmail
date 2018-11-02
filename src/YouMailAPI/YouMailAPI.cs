@@ -76,7 +76,7 @@ namespace MagikInfo.YouMailAPI
                     {
                         if (response != null)
                         {
-                            YouMailAuthToken token = response.GetResponseStream().FromXml<YouMailAuthToken>();
+                            YouMailAuthToken token = DeserializeObject<YouMailAuthToken>(response.GetResponseStream());
                             AuthToken = token.AuthToken;
 
                             if (_auth == null)

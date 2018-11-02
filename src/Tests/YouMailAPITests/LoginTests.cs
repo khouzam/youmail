@@ -65,7 +65,7 @@ namespace MagikInfo.YouMailAPI.Tests
         [TestMethod]
         public async Task Login_Fail()
         {
-            var service = new YouMailService("0000", "0000", null, YouMailTestService.UserAgent, true);
+            var service = new YouMailService("0000", "0000", null, YouMailTestService.UserAgent);
             try
             {
                 await service.LoginAsync();

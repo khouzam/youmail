@@ -19,15 +19,9 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using Newtonsoft.Json;
-    using System.Xml.Serialization;
-
-    [XmlType(AnonymousType = true)]
-    [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_settings)]
-    public class YouMailUserId
+    public enum ResponseFormat
     {
-        [XmlElement(YMST.c_userId)]
-        [JsonProperty(PropertyName = YMST.c_userId)]
-        public string UserId { get; set; }
+        JSON = 0,
+        XML = 1
     }
 }
