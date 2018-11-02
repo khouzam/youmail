@@ -329,5 +329,56 @@ namespace MagikInfo.YouMailAPI
 
             return null;
         }
+
+        /// <summary>
+        /// Create a new contact
+        /// </summary>
+        /// <param name="contact"></param>
+        /// <returns></returns>
+        public async Task<long> CreateContactAsync(YouMailContact contact)
+        {
+            long id = 0;
+            try
+            {
+                AddPendingOp();
+                if (await LoginWaitAsync())
+                {
+                    using (var response = await YouMailApiAsync(YMST.c_createContact, contact.ToXmlHttpContent(), HttpMethod.Post))
+                    {
+                        YouMailContact returned = response.GetResponseStream().FromXml<YouMailContact>();
+                        id = returned.Id;
+                    }
+                }
+            }
+            finally
+            {
+                RemovePendingOp();
+            }
+            return id;
+        }
+
+        /// <summary>
+        /// Create a new contact
+        /// </summary>
+        /// <param name="contact"></param>
+        /// <returns></returns>
+        public async Task UpdateContactAsync(YouMailContact contact, long id)
+        {
+            try
+            {
+                AddPendingOp();
+                if (await LoginWaitAsync())
+                {
+
+                    using (await YouMailApiAsync(string.Format(YMST.c_updateContact, id), contact.ToXmlHttpContent(), HttpMethod.Put))
+                    {
+                    }
+                }
+            }
+            finally
+            {
+                RemovePendingOp();
+            }
+        }
     }
 }

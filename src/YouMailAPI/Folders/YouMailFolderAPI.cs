@@ -55,7 +55,7 @@ namespace MagikInfo.YouMailAPI
                         {
                             foreach (var folder in folders.Folders)
                             {
-                                if (string.Compare(folder.Name, folderName, StringComparison.InvariantCultureIgnoreCase) == 0)
+                                if (string.Compare(folder.Name, folderName, StringComparison.CurrentCultureIgnoreCase) == 0)
                                 {
                                     return folder;
                                 }
@@ -116,6 +116,36 @@ namespace MagikInfo.YouMailAPI
             }
 
             return folderList;
+        }
+
+        /// <summary>
+        /// Create a new folder
+        /// </summary>
+        /// <param name="folderName"></param>
+        /// <param name="folderDescription"></param>
+        /// <returns></returns>
+        public async Task CreateFolderAsync(string folderName, string folderDescription)
+        {
+            try
+            {
+                AddPendingOp();
+                if (await LoginWaitAsync())
+                {
+                    var folder = new YouMailFolder
+                    {
+                        Name = folderName,
+                        Description = folderDescription
+                    };
+
+                    using (await YouMailApiAsync(YMST.c_createFolder, folder.ToXmlHttpContent(), HttpMethod.Post))
+                    {
+                    }
+                }
+            }
+            finally
+            {
+                RemovePendingOp();
+            }
         }
     }
 }
