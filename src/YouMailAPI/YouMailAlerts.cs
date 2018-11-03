@@ -19,6 +19,7 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System.Xml.Serialization;
 
     /// <summary>
@@ -29,6 +30,7 @@ namespace MagikInfo.YouMailAPI
     public class YouMailAlerts
     {
         [XmlElement(YMST.c_ditchedCall)]
+        [JsonProperty(YMST.c_ditchedCall)]
         public int _ditchedCallInt
         {
             get { return (int)DitchedCall; }
@@ -36,9 +38,11 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public DitchedCall DitchedCall { get; set; }
 
         [XmlElement(YMST.c_ditchedCallMask)]
+        [JsonProperty(YMST.c_ditchedCallMask)]
         public int _ditchedCallMaskInt
         {
             get { return (int)DitchedCallMask; }
@@ -46,9 +50,11 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public DitchedCall DitchedCallMask { get; set; }
 
         [XmlElement(YMST.c_newSpamMessage)]
+        [JsonProperty(YMST.c_newSpamMessage)]
         public int _newSpamMessageInt
         {
             get { return (int)SpamMessage; }
@@ -56,9 +62,11 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public SpamMessage SpamMessage { get; set; }
 
         [XmlElement(YMST.c_newSpamMessageMask)]
+        [JsonProperty(YMST.c_newSpamMessageMask)]
         public int _spamMessageMaskInt
         {
             get { return (int)SpamMessageMask; }
@@ -66,9 +74,11 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public SpamMessage SpamMessageMask { get; set; }
 
         [XmlElement(YMST.c_emailAttachment)]
+        [JsonProperty(YMST.c_emailAttachment)]
         public int _emailAttachmentInt
         {
             get { return (int)EmailAttachment; }
@@ -76,9 +86,11 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public EmailAttachment EmailAttachment { get; set; }
 
         [XmlElement(YMST.c_emailCustomFormat)]
+        [JsonProperty(YMST.c_emailCustomFormat)]
         public int _emailCustomFormatInt
         {
             get { return (int)EmailCustomFormat; }
@@ -86,9 +98,11 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public EmailCustomFormat EmailCustomFormat { get; set; }
 
         [XmlElement(YMST.c_emailFormat)]
+        [JsonProperty(YMST.c_emailFormat)]
         public int _emailFormatInt
         {
             get { return (int)EmailFormat; }
@@ -96,9 +110,11 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public EmailFormat EmailFormat { get; set; }
 
         [XmlElement(YMST.c_missedCall)]
+        [JsonProperty(YMST.c_missedCall)]
         public int _missedCallInt
         {
             get { return (int)MissedCall; }
@@ -106,9 +122,11 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public MissedCall MissedCall { get; set; }
 
         [XmlElement(YMST.c_missedCallMask)]
+        [JsonProperty(YMST.c_missedCallMask)]
         public int _missedCallMask
         {
             get { return (int)MissedCallMask; }
@@ -116,9 +134,11 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public MissedCall MissedCallMask { get; set; }
 
         [XmlElement(YMST.c_newMessage)]
+        [JsonProperty(YMST.c_newMessage)]
         public int _newMessageInt
         {
             get { return (int)NewMessage; }
@@ -126,9 +146,11 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public NewMessage NewMessage { get; set; }
 
         [XmlElement(YMST.c_newMessageMask)]
+        [JsonProperty(YMST.c_newMessageMask)]
         public int _newMessageMaskInt
         {
             get { return (int)NewMessageMask; }
@@ -136,9 +158,11 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public NewMessage NewMessageMask { get; set; }
 
         [XmlElement(YMST.c_pushConditions)]
+        [JsonProperty(YMST.c_pushConditions)]
         public int PushConditions { get; set; }
 
         [XmlArray(YMST.c_pushRegistrations)]
@@ -146,15 +170,19 @@ namespace MagikInfo.YouMailAPI
         public YouMailPushRegistration[] PushRegistrations { get; set; }
 
         [XmlElement(YMST.c_emailCCEnabled)]
+        [JsonProperty(YMST.c_emailCCEnabled)]
         public bool EmailCCEnabled { get; set; }
 
         [XmlElement(YMST.c_emailCCList)]
+        [JsonProperty(YMST.c_emailCCList)]
         public string EmailCCList { get; set; }
 
         [XmlElement(YMST.c_confirmedSmsPhone)]
+        [JsonProperty(YMST.c_confirmedSmsPhone)]
         public bool ConfirmedSmsPhone { get; set; }
 
         [XmlElement(YMST.c_carrierSupportsSms)]
+        [JsonProperty(YMST.c_carrierSupportsSms)]
         public bool CarrierSupportsSms { get; set; }
     }
 }

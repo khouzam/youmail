@@ -19,6 +19,7 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System.Xml.Serialization;
 
     [XmlType(AnonymousType = true)]
@@ -26,18 +27,23 @@ namespace MagikInfo.YouMailAPI
     public class YouMailResponse
     {
         [XmlElement(YMST.c_statusCode)]
+        [JsonProperty(YMST.c_statusCode)]
         public int StatusCode { get; set; }
 
         [XmlElement(YMST.c_shortMessage)]
+        [JsonProperty(YMST.c_shortMessage)]
         public string ShortMessage { get; set; }
 
         [XmlElement(YMST.c_longMessage)]
+        [JsonProperty(YMST.c_longMessage)]
         public string LongMessage { get; set; }
 
         [XmlElement(YMST.c_timestamp)]
+        [JsonProperty(YMST.c_timestamp)]
         public string TimeStamp { get; set; }
 
         [XmlElement(YMST.c_timestampMs)]
+        [JsonProperty(YMST.c_timestampMs)]
         public long TimeStampsMs { get; set; }
     }
 }

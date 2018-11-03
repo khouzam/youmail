@@ -19,6 +19,7 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System.Xml.Serialization;
 
     [XmlType(AnonymousType = true)]
@@ -26,6 +27,7 @@ namespace MagikInfo.YouMailAPI
     public class YouMailFolders
     {
         [XmlElement(YMST.c_folder)]
+        [JsonProperty(YMST.c_folder)]
         public YouMailFolder[] Folders;
     }
 
@@ -34,15 +36,19 @@ namespace MagikInfo.YouMailAPI
     public class YouMailFolder
     {
         [XmlElement(YMST.c_name)]
+        [JsonProperty(YMST.c_name)]
         public string Name { get; set; }
 
         [XmlElement(YMST.c_description)]
+        [JsonProperty(YMST.c_description)]
         public string Description { get; set; }
 
         [XmlElement(YMST.c_id)]
+        [JsonProperty(YMST.c_id)]
         public int Id { get; set; }
 
         [XmlElement(YMST.c_newEntryCount)]
+        [JsonProperty(YMST.c_newEntryCount)]
         public int UnreadCount { get; set; }
 
         public bool IsValid()

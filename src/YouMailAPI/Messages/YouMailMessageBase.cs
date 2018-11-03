@@ -19,30 +19,38 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System;
     using System.Xml.Serialization;
 
     public partial class YouMailMessageBase
     {
         [XmlElement(YMST.c_source)]
+        [JsonProperty(YMST.c_source)]
         public string Source { get; set; }
 
         [XmlElement(YMST.c_destination)]
+        [JsonProperty(YMST.c_destination)]
         public string Destination { get; set; }
 
         [XmlElement(YMST.c_id)]
+        [JsonProperty(YMST.c_id)]
         public long Id { get; set; }
 
         [XmlElement(YMST.c_length)]
+        [JsonProperty(YMST.c_length)]
         public long LengthInMS { get; set; }
 
         [XmlElement(YMST.c_callerName)]
+        [JsonProperty(YMST.c_callerName)]
         public string CallerName { get; set; }
 
         [XmlIgnore]
+        [JsonIgnore]
         public DateTime Created { get; set; }
 
         [XmlElement(YMST.c_created)]
+        [JsonProperty(YMST.c_created)]
         public long _createdLong
         {
             get { return Created.ToMillisecondsFromEpoch(); }
@@ -50,9 +58,11 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public VoicemailResult Result { get; set; }
 
         [XmlElement(YMST.c_result)]
+        [JsonProperty(YMST.c_result)]
         public int _resultInt
         {
             get { return (int)Result; }
@@ -60,9 +70,11 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlElement(YMST.c_imageUrl)]
+        [JsonProperty(YMST.c_imageUrl)]
         public string ImageUrl { get; set; }
 
         [XmlElement(YMST.c_createSource)]
+        [JsonProperty(YMST.c_createSource)]
         public int _createSourceInt
         {
             get { return (int)CreateSource; }
@@ -70,9 +82,11 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public YouMailCreateSource CreateSource { get; set; }
 
         [XmlElement(YMST.c_phonebookSourceType)]
+        [JsonProperty(YMST.c_phonebookSourceType)]
         public string _phoneBookSourceType
         {
             get
@@ -88,15 +102,19 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public YouMailPhoneBookSourceType PhoneBookSourceType { get; set; }
 
         [XmlElement(YMST.c_phonebookSourceId)]
+        [JsonProperty(YMST.c_phonebookSourceId)]
         public int PhoneBookSourceId { get; set; }
 
         [XmlElement(YMST.c_city)]
+        [JsonProperty(YMST.c_city)]
         public string City { get; set; }
 
         [XmlElement(YMST.c_countryState)]
+        [JsonProperty(YMST.c_countryState)]
         public string CountryState { get; set; }
 
         public virtual bool IsSpecialItem

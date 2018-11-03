@@ -19,8 +19,7 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using System.Collections.Generic;
-    using System.Diagnostics;
+    using Newtonsoft.Json;
     using System.Xml.Serialization;
 
     /// <summary>
@@ -62,6 +61,7 @@ namespace MagikInfo.YouMailAPI
         /// 
         /// </summary>
         [XmlIgnore]
+        [JsonIgnore]
         public YouMailOrder TranscriptionPlan
         {
             get
@@ -85,6 +85,7 @@ namespace MagikInfo.YouMailAPI
         /// 
         /// </summary>
         [XmlIgnore]
+        [JsonIgnore]
         public TranscriptionAction TranscriptionAction
         {
             get

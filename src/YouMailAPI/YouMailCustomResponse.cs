@@ -19,6 +19,7 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System.Collections.Generic;
     using System.Xml.Serialization;
 
@@ -27,6 +28,7 @@ namespace MagikInfo.YouMailAPI
     public partial class YouMailCustoms
     {
         [XmlElement(YMST.c_custom)]
+        [JsonProperty(YMST.c_custom)]
         public List<YouMailCustom> Customs;
     }
 
@@ -35,18 +37,20 @@ namespace MagikInfo.YouMailAPI
     public class YouMailCustom
     {
         [XmlElement(YMST.c_key)]
+        [JsonProperty(YMST.c_key)]
         public string Key { get; set; }
 
         [XmlElement(YMST.c_value)]
+        [JsonProperty(YMST.c_value)]
         public string Value { get; set; }
     }
-
 
     [XmlType(AnonymousType = true)]
     [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_response)]
     public class YouMailCustomResponse : YouMailResponse
     {
         [XmlElement(YMST.c_customs)]
+        [JsonProperty(YMST.c_customs)]
         public YouMailCustoms Customs
         {
             set
@@ -83,6 +87,7 @@ namespace MagikInfo.YouMailAPI
         /// A Dictionary representation of the custom properties
         /// </summary>
         [XmlIgnore]
+        [JsonIgnore]
         public IDictionary<string, string> Properties { get; set; }
     }
 }

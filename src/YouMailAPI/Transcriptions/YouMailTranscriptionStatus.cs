@@ -19,6 +19,7 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System;
     using System.Xml.Serialization;
 
@@ -27,21 +28,27 @@ namespace MagikInfo.YouMailAPI
     public class YouMailTranscriptionStatus
     {
         [XmlElement(YMST.c_active)]
+        [JsonProperty(YMST.c_active)]
         public bool Active { get; set; }
 
         [XmlElement(YMST.c_enabled)]
+        [JsonProperty(YMST.c_enabled)]
         public bool Enabled { get; set; }
 
         [XmlElement(YMST.c_freeCount)]
+        [JsonProperty(YMST.c_freeCount)]
         public int FreeCount { get; set; }
 
         [XmlElement(YMST.c_planMaxCount)]
+        [JsonProperty(YMST.c_planMaxCount)]
         public int PlanMaxCount { get; set; }
 
         [XmlElement(YMST.c_planUsedCount)]
+        [JsonProperty(YMST.c_planUsedCount)]
         public int PlanUsedCount { get; set; }
 
         [XmlElement(YMST.c_renewalDate)]
+        [JsonProperty(YMST.c_renewalDate)]
         public long _planRenewalLong
         {
             get { return PlanRenewal.ToMillisecondsFromEpoch(); }
@@ -49,6 +56,7 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public DateTime PlanRenewal { get; set; }
     }
 }

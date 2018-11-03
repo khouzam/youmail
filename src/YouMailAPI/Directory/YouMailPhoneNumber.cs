@@ -19,6 +19,7 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System.Xml.Serialization;
 
     [XmlType(AnonymousType = true)]
@@ -26,6 +27,7 @@ namespace MagikInfo.YouMailAPI
     public partial class YouMailPhoneNumbers
     {
         [XmlElement(YMST.c_phoneNumber)]
+        [JsonProperty(YMST.c_phoneNumber)]
         public YouMailPhoneNumber[] PhoneNumbers { get; set; }
     }
 
@@ -34,24 +36,31 @@ namespace MagikInfo.YouMailAPI
     public class YouMailPhoneNumber
     {
         [XmlElement(YMST.c_id)]
+        [JsonProperty(YMST.c_id)]
         public long ID { get; set; }
 
         [XmlElement(YMST.c_phoneNumber)]
+        [JsonProperty(YMST.c_phoneNumber)]
         public string PhoneNumber { get; set; }
 
         [XmlElement(YMST.c_nickName)]
+        [JsonProperty(YMST.c_nickName)]
         public string NickName { get; set; }
 
         [XmlElement(YMST.c_carrierId)]
+        [JsonProperty(YMST.c_carrierId)]
         public int CarriedId { get; set; }
 
         [XmlElement(YMST.c_autoLoginFlag)]
+        [JsonProperty(YMST.c_autoLoginFlag)]
         public bool AutoLoginFlag { get; set; }
 
         [XmlElement(YMST.c_phoneModel)]
+        [JsonProperty(YMST.c_phoneModel)]
         public string PhoneModel { get; set; }
 
         [XmlElement(YMST.c_phoneModelId)]
+        [JsonProperty(YMST.c_phoneModelId)]
         public int PhoneModelId { get; set; }
     }
 }

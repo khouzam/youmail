@@ -19,6 +19,7 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System.Xml.Serialization;
 
     [XmlType(AnonymousType = true)]
@@ -26,24 +27,31 @@ namespace MagikInfo.YouMailAPI
     public class YouMailAccessPoint
     {
         [XmlElement(YMST.c_id)]
+        [JsonProperty(YMST.c_id)]
         public int Id { get; set; }
 
         [XmlElement(YMST.c_carrierId)]
+        [JsonProperty(YMST.c_carrierId)]
         public int CarrierId { get; set; }
 
         [XmlElement(YMST.c_forwardToNumber)]
+        [JsonProperty(YMST.c_forwardToNumber)]
         public string ForwardToNumber { get; set; }
 
         [XmlElement(YMST.c_pickupNumber)]
+        [JsonProperty(YMST.c_pickupNumber)]
         public string PickupNumber { get; set; }
 
         [XmlElement(YMST.c_forwardingNotRequired)]
+        [JsonProperty(YMST.c_forwardingNotRequired)]
         public bool ForwardingNotRequired { get; set; }
 
         [XmlElement(YMST.c_conferenceNumber)]
+        [JsonProperty(YMST.c_conferenceNumber)]
         public string ConferenceNumber { get; set; }
 
         [XmlElement(YMST.c_defaultConferenceNumber)]
+        [JsonProperty(YMST.c_defaultConferenceNumber)]
         public string DefaultConferenceNumber { get; set; }
     }
 }

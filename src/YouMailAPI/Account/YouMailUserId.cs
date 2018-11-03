@@ -27,7 +27,7 @@ namespace MagikInfo.YouMailAPI
     public class YouMailUserId
     {
         [XmlElement(YMST.c_userId)]
-        [JsonProperty(PropertyName = YMST.c_userId)]
+        [JsonProperty(YMST.c_userId)]
         public string UserId { get; set; }
     }
 }

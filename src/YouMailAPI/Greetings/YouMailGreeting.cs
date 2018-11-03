@@ -19,6 +19,7 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System.Xml.Serialization;
 
     [XmlType(AnonymousType = true)]
@@ -26,6 +27,7 @@ namespace MagikInfo.YouMailAPI
     public class YouMailGreetingsResponse : YouMailResponse
     {
         [XmlElement(YMST.c_greetings)]
+        [JsonProperty(YMST.c_greetings)]
         public YouMailGreetings Greetings { get; set; }
     }
 
@@ -34,6 +36,7 @@ namespace MagikInfo.YouMailAPI
     public partial class YouMailGreetings
     {
         [XmlElement(YMST.c_greeting)]
+        [JsonProperty(YMST.c_greeting)]
         public YouMailGreeting[] Greetings { get; set; }
     }
 
@@ -42,24 +45,31 @@ namespace MagikInfo.YouMailAPI
     public partial class YouMailGreeting
     {
         [XmlElement(YMST.c_name)]
+        [JsonProperty(YMST.c_name)]
         public string Name { get; set; }
 
         [XmlElement(YMST.c_description)]
+        [JsonProperty(YMST.c_description)]
         public string Description { get; set; }
 
         [XmlElement(YMST.c_duration)]
+        [JsonProperty(YMST.c_duration)]
         public int ItemDuration { get; set; }
 
         [XmlElement(YMST.c_id)]
+        [JsonProperty(YMST.c_id)]
         public int Id { get; set; }
 
         [XmlElement(YMST.c_imageUrl)]
+        [JsonProperty(YMST.c_imageUrl)]
         public string ImageUrl { get; set; }
 
         [XmlElement(YMST.c_communityGreetingId)]
+        [JsonProperty(YMST.c_communityGreetingId)]
         public int CommunityGreetingId { get; set; }
 
         [XmlElement(YMST.c_source)]
+        [JsonProperty(YMST.c_source)]
         public int _sourceInt
         {
             get { return (int)Source; }
@@ -67,15 +77,19 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public YouMailGreetingSource Source { get; set; }
 
         [XmlElement(YMST.c_dataUrl)]
+        [JsonProperty(YMST.c_dataUrl)]
         public string DataUrl { get; set; }
 
         [XmlElement(YMST.c_data)]
+        [JsonProperty(YMST.c_data)]
         public string Data { get; set; }
 
         [XmlElement(YMST.c_greetingType)]
+        [JsonProperty(YMST.c_greetingType)]
         public int _greetingTypeInt
         {
             get { return (int)GreetingType; }
@@ -83,6 +97,7 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public YouMailGreetingType GreetingType { get; set; }
     }
 }

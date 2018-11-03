@@ -19,6 +19,7 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System.Xml.Serialization;
 
     /// <summary>
@@ -29,21 +30,27 @@ namespace MagikInfo.YouMailAPI
     public class YouMailCallVerifyStatus
     {
         [XmlElement(YMST.c_userId)]
+        [JsonProperty(YMST.c_userId)]
         public int UserId { get; set; }
 
         [XmlElement(YMST.c_userPhoneNumber)]
+        [JsonProperty(YMST.c_userPhoneNumber)]
         public string UserPhoneNumber { get; set; }
 
         [XmlElement(YMST.c_outboundPhoneNumber)]
+        [JsonProperty(YMST.c_outboundPhoneNumber)]
         public string OutboundPhoneNumber { get; set; }
 
         [XmlElement(YMST.c_status)]
+        [JsonProperty(YMST.c_status)]
         public string Status { get; set; }
 
         [XmlElement(YMST.c_initiatedTime)]
+        [JsonProperty(YMST.c_initiatedTime)]
         public string InitiatedTime { get; set; }
 
         [XmlElement(YMST.c_completedTime)]
+        [JsonProperty(YMST.c_completedTime)]
         public string CompletedTime { get; set; }
     }
 }

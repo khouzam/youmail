@@ -19,6 +19,7 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System.Collections.Generic;
     using System.Xml.Serialization;
 
@@ -27,6 +28,7 @@ namespace MagikInfo.YouMailAPI
     public class YouMailGreetingStatuses
     {
         [XmlElement(YMST.c_status)]
+        [JsonProperty(YMST.c_status)]
         public List<YouMailGreetingStatus> Statuses;
     }
 
@@ -35,12 +37,15 @@ namespace MagikInfo.YouMailAPI
     public class YouMailGreetingStatus
     {
         [XmlElement(YMST.c_greetingId)]
+        [JsonProperty(YMST.c_greetingId)]
         public long GreetingId { get; set; }
 
         [XmlElement(YMST.c_id)]
+        [JsonProperty(YMST.c_id)]
         public int Id { get; set; }
 
         [XmlElement(YMST.c_playType)]
+        [JsonProperty(YMST.c_playType)]
         public int _playTypeInt
         {
             get { return (int)PlayType; }
@@ -48,9 +53,11 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public YouMailPlayType PlayType { get; set; }
 
         [XmlElement(YMST.c_statusType)]
+        [JsonProperty(YMST.c_statusType)]
         public int _statusTypeInt
         {
             get { return (int)StatusType; }
@@ -58,15 +65,19 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public YouMailStatusType StatusType { get; set; }
 
         [XmlElement(YMST.c_name)]
+        [JsonProperty(YMST.c_name)]
         public string Name { get; set; }
 
         [XmlElement(YMST.c_system)]
+        [JsonProperty(YMST.c_system)]
         public bool System { get; set; }
 
         [XmlElement(YMST.c_userId)]
+        [JsonProperty(YMST.c_userId)]
         public int UserId { get; set; }
     }
 }

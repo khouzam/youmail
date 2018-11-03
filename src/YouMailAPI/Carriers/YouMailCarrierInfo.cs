@@ -19,6 +19,7 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System.Xml.Serialization;
 
     [XmlType(AnonymousType = true)]
@@ -26,6 +27,7 @@ namespace MagikInfo.YouMailAPI
     public partial class YouMailCarriers
     {
         [XmlElement(YMST.c_carrier)]
+        [JsonProperty(YMST.c_carrier)]
         public YouMailCarrier[] Carriers;
     }
 
@@ -34,18 +36,23 @@ namespace MagikInfo.YouMailAPI
     public class YouMailCarrier
     {
         [XmlElement(YMST.c_id)]
+        [JsonProperty(YMST.c_id)]
         public int Id { get; set; }
 
         [XmlElement(YMST.c_name)]
+        [JsonProperty(YMST.c_name)]
         public string Name { get; set; }
 
         [XmlElement(YMST.c_carrierClass)]
+        [JsonProperty(YMST.c_carrierClass)]
         public int CarrierClass { get; set; }
 
         [XmlElement(YMST.c_activeFlag)]
+        [JsonProperty(YMST.c_activeFlag)]
         public bool ActiveFlag { get; set; }
 
         [XmlElement(YMST.c_supportedFlag)]
+        [JsonProperty(YMST.c_supportedFlag)]
         public bool SupportedFlag { get; set; }
     }
 }

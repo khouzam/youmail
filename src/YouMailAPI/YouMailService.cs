@@ -22,6 +22,7 @@ namespace MagikInfo.YouMailAPI
     using MagikInfo.Synchronization;
     using MagikInfo.XmlSerializerExtensions;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -139,7 +140,17 @@ namespace MagikInfo.YouMailAPI
             };
             _httpClient = new HttpClient(handler);
             _httpClient.DefaultRequestHeaders.Add("User-Agent", _userAgent);
-            _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+
+            // Set the response format for the requests
+            if (_responseFormat == ResponseFormat.JSON)
+            {
+                _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+            }
+            else if (_responseFormat == ResponseFormat.XML)
+            {
+                _httpClient.DefaultRequestHeaders.Add("Accept", "application/xml");
+            }
+
             if (s_gzipSupported)
             {
                 _httpClient.DefaultRequestHeaders.Add("Accept-Encoding", "gzip,defalte");
@@ -675,25 +686,39 @@ namespace MagikInfo.YouMailAPI
             }
         }
 
-        private T DeserializeObject<T>(Stream s) where T : class
+        private T DeserializeObject<T>(Stream s, string rootElement = null) where T : class
         {
             T returnObject = null;
             switch (_responseFormat)
             {
                 case ResponseFormat.JSON:
                     {
-                        var serializer = new JsonSerializer();
-
                         using (var sr = new StreamReader(s))
-                        using (var jsonTextReader = new JsonTextReader(sr))
                         {
-                            returnObject = (T)serializer.Deserialize(jsonTextReader, typeof(T));
+                            var content = sr.ReadToEnd();
+                            Debug.WriteLine(content);
+                            if (!string.IsNullOrEmpty(rootElement))
+                            {
+                                var root = JObject.Parse(content);
+                                returnObject = root[rootElement].ToObject<T>();
+                            }
+                            else
+                            {
+                                returnObject = JsonConvert.DeserializeObject<T>(content);
+                            }
                         }
+
+                        //var serializer = new JsonSerializer();
+                        //using (var sr = new StreamReader(s))
+                        //using (var jsonTextReader = new JsonTextReader(sr))
+                        //{
+                        //    returnObject = (T)serializer.Deserialize(jsonTextReader, typeof(T));
+                        //}
                     }
                     break;
 
                 case ResponseFormat.XML:
-                    returnObject = s.FromXml<T>();
+                    returnObject = s.FromXmlDebug<T>();
                     break;
 
                 default:

@@ -19,6 +19,7 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Xml.Serialization;
@@ -28,6 +29,7 @@ namespace MagikInfo.YouMailAPI
     public partial class YouMailAPICalls
     {
         [XmlElement(YMST.c_YouMailAPICall)]
+        [JsonProperty(YMST.c_YouMailAPICall)]
         public List<YouMailAPICall> APICalls;
 
         public YouMailAPICalls()

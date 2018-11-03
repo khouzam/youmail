@@ -19,6 +19,7 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System.Xml.Serialization;
 
     [XmlType(AnonymousType = true)]
@@ -26,6 +27,7 @@ namespace MagikInfo.YouMailAPI
     public partial class YouMailHistories
     {
         [XmlElement(YMST.c_history)]
+        [JsonProperty(YMST.c_history)]
         public YouMailHistory[] Histories;
     }
 
@@ -34,6 +36,7 @@ namespace MagikInfo.YouMailAPI
     public partial class YouMailHistory : YouMailMessageBase
     {
         [XmlIgnore]
+        [JsonIgnore]
         public override bool IsSpecialItem
         {
             get { return true; }

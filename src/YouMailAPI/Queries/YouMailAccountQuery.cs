@@ -19,6 +19,7 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System.Xml.Serialization;
 
     [XmlType(AnonymousType = true)]
@@ -31,30 +32,38 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlElement(YMST.c_phone)]
+        [JsonProperty(YMST.c_phone)]
         public string Phone { get; set; }
 
         [XmlElement(YMST.c_password)]
+        [JsonProperty(YMST.c_password)]
         public string Password { get; set; }
 
         [XmlElement(YMST.c_firstName)]
+        [JsonProperty(YMST.c_firstName)]
         public string FirstName { get; set; }
 
         [XmlElement(YMST.c_lastName)]
+        [JsonProperty(YMST.c_lastName)]
         public string LastName { get; set; }
 
         [XmlElement(YMST.c_email)]
+        [JsonProperty(YMST.c_email)]
         public string Email { get; set; }
 
         [XmlElement(YMST.c_phoneModel)]
+        [JsonProperty(YMST.c_phoneModel)]
         public string PhoneModel { get; set; }
 
         [XmlIgnore]
+        [JsonIgnore]
         public string Username
         {
             get { return FirstName + LastName; }
         }
 
         [XmlElement(YMST.c_accountTemplate)]
+        [JsonProperty(YMST.c_accountTemplate)]
         public string AccountTemplate { get; set; }
     }
 }

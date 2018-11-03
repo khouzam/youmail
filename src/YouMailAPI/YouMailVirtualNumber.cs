@@ -19,6 +19,7 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System.Xml.Serialization;
 
     [XmlType(AnonymousType = true)]
@@ -26,6 +27,7 @@ namespace MagikInfo.YouMailAPI
     public partial class YouMailVirtualNumbers
     {
         [XmlElement(YMST.c_virtualNumber)]
+        [JsonProperty(YMST.c_virtualNumber)]
         public YouMailVirtualNumber[] VirtualNumbers;
     }
 
@@ -34,9 +36,11 @@ namespace MagikInfo.YouMailAPI
     public class YouMailVirtualNumber
     {
         [XmlElement(YMST.c_virtualNumber)]
+        [JsonProperty(YMST.c_virtualNumber)]
         public string VirtualNumber { get; set; }
 
         [XmlElement(YMST.c_nickname)]
+        [JsonProperty(YMST.c_nickname)]
         public string Nickname { get; set; }
     }
 }
