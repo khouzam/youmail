@@ -42,7 +42,7 @@ namespace MagikInfo.YouMailAPI
                     {
                         if (response != null)
                         {
-                            instructions = response.GetResponseStream().FromXml<YouMailForwardingInstructions>();
+                            instructions = DeserializeObject<YouMailForwardingInstructions>(response.GetResponseStream(), YMST.c_phoneForwardingInstruction);
                         }
                     }
                 }
@@ -72,8 +72,7 @@ namespace MagikInfo.YouMailAPI
                     {
                         if (response != null)
                         {
-                            var s = response.GetResponseStream();
-                            carrier = s.FromXml<YouMailCarrier>();
+                            carrier = DeserializeObject<YouMailCarrier>(response.GetResponseStream(), YMST.c_carrier);
                         }
                     }
                 }
@@ -128,7 +127,7 @@ namespace MagikInfo.YouMailAPI
                     {
                         if (response != null)
                         {
-                            carriers = response.GetResponseStream().FromXml<YouMailCarriers>();
+                            carriers = DeserializeObject<YouMailCarriers>(response.GetResponseStream());
                         }
                     }
                 }

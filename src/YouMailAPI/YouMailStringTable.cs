@@ -46,7 +46,7 @@ namespace MagikInfo.YouMailAPI
         public const string c_authToken = "authToken";
         public const string c_authorization = "Authorization";
         public const string c_disableCodes = "disableCodes";
-        public const string c_phoneForwardingInstructions = "phoneForwardingInstruction";
+        public const string c_phoneForwardingInstruction = "phoneForwardingInstruction";
         public const string c_enableCodes = "enableCodes";
         public const string c_enableMessage = "enableMessage";
         public const string c_disableMessage = "disableMessage";

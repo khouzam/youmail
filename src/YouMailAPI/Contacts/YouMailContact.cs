@@ -28,9 +28,10 @@ namespace MagikInfo.YouMailAPI
     [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_response)]
     public partial class YouMailContactsResponse : YouMailResponse
     {
-        [XmlElement(YMST.c_contacts)]
+        [XmlArray(YMST.c_contacts)]
+        [XmlArrayItem(YMST.c_contact)]
         [JsonProperty(YMST.c_contacts)]
-        public YouMailContacts Contacts;
+        public YouMailContact[] Contacts;
     }
 
     [XmlType(AnonymousType = true)]

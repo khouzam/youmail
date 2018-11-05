@@ -27,12 +27,13 @@ namespace MagikInfo.YouMailAPI
     public partial class YouMailCarriers
     {
         [XmlElement(YMST.c_carrier)]
-        [JsonProperty(YMST.c_carrier)]
+        [JsonProperty(YMST.c_carriers)]
         public YouMailCarrier[] Carriers;
     }
 
     [XmlType(AnonymousType = true)]
     [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_carrier)]
+    [JsonObject(YMST.c_carrier)]
     public class YouMailCarrier
     {
         [XmlElement(YMST.c_id)]

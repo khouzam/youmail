@@ -23,7 +23,7 @@ namespace MagikInfo.YouMailAPI
     using System.Xml.Serialization;
 
     [XmlType(AnonymousType = true)]
-    [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_phoneForwardingInstructions)]
+    [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_phoneForwardingInstruction)]
     public class YouMailForwardingInstructions
     {
         [XmlElement(YMST.c_carrierId)]

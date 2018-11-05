@@ -46,6 +46,7 @@ namespace MagikInfo.YouMailAPI
                 {
                     int currentIndex = 0;
                     YouMailContacts currentContacts = new YouMailContacts();
+
                     // We can only send 15 contacts at a time
                     var contactsList = new List<YouMailContact>();
                     do
@@ -101,7 +102,7 @@ namespace MagikInfo.YouMailAPI
                             // We've uploaded a batch of contacts, poll to see if we can send the next ones
                             using (var response = await YouMailApiAsync(YMST.c_uploadContactsStatus, null, HttpMethod.Get))
                             {
-                                var status = response.GetResponseStream().FromXml<YouMailContactsUploadStatus>();
+                                var status = DeserializeObject<YouMailContactsUploadStatus>(response.GetResponseStream(), YMST.c_contactSyncSummary);
                                 if (status.Status == YouMailContactsUploadStatus.StatusEnum.Started ||
                                     status.Status == YouMailContactsUploadStatus.StatusEnum.Pending)
                                 {
@@ -200,13 +201,13 @@ namespace MagikInfo.YouMailAPI
                     if (response != null)
                     {
                         var stream = response.GetResponseStream();
-                        var contactResponse = stream.FromXml<YouMailContactsResponse>();
+                        var contactResponse = DeserializeObject<YouMailContactsResponse>(stream);
                         if (contactResponse != null)
                         {
-                            count = contactResponse.Contacts.Contacts.Length;
+                            count = contactResponse.Contacts.Length;
                             if (count > 0)
                             {
-                                contacts.AddRange(contactResponse.Contacts.Contacts);
+                                contacts.AddRange(contactResponse.Contacts);
                             }
                         }
 
