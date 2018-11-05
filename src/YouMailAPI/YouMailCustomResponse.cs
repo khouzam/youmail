@@ -24,15 +24,6 @@ namespace MagikInfo.YouMailAPI
     using System.Xml.Serialization;
 
     [XmlType(AnonymousType = true)]
-    [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_customs)]
-    public partial class YouMailCustoms
-    {
-        [XmlElement(YMST.c_custom)]
-        [JsonProperty(YMST.c_custom)]
-        public List<YouMailCustom> Customs;
-    }
-
-    [XmlType(AnonymousType = true)]
     [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_custom)]
     public class YouMailCustom
     {
@@ -49,37 +40,35 @@ namespace MagikInfo.YouMailAPI
     [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_response)]
     public class YouMailCustomResponse : YouMailResponse
     {
-        [XmlElement(YMST.c_customs)]
+        [XmlArray(YMST.c_customs)]
+        [XmlArrayItem(YMST.c_custom)]
         [JsonProperty(YMST.c_customs)]
-        public YouMailCustoms Customs
+        public YouMailCustom[] Customs
         {
             set
             {
                 Properties = new Dictionary<string, string>();
-                foreach (var item in value.Customs)
+                foreach (var item in value)
                 {
                     Properties.Add(item.Key, item.Value);
                 }
             }
             get
             {
-                YouMailCustoms customs = null;
+                List<YouMailCustom> customs = null;
                 if (Properties != null)
                 {
-                    customs = new YouMailCustoms
-                    {
-                        Customs = new List<YouMailCustom>()
-                    };
+                    customs = new List<YouMailCustom>();
                     foreach (var item in Properties)
                     {
-                        customs.Customs.Add(new YouMailCustom
+                        customs.Add(new YouMailCustom
                         {
                             Key = item.Key,
                             Value = item.Value
                         });
                     }
                 }
-                return customs;
+                return customs?.ToArray();
             }
         }
 

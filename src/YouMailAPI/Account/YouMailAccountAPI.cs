@@ -20,6 +20,7 @@
 namespace MagikInfo.YouMailAPI
 {
     using MagikInfo.XmlSerializerExtensions;
+    using System.Collections.Generic;
     using System.Net.Http;
     using System.Threading.Tasks;
 
@@ -30,7 +31,7 @@ namespace MagikInfo.YouMailAPI
         /// </summary>
         /// <param name="phoneNumber">The account to lookup</param>
         /// <returns>YouMailCustomResponse</returns>
-        public async Task<YouMailCustomResponse> AccountRegistrationVerification(string phoneNumber)
+        public async Task<YouMailCustomResponse> AccountRegistrationVerificationAsync(string phoneNumber)
         {
             YouMailCustomResponse customResponse = null;
             try
@@ -41,7 +42,7 @@ namespace MagikInfo.YouMailAPI
                     string url = string.Format(YMST.c_registrationVerify, phoneNumber);
                     using (var response = await YouMailApiAsync(url, null, HttpMethod.Get))
                     {
-                        customResponse = DeserializeObject<YouMailCustomResponse>(response.GetResponseStream(), YMST.c_customs);
+                        customResponse = DeserializeObject<YouMailCustomResponse>(response.GetResponseStream(), null);
                     }
                 }
             }
@@ -64,7 +65,7 @@ namespace MagikInfo.YouMailAPI
             AddPendingOp();
             try
             {
-                var result = await AccountRegistrationVerification(phoneNumber);
+                var result = await AccountRegistrationVerificationAsync(phoneNumber);
                 // On Success we found the account;
                 if (result.Properties != null && result.Properties.ContainsKey(YMST.c_registrationStatus))
                 {

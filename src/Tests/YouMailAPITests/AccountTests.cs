@@ -111,7 +111,7 @@ namespace MagikInfo.YouMailAPI.Tests
         private async Task VerifyAccountAsync(string user, bool expected)
         {
             var youmail = YouMailTestService.PrivateService;
-            var registration = await youmail.AccountRegistrationVerification(user);
+            var registration = await youmail.AccountRegistrationVerificationAsync(user);
             bool found = registration.Properties[YMST.c_registrationStatus] == YMST.c_accountExists;
 
             Assert.IsTrue(found == expected);
