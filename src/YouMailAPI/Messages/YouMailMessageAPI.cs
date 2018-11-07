@@ -94,7 +94,7 @@ namespace MagikInfo.YouMailAPI
                     }
                     try
                     {
-                        YouMailMessages messages = response.GetResponseStream().FromXml<YouMailMessages>();
+                        YouMailMessages messages = DeserializeObject<YouMailMessages>(response.GetResponseStream());
                         if (messages != null && messages.Messages != null)
                         {
                             count = messages.Messages.Length;
@@ -169,13 +169,10 @@ namespace MagikInfo.YouMailAPI
                             {
                                 if (response != null)
                                 {
-                                    var stream = response.GetResponseStream();
+                                    var resp = DeserializeObject<YouMailMessageResponse>(response.GetResponseStream());
+                                    if (resp != null)
                                     {
-                                        var resp = stream.FromXml<YouMailMessageResponse>();
-                                        if (resp != null)
-                                        {
-                                            message.Transcription = resp.Message.Transcription;
-                                        }
+                                        message.Transcription = resp.Message.Transcription;
                                     }
                                 }
                             }
@@ -350,8 +347,7 @@ namespace MagikInfo.YouMailAPI
                 {
                     if (response != null)
                     {
-                        Stream stream = response.GetResponseStream();
-                        var histories = stream.FromXml<YouMailHistories>();
+                        var histories = DeserializeObject<YouMailHistories>(response.GetResponseStream());
 
                         // Get all the call histories where the result is no message left
                         if (histories != null && histories.Histories != null)
@@ -497,7 +493,7 @@ namespace MagikInfo.YouMailAPI
                         {
                             if (response != null)
                             {
-                                var messages = response.GetResponseStream().FromXml<YouMailMessages>();
+                                var messages = DeserializeObject<YouMailMessages>(response.GetResponseStream());
 
                                 if (messages != null && messages.Messages != null)
                                 {

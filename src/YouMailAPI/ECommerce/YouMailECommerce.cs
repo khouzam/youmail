@@ -53,10 +53,6 @@ namespace MagikInfo.YouMailAPI
         private YouMailOrder _transcriptionPlan = null;
         public YouMailTranscriptionStatus TranscriptionStatus = null;
 
-        public YouMailECommerce()
-        {
-        }
-
         /// <summary>
         /// 
         /// </summary>

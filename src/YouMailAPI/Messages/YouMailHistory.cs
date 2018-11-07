@@ -27,7 +27,7 @@ namespace MagikInfo.YouMailAPI
     public partial class YouMailHistories
     {
         [XmlElement(YMST.c_history)]
-        [JsonProperty(YMST.c_history)]
+        [JsonProperty(YMST.c_histories)]
         public YouMailHistory[] Histories;
     }
 

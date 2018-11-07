@@ -57,14 +57,13 @@ namespace MagikInfo.YouMailAPI
                         {
                             if (response != null)
                             {
-                                var stream = response.GetResponseStream();
-                                var greetingResponse = stream.FromXml<YouMailGreetingsResponse>();
+                                var greetingResponse = DeserializeObject<YouMailGreetingsResponse>(response.GetResponseStream());
                                 if (greetingResponse != null)
                                 {
-                                    count = greetingResponse.Greetings.Greetings.Length;
+                                    count = greetingResponse.Greetings.Length;
                                     if (count > 0)
                                     {
-                                        greetings.AddRange(greetingResponse.Greetings.Greetings);
+                                        greetings.AddRange(greetingResponse.Greetings);
                                     }
                                 }
 
@@ -159,8 +158,7 @@ namespace MagikInfo.YouMailAPI
                     {
                         if (response != null)
                         {
-                            var stream = response.GetResponseStream();
-                            statuses = stream.FromXml<YouMailGreetingStatuses>();
+                            statuses = DeserializeObject<YouMailGreetingStatuses>(response.GetResponseStream());
                         }
                     }
                 }

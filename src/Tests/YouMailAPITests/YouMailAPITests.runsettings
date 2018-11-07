@@ -8,9 +8,10 @@
     <Parameter name="TestFullName" value="SetValue" />
     <Parameter name="RealUsername" value="SetValue" />
     <Parameter name="RealPassword" value="SetValue" />
+    <Parameter name="RealAuthToken" value="" />
     <Parameter name="PrivateUsername" value="SetValue" />
     <Parameter name="PrivatePassword" value="SetValue" />
-    <Parameter name="RealAuthToken" value="" />
+    <Parameter name="PrivateAuthToken" value="" />
     <Parameter name="DefaultUserAgent" value="MagikInfo.YouMailAPITests" />
     <Parameter name="AccountCreationEmail" value="SetValue" />
   </TestRunParameters>

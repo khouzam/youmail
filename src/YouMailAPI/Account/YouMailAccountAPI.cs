@@ -42,7 +42,7 @@ namespace MagikInfo.YouMailAPI
                     string url = string.Format(YMST.c_registrationVerify, phoneNumber);
                     using (var response = await YouMailApiAsync(url, null, HttpMethod.Get))
                     {
-                        customResponse = DeserializeObject<YouMailCustomResponse>(response.GetResponseStream(), null);
+                        customResponse = DeserializeObject<YouMailCustomResponse>(response.GetResponseStream());
                     }
                 }
             }

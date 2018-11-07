@@ -125,13 +125,13 @@ namespace MagikInfo.YouMailAPI
             string password,
             string authToken,
             string userAgent,
-            //ResponseFormat responseFormat = ResponseFormat.JSON,
+            ResponseFormat responseFormat = ResponseFormat.JSON,
             bool secureConnections = false)
         {
             _username = username;
             _password = password;
             _userAgent = userAgent;
-            _responseFormat = ResponseFormat.JSON;
+            _responseFormat = responseFormat;
 
             // Create the HttpClient before setting the AuthToken
             var handler = new HttpClientHandler
@@ -686,7 +686,60 @@ namespace MagikInfo.YouMailAPI
             }
         }
 
+
+        /// <summary>
+        /// Take an object and deserialize it base on the requested format for the serivce.
+        /// </summary>
+        /// <typeparam name="T">The type to deserialize to</typeparam>
+        /// <param name="s">The stream that has the data</param>
+        /// <param name="rootElement">An optional root element for JSON that will contain the object</param>
+        /// <returns>The object requested</returns>
         private T DeserializeObject<T>(Stream s, string rootElement = null) where T : class
+        {
+            T returnObject = null;
+            switch (_responseFormat)
+            {
+                case ResponseFormat.JSON:
+                    {
+                        var serializer = new JsonSerializer();
+                        using (var sr = new StreamReader(s))
+                        {
+                            using (var jsonTextReader = new JsonTextReader(sr))
+                            {
+                                if (!string.IsNullOrEmpty(rootElement))
+                                {
+                                    var root = (JObject)serializer.Deserialize(jsonTextReader, typeof(JObject));
+                                    returnObject = root[rootElement].ToObject<T>();
+                                }
+                                else
+                                {
+                                    returnObject = (T)serializer.Deserialize(jsonTextReader, typeof(T));
+                                }
+                            }
+                        }
+                    }
+                    break;
+
+                case ResponseFormat.XML:
+                    returnObject = s.FromXml<T>();
+                    break;
+
+                default:
+                    throw new InvalidOperationException("Invalid conversion format");
+            }
+
+            return returnObject;
+        }
+
+        /// <summary>
+        /// Take an object and deserialize it base on the requested format for the serivce.
+        /// This will also print out the response receieved to the debug console
+        /// </summary>
+        /// <typeparam name="T">The type to deserialize to</typeparam>
+        /// <param name="s">The stream that has the data</param>
+        /// <param name="rootElement">An optional root element for JSON that will contain the object</param>
+        /// <returns>The object requested</returns>
+        private T DeserializeObjectDebug<T>(Stream s, string rootElement = null) where T : class
         {
             T returnObject = null;
             switch (_responseFormat)
@@ -707,13 +760,6 @@ namespace MagikInfo.YouMailAPI
                                 returnObject = JsonConvert.DeserializeObject<T>(content);
                             }
                         }
-
-                        //var serializer = new JsonSerializer();
-                        //using (var sr = new StreamReader(s))
-                        //using (var jsonTextReader = new JsonTextReader(sr))
-                        //{
-                        //    returnObject = (T)serializer.Deserialize(jsonTextReader, typeof(T));
-                        //}
                     }
                     break;
 

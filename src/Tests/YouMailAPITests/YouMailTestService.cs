@@ -36,6 +36,7 @@ namespace MagikInfo.YouMailAPI.Tests
             _myAuth = context.Properties["RealAuthToken"].ToString();
             _privateUser = context.Properties["PrivateUsername"].ToString();
             _privatePwd = context.Properties["PrivatePassword"].ToString();
+            _privateAuth = context.Properties["PrivateAuthToken"].ToString();
             UserAgent = context.Properties["DefaultUserAgent"].ToString();
         }
 
@@ -47,6 +48,7 @@ namespace MagikInfo.YouMailAPI.Tests
         private static string _myAuth;
         private static string _privateUser;
         private static string _privatePwd;
+        private static string _privateAuth;
 
         public static string TestUser { get; private set; }
         public static string TestPassword { get; private set; }
@@ -78,7 +80,7 @@ namespace MagikInfo.YouMailAPI.Tests
             }
         }
 
-        public static YouMailService PrivateService => new YouMailService(_privateUser, _privatePwd, null, UserAgent);
+        public static YouMailService PrivateService => new YouMailService(_privateUser, _privatePwd, _privateAuth, UserAgent);
 
         /// <summary>
         /// Provide a new service that is not the global one.

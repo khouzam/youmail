@@ -28,7 +28,7 @@ namespace MagikInfo.YouMailAPI
     public class YouMailGreetingStatuses
     {
         [XmlElement(YMST.c_status)]
-        [JsonProperty(YMST.c_status)]
+        [JsonProperty(YMST.c_statuses)]
         public List<YouMailGreetingStatus> Statuses;
     }
 

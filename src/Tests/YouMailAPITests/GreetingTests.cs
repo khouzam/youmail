@@ -50,7 +50,7 @@ namespace MagikInfo.YouMailAPI.Tests
             try
             {
                 var statuses = await service.GetGreetingStatusesAsync();
-                Assert.IsNotNull(statuses);
+                Assert.IsTrue(statuses.Statuses.Count > 0);
             }
             catch (YouMailException yme)
             {

@@ -31,6 +31,7 @@ namespace MagikInfo.YouMailAPI.Tests
         public async Task GetEcommerce()
         {
             var commerce = await service.GetECommerceStatusAsync();
+            Assert.IsTrue(commerce.Recommendations.Length > 0);
         }
     }
 }

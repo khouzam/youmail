@@ -69,8 +69,6 @@ namespace MagikInfo.YouMailAPI
         /// <summary>
         /// Get the current transcription status for the user
         /// </summary>
-        /// <param name="callback"></param>
-        /// <param name="asyncState"></param>
         /// <returns></returns>
         public async Task<YouMailTranscriptionStatus> GetTranscriptionStatusAsync()
         {
@@ -84,8 +82,9 @@ namespace MagikInfo.YouMailAPI
                     {
                         if (response != null)
                         {
-                            var s = response.GetResponseStream();
-                            returnValue = s.FromXml<YouMailTranscriptionStatus>();
+                            // TODO: This only supports XML
+                            //returnValue = DeserializeObject<YouMailTranscriptionStatus>(response.GetResponseStream());
+                            returnValue = response.GetResponseStream().FromXml<YouMailTranscriptionStatus>();
                         }
                     }
                 }
@@ -116,8 +115,7 @@ namespace MagikInfo.YouMailAPI
                     {
                         if (response != null)
                         {
-                            var s = response.GetResponseStream();
-                            returnValue = s.FromXml<TranscriptionSettings>();
+                            returnValue = DeserializeObject<TranscriptionSettings>(response.GetResponseStream(), YMST.c_transcriptionSettings);
                         }
                     }
                 }

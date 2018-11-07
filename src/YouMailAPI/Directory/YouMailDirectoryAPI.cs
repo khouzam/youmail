@@ -38,6 +38,7 @@ namespace MagikInfo.YouMailAPI
                     {
                         if (response != null)
                         {
+                            // TODO: Directory access is always in XML
                             var records = response.GetResponseStream().FromXml<YouMailPhoneRecords>();
                             if (records != null && records.PhoneRecords != null && records.PhoneRecords.Count > 0)
                             {

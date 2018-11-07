@@ -50,7 +50,7 @@ namespace MagikInfo.YouMailAPI
                     {
                         // YouMail returns an array of folders, limit it to the folder we're
                         // looking for
-                        var folders = response.GetResponseStream().FromXml<YouMailFolders>();
+                        var folders = DeserializeObject<YouMailFolders>(response.GetResponseStream());
                         if (folders != null && folders.Folders != null)
                         {
                             foreach (var folder in folders.Folders)
@@ -89,9 +89,8 @@ namespace MagikInfo.YouMailAPI
                     {
                         if (response != null)
                         {
-                            var stream = response.GetResponseStream();
+                            var folders = DeserializeObject<YouMailFolders>(response.GetResponseStream());
 
-                            var folders = stream.FromXml<YouMailFolders>();
                             if (folders != null && folders.Folders != null)
                             {
                                 var list = folders.Folders.ToList();

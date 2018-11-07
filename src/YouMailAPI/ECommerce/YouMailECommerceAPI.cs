@@ -41,8 +41,7 @@ namespace MagikInfo.YouMailAPI
                     {
                         if (response != null)
                         {
-                            var s = response.GetResponseStream();
-                            eCommerceResult = s.FromXml<YouMailECommerce>();
+                            eCommerceResult = DeserializeObject<YouMailECommerce>(response.GetResponseStream(), YMST.c_ecommerceStatus);
                             if (eCommerceResult != null &&
                                 eCommerceResult.TranscriptionPlan != null &&
                                 eCommerceResult.TranscriptionPlan.ProductStatus == ProductStatus.Active)

@@ -35,10 +35,6 @@ namespace MagikInfo.YouMailAPI
             Error = 5
         }
 
-        public YouMailContactsUploadStatus()
-        {
-        }
-
         [XmlElement(YMST.c_id)]
         [JsonProperty(YMST.c_id)]
         public long Id { get; set; }

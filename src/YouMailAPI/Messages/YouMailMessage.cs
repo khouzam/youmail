@@ -27,7 +27,7 @@ namespace MagikInfo.YouMailAPI
     public partial class YouMailMessages
     {
         [XmlElement(YMST.c_entry)]
-        [JsonProperty(YMST.c_entry)]
+        [JsonProperty(YMST.c_entries)]
         public YouMailMessage[] Messages;
     }
 

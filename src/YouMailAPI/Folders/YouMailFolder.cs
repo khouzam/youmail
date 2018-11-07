@@ -27,7 +27,7 @@ namespace MagikInfo.YouMailAPI
     public class YouMailFolders
     {
         [XmlElement(YMST.c_folder)]
-        [JsonProperty(YMST.c_folder)]
+        [JsonProperty(YMST.c_folders)]
         public YouMailFolder[] Folders;
     }
 

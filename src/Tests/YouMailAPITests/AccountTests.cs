@@ -48,7 +48,8 @@ namespace MagikInfo.YouMailAPI.Tests
             {
                 try
                 {
-                    await youmail.DeleteAccountAsync();
+                    var newService = new YouMailService(user, password, null, YouMailTestService.UserAgent);
+                    await newService.DeleteAccountAsync();
                 }
                 catch (YouMailException)
                 {
@@ -58,6 +59,7 @@ namespace MagikInfo.YouMailAPI.Tests
 
             await youmail.CreateAccountAsync(user, password, "Test", "Account", string.Format(_defaultEmail, user));
             {
+                // Reset the service in case we already had logged in with old credentials
                 var newService = new YouMailService(user, password, null, YouMailTestService.UserAgent);
                 await newService.DeleteAccountAsync();
 

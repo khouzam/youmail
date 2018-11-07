@@ -28,7 +28,7 @@ namespace MagikInfo.YouMailAPI
     {
         [XmlElement(YMST.c_greetings)]
         [JsonProperty(YMST.c_greetings)]
-        public YouMailGreetings Greetings { get; set; }
+        public YouMailGreeting[] Greetings { get; set; }
     }
 
     [XmlType(AnonymousType = true)]
@@ -36,7 +36,7 @@ namespace MagikInfo.YouMailAPI
     public partial class YouMailGreetings
     {
         [XmlElement(YMST.c_greeting)]
-        [JsonProperty(YMST.c_greeting)]
+        [JsonProperty(YMST.c_greetings)]
         public YouMailGreeting[] Greetings { get; set; }
     }
 
