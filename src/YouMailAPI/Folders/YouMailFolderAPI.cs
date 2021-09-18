@@ -19,7 +19,6 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using MagikInfo.XmlSerializerExtensions;
     using System;
     using System.Linq;
     using System.Net.Http;
@@ -123,10 +122,11 @@ namespace MagikInfo.YouMailAPI
         /// <param name="folderName"></param>
         /// <param name="folderDescription"></param>
         /// <returns></returns>
-        public async Task CreateFolderAsync(string folderName, string folderDescription)
+        public async Task<YouMailFolder> CreateFolderAsync(string folderName, string folderDescription)
         {
             try
             {
+                YouMailFolder newFolder = null;
                 AddPendingOp();
                 if (await LoginWaitAsync())
                 {
@@ -136,7 +136,60 @@ namespace MagikInfo.YouMailAPI
                         Description = folderDescription
                     };
 
-                    using (await YouMailApiAsync(YMST.c_createFolder, folder.ToXmlHttpContent(), HttpMethod.Post))
+                    using (var response = await YouMailApiAsync(YMST.c_createFolder, SerializeObjectToHttpContent(folder, "folder"), HttpMethod.Post))
+                    {
+                        if (response != null)
+                        {
+                            newFolder = DeserializeObject<YouMailFolder>(response.GetResponseStream(), YMST.c_folder);
+                        }
+                    }
+                }
+                return newFolder;
+            }
+            finally
+            {
+                RemovePendingOp();
+            }
+        }
+
+        /// <summary>
+        /// Delete a user folder
+        /// </summary>
+        /// <param name="folderId"></param>
+        /// <returns>A Task to wait on</returns>
+        public async Task DeleteFolderAsync(int folderId)
+        {
+            try
+            {
+                AddPendingOp();
+                if (await LoginWaitAsync())
+                {
+                    var URL = string.Format(YMST.c_deleteFolder, folderId);
+                    using (await YouMailApiAsync(URL, null, HttpMethod.Delete))
+                    {
+                    }
+                }
+            }
+            finally
+            {
+                RemovePendingOp();
+            }
+        }
+
+        /// <summary>
+        /// Delete a user folder
+        /// </summary>
+        /// <param name="folderId"></param>
+        /// <returns>A Task to wait on</returns>
+        public async Task MoveAllMessageFromFolderAsync(int sourceFolderId, int destFolderId)
+        {
+            try
+            {
+                AddPendingOp();
+                if (await LoginWaitAsync())
+                {
+                    var URL = string.Format(YMST.c_moveAllMessagesFromFolder, sourceFolderId, destFolderId);
+                    using (await YouMailApiAsync(URL, null, HttpMethod.Put))
                     {
                     }
                 }

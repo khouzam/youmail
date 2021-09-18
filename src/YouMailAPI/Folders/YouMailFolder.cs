@@ -51,6 +51,14 @@ namespace MagikInfo.YouMailAPI
         [JsonProperty(YMST.c_newEntryCount)]
         public int UnreadCount { get; set; }
 
+        [XmlElement(YMST.c_ackEntryCount)]
+        [JsonProperty(YMST.c_ackEntryCount)]
+        public int AckCount { get; set; }
+
+        [XmlElement(YMST.c_visibleEntryCount)]
+        [JsonProperty(YMST.c_visibleEntryCount)]
+        public int VisibleCount { get; set; }
+
         public bool IsValid()
         {
             return (!string.IsNullOrEmpty(Name) && Id >= 0);

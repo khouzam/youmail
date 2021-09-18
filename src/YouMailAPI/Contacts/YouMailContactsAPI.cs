@@ -317,7 +317,7 @@ namespace MagikInfo.YouMailAPI
                 AddPendingOp();
                 if (await LoginWaitAsync())
                 {
-                    using (var response = await YouMailApiAsync(string.Format(YMST.c_getOrCreateContact, number), contact.ToXmlHttpContent(), HttpMethod.Post))
+                    using (var response = await YouMailApiAsync(string.Format(YMST.c_getOrCreateContact, number), SerializeObjectToHttpContent(contact), HttpMethod.Post))
                     {
                         return response.GetResponseStream().FromXml<YouMailContact>();
                     }
@@ -371,7 +371,7 @@ namespace MagikInfo.YouMailAPI
                 if (await LoginWaitAsync())
                 {
 
-                    using (await YouMailApiAsync(string.Format(YMST.c_updateContact, id), contact.ToXmlHttpContent(), HttpMethod.Put))
+                    using (await YouMailApiAsync(string.Format(YMST.c_updateContact, id), SerializeObjectToHttpContent(contact), HttpMethod.Put))
                     {
                     }
                 }

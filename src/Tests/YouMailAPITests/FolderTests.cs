@@ -20,6 +20,7 @@
 namespace MagikInfo.YouMailAPI.Tests
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using System;
     using System.Threading.Tasks;
 
     [TestClass]
@@ -42,6 +43,30 @@ namespace MagikInfo.YouMailAPI.Tests
             }
 
             Assert.IsTrue(found);
+        }
+
+        [TestMethod]
+        public async Task CreateAndDeleteFolder()
+        {
+            var rand = new Random();
+
+            var random = rand.Next(1000);
+
+            var folderName = string.Format("TestFolder {0}", random);
+            var folderDescription = string.Format("Random Test Folder {0}", random);
+
+            var newFolder = await service.CreateFolderAsync(folderName, folderDescription);
+
+            Assert.IsNotNull(newFolder, "Folder did not return an object");
+            Assert.IsTrue(newFolder.Id != 0, "FolderId is 0, this should not happen.");
+
+            //await service.MoveAllMessageFromFolderAsync(newFolder.Id, service.Trash)
+
+            // Delete the folder first in case the name or description doesn't match
+            await service.DeleteFolderAsync(newFolder.Id);
+
+            Assert.IsTrue(newFolder.Name.CompareTo(folderName) == 0, $"Folder name doesn't match.{Environment.NewLine}Expected: {folderName}, got {newFolder.Name}");
+            Assert.IsTrue(newFolder.Description.CompareTo(folderDescription) == 0, $"Folder description doesn't match.{Environment.NewLine}Expected: {folderDescription}, got {newFolder.Description}");
         }
     }
 }

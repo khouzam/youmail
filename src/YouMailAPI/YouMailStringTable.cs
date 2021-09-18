@@ -88,7 +88,9 @@ namespace MagikInfo.YouMailAPI
         public const string c_data = "data";
         public const string c_dataUrl = "dataUrl";
         public const string c_name = "name";
+        public const string c_ackEntryCount = "ackEntryCount";
         public const string c_newEntryCount = "newEntryCount";
+        public const string c_visibleEntryCount = "visibleEntryCount";
         public const string c_folder = "folder";
         public const string c_folders = "folders";
         public const string c_entries = "entries";
@@ -370,6 +372,8 @@ namespace MagikInfo.YouMailAPI
         public const string c_createVoicemail = c_server + "/api/v4/messagebox/entry/create";
         public const string c_createFolder = c_server + "/api/v4/messagebox/folders";
         public const string c_getFolder = c_server + "/api/v4/messagebox/folders";
+        public const string c_moveAllMessagesFromFolder = c_server + "/api/v4/messagebox/{0}/moveentries/{1}";
+        public const string c_deleteFolder = c_server + "/api/v4/messagebox/folders/{0}";
 
         public const string c_createContact = c_server + "/api/v4/contacts";
         public const string c_updateContact = c_server + "/api/v4/contacts/{0}";
