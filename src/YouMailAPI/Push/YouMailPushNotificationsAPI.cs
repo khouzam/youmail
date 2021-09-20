@@ -19,7 +19,6 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using MagikInfo.XmlSerializerExtensions;
     using System.Net.Http;
     using System.Threading.Tasks;
 
@@ -39,11 +38,11 @@ namespace MagikInfo.YouMailAPI
                 AddPendingOp();
                 if (await LoginWaitAsync())
                 {
-                    using (var response = await YouMailApiAsync(YMST.c_devicePushRegistrations, pushRegistration.ToXmlHttpContent(), HttpMethod.Post))
+                    using (var response = await YouMailApiAsync(YMST.c_devicePushRegistrations, SerializeObjectToHttpContent(pushRegistration, YMST.c_pushRegistration), HttpMethod.Post))
                     {
                         if (response != null)
                         {
-                            registration = response.GetResponseStream().FromXml<YouMailPushRegistration>();
+                            registration = DeserializeObject<YouMailPushRegistration>(response.GetResponseStream(), YMST.c_pushRegistration);
                         }
                     }
                 }
@@ -72,8 +71,7 @@ namespace MagikInfo.YouMailAPI
                     {
                         if (response != null)
                         {
-                            var stream = response.GetResponseStream();
-                            var registrations = stream.FromXml<YouMailPushRegistrations>();
+                            var registrations = DeserializeObject<YouMailPushRegistrations>(response.GetResponseStream());
                             if (registrations != null)
                             {
                                 returnValue = registrations.PushRegistrations;

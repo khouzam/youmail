@@ -177,6 +177,7 @@ namespace MagikInfo.YouMailAPI
         public const string c_playType = "playType";
         public const string c_statusType = "statusType";
         public const string c_system = "system";
+        public const string c_messageTypes = "messageTypes";
 
 
         public const string c_createdsince = "createdsince";
@@ -353,6 +354,7 @@ namespace MagikInfo.YouMailAPI
         public const string c_getOrCreateContact = c_server + "/api/v4/contacts/getorcreate/{0}";
         public const string c_uploadContacts = c_server + "/api/v4/contacts/upload";
         public const string c_uploadContactsStatus = c_server + "/api/v4/contacts/upload/status";
+        public const string c_uploadContactsSummary = c_server + "/api/v4/contacts/upload/summary";
 
         public const string c_getGreetings = c_server + "/api/v4/greetings/query";
         public const string c_deleteGreeting = c_server + "/api/v4/greetings/{0}";

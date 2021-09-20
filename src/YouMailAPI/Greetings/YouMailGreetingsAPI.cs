@@ -19,7 +19,6 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using MagikInfo.XmlSerializerExtensions;
     using System;
     using System.Collections.Generic;
     using System.Net.Http;
@@ -101,7 +100,6 @@ namespace MagikInfo.YouMailAPI
                 AddPendingOp();
                 if (await LoginWaitAsync())
                 {
-                    HttpContent post = null;
                     var greeting = new YouMailGreeting
                     {
                         Name = name,
@@ -109,10 +107,7 @@ namespace MagikInfo.YouMailAPI
                         Data = Convert.ToBase64String(waveData)
                     };
 
-                    // Generate the POST request
-                    post = greeting.ToXmlHttpContent();
-
-                    using (await YouMailApiAsync(YMST.c_getGreetings, post, HttpMethod.Post))
+                    using (await YouMailApiAsync(YMST.c_getGreetings, SerializeObjectToHttpContent(greeting, YMST.c_greeting), HttpMethod.Post))
                     {
                     }
                 }

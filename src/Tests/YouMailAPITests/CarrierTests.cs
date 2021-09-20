@@ -19,7 +19,6 @@
 
 namespace MagikInfo.YouMailAPI.Tests
 {
-    using MagikInfo.XmlSerializerExtensions;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Collections.Generic;
@@ -85,7 +84,6 @@ namespace MagikInfo.YouMailAPI.Tests
                 {
                     await Service.SetCarrierInfoAsync(carrier.Id);
                     var info = await Service.GetForwardingInstructionsAsync();
-                    Debug.WriteLine(info.ToXml());
                 }
                 catch (YouMailException)
                 {

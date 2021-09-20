@@ -19,10 +19,9 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using MagikInfo.Synchronization;
-    using MagikInfo.XmlSerializerExtensions;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
+    using Synchronization;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -33,6 +32,7 @@ namespace MagikInfo.YouMailAPI
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
+    using XmlSerializerExtensions;
 
 #if WINDOWS_UWP
     using Windows.Networking.Connectivity;
@@ -144,16 +144,18 @@ namespace MagikInfo.YouMailAPI
             // Set the response format for the requests
             if (_responseFormat == ResponseFormat.JSON)
             {
-                _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+                _responseFormatString = "application/json";
             }
             else if (_responseFormat == ResponseFormat.XML)
             {
-                _httpClient.DefaultRequestHeaders.Add("Accept", "application/xml");
+                _responseFormatString = "application/xml";
             }
             else
             {
                 throw new InvalidOperationException(string.Format("Unsupported ResponseFormat: {0}, is not supported.", _responseFormat.ToString()));
             }
+
+            _httpClient.DefaultRequestHeaders.Add("Accept", ResponseFormatString);
 
             if (s_gzipSupported)
             {
@@ -712,17 +714,8 @@ namespace MagikInfo.YouMailAPI
                         {
                             if (!string.IsNullOrEmpty(rootElement))
                             {
-                                if (rootElement != null)
-                                {
-                                    var root = (JObject)serializer.Deserialize(jsonTextReader, typeof(JObject));
-                                    returnObject = root[rootElement].ToObject<T>();
-
-                                }
-                                else
-                                {
-                                    var root = (JObject)serializer.Deserialize(jsonTextReader, typeof(JObject));
-                                    returnObject = root[rootElement].ToObject<T>();
-                                }
+                                var root = (JObject)serializer.Deserialize(jsonTextReader, typeof(JObject));
+                                returnObject = root[rootElement].ToObject<T>();
                             }
                             else
                             {
@@ -819,22 +812,7 @@ namespace MagikInfo.YouMailAPI
         private HttpContent SerializeObjectToHttpContent<T>(T obj, string rootObject = null) where T : class
         {
             var serializedString = SerializeObject(obj, rootObject);
-            HttpContent serializedObject;
-            switch (_responseFormat)
-            {
-                case ResponseFormat.JSON:
-                    serializedObject = new StringContent(serializedString, Encoding.UTF8, "application/json");
-                    break;
-
-                case ResponseFormat.XML:
-                    serializedObject = new StringContent(serializedString, Encoding.UTF8, "text/xml");
-                    break;
-
-                default:
-                    throw new InvalidOperationException("Invalid conversion format specified");
-            }
-
-            return serializedObject;
+            return new StringContent(serializedString, Encoding.UTF8, ResponseFormatString);
         }
 
         /// <summary>
@@ -860,7 +838,13 @@ namespace MagikInfo.YouMailAPI
         }
 #endif
 
+        public string ResponseFormatString
+        {
+            get { return _responseFormatString; }
+        }
+
         private readonly ResponseFormat _responseFormat;
+        private readonly string _responseFormatString;
         private readonly string _username;
         private readonly string _password;
         private readonly string _userAgent;

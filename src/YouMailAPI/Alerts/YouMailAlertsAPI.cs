@@ -19,7 +19,6 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using MagikInfo.XmlSerializerExtensions;
     using System.Net.Http;
     using System.Threading.Tasks;
 
@@ -41,7 +40,7 @@ namespace MagikInfo.YouMailAPI
                     {
                         if (response != null)
                         {
-                            var ymAlerts = response.GetResponseStream().FromXml<YouMailAlerts>();
+                            var ymAlerts = DeserializeObject<YouMailAlerts>(response.GetResponseStream());
                             returnValue = ymAlerts;
                         }
                     }

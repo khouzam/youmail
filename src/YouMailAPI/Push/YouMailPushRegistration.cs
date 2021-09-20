@@ -29,7 +29,7 @@ namespace MagikInfo.YouMailAPI
     {
         /// <remarks/>
         [XmlElement(YMST.c_pushRegistration)]
-        [JsonProperty(YMST.c_pushRegistration)]
+        [JsonProperty(YMST.c_pushRegistrations)]
         public YouMailPushRegistration[] PushRegistrations { get; set; }
     }
 
@@ -101,5 +101,9 @@ namespace MagikInfo.YouMailAPI
         [XmlElement(YMST.c_version)]
         [JsonProperty(YMST.c_version)]
         public byte Version { get; set; }
+
+        [XmlElement(YMST.c_messageTypes)]
+        [JsonProperty(YMST.c_messageTypes)]
+        public string MessageTypes { get; set; }
     }
 }

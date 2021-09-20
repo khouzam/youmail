@@ -19,8 +19,6 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using MagikInfo.XmlSerializerExtensions;
-    using System.Collections.Generic;
     using System.Net.Http;
     using System.Threading.Tasks;
 
@@ -101,7 +99,7 @@ namespace MagikInfo.YouMailAPI
                         AccountTemplate = "Magikinfo"
                     };
 
-                    using (await YouMailApiAsync(YMST.c_createAccountUrl, account.ToXmlHttpContent(), HttpMethod.Post))
+                    using (await YouMailApiAsync(YMST.c_createAccountUrl, SerializeObjectToHttpContent(account), HttpMethod.Post))
                     {
                     }
                 }
@@ -182,7 +180,7 @@ namespace MagikInfo.YouMailAPI
                 if (await LoginWaitAsync())
                 {
                     string uri = string.Format(YMST.c_accountDetailsUrl, _username);
-                    using (await YouMailApiAsync(uri, userInfo.ToXmlHttpContent(), HttpMethod.Put))
+                    using (await YouMailApiAsync(uri, SerializeObjectToHttpContent(userInfo), HttpMethod.Put))
                     {
                     }
                 }

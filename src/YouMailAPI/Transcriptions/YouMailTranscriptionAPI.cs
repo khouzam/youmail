@@ -19,11 +19,8 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using MagikInfo.XmlSerializerExtensions;
-    using System;
-    using System.Collections.Generic;
+    using global::MagikInfo.XmlSerializerExtensions;
     using System.Net.Http;
-    using System.Text;
     using System.Threading.Tasks;
 
     public partial class YouMailService
@@ -51,8 +48,7 @@ namespace MagikInfo.YouMailAPI
                     {
                         if (response != null)
                         {
-                            var stream = response.GetResponseStream();
-                            var transcriptionResponse = stream.FromXml<YouMailTranscriptionRequestResponse>();
+                            var transcriptionResponse = DeserializeObject<YouMailTranscriptionRequestResponse>(response.GetResponseStream());
                             retVal = transcriptionResponse.TranscriptionState;
                         }
                     }

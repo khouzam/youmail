@@ -24,7 +24,7 @@ namespace MagikInfo.YouMailAPI.Tests
     using System.Net;
     using System.Threading.Tasks;
 
-    [TestClass]
+    [TestClass, Ignore]
     public class AccountTests
     {
         private static string _defaultEmail;

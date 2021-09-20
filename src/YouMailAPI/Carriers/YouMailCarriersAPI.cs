@@ -19,7 +19,6 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using MagikInfo.XmlSerializerExtensions;
     using System.Net.Http;
     using System.Threading.Tasks;
 
@@ -158,7 +157,7 @@ namespace MagikInfo.YouMailAPI
                     {
                         if (response != null)
                         {
-                            returnValue = response.GetResponseStream().FromXml<YouMailAccessPoint>();
+                            returnValue = DeserializeObject<YouMailAccessPoint>(response.GetResponseStream());
                         }
                     }
                 }
@@ -187,8 +186,7 @@ namespace MagikInfo.YouMailAPI
                     {
                         if (response != null)
                         {
-                            var stream = response.GetResponseStream();
-                            retVal = stream.FromXml<YouMailCallVerifyStatus>();
+                            retVal = DeserializeObject<YouMailCallVerifyStatus>(response.GetResponseStream());
                         }
                     }
                 }

@@ -19,7 +19,6 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using MagikInfo.XmlSerializerExtensions;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -74,7 +73,11 @@ namespace MagikInfo.YouMailAPI
                             {
                                 using (GZipStream gzStream = new GZipStream(stream, CompressionMode.Compress, true))
                                 {
-                                    currentContacts.ToXml(gzStream);
+                                    using (StreamWriter writer = new StreamWriter(gzStream))
+                                    {
+                                        var serializedContacts = SerializeObject(currentContacts.Contacts);
+                                        writer.Write(serializedContacts);
+                                    }
                                 }
 
                                 // Seek back to the origin of the stream to stick it into the http message
@@ -82,10 +85,10 @@ namespace MagikInfo.YouMailAPI
 
                                 using (var compressedContacts = new ByteArrayContent(stream.ToArray()))
                                 {
-                                    compressedContacts.Headers.ContentType = new MediaTypeHeaderValue("application/gzip");
+                                    compressedContacts.Headers.ContentType = new MediaTypeHeaderValue(ResponseFormatString);
                                     compressedContacts.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
                                     {
-                                        FileName = "contacts.xml.gz",
+                                        FileName = "contacts.gz",
                                         Name = "datafile"
                                     };
                                     content.Add(compressedContacts);
@@ -200,8 +203,7 @@ namespace MagikInfo.YouMailAPI
                 {
                     if (response != null)
                     {
-                        var stream = response.GetResponseStream();
-                        var contactResponse = DeserializeObject<YouMailContactsResponse>(stream);
+                        var contactResponse = DeserializeObject<YouMailContactsResponse>(response.GetResponseStream());
                         if (contactResponse != null)
                         {
                             count = contactResponse.Contacts.Length;
@@ -319,7 +321,7 @@ namespace MagikInfo.YouMailAPI
                 {
                     using (var response = await YouMailApiAsync(string.Format(YMST.c_getOrCreateContact, number), SerializeObjectToHttpContent(contact), HttpMethod.Post))
                     {
-                        return response.GetResponseStream().FromXml<YouMailContact>();
+                        return DeserializeObject<YouMailContact>(response.GetResponseStream());
                     }
                 }
             }
@@ -344,9 +346,9 @@ namespace MagikInfo.YouMailAPI
                 AddPendingOp();
                 if (await LoginWaitAsync())
                 {
-                    using (var response = await YouMailApiAsync(YMST.c_createContact, contact.ToXmlHttpContent(), HttpMethod.Post))
+                    using (var response = await YouMailApiAsync(YMST.c_createContact, SerializeObjectToHttpContent(contact), HttpMethod.Post))
                     {
-                        YouMailContact returned = response.GetResponseStream().FromXml<YouMailContact>();
+                        YouMailContact returned = DeserializeObject<YouMailContact>(response.GetResponseStream());
                         id = returned.Id;
                     }
                 }

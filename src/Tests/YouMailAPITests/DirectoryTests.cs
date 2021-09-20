@@ -27,7 +27,7 @@ namespace MagikInfo.YouMailAPI.Tests
     {
         YouMailService service = YouMailTestService.Service;
 
-        [TestMethod]
+        [TestMethod, Ignore]
         public async Task TestDirectory()
         {
             var phoneRecord = await service.LookupPhoneNumberAsync("0002320012");

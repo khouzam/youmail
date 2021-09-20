@@ -46,7 +46,7 @@ namespace MagikInfo.YouMailAPI.Tests
             }
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         public async Task Private_Login()
         {
             try
