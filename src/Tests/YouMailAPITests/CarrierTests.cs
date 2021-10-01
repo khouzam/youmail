@@ -85,9 +85,10 @@ namespace MagikInfo.YouMailAPI.Tests
                     await Service.SetCarrierInfoAsync(carrier.Id);
                     var info = await Service.GetForwardingInstructionsAsync();
                 }
-                catch (YouMailException)
+                catch (YouMailException yme)
                 {
                     Debug.WriteLine($"Failed to set the carrier {carrier.Name}, Supported: {carrier.SupportedFlag}");
+                    Debug.WriteLine($"Failed with {yme.Message}");
                 }
             }
         }

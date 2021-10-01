@@ -469,19 +469,26 @@ namespace MagikInfo.YouMailAPI
                         }
                     }
                     while (redirect);
-                    response.EnsureYouMailResponse();
+                    EnsureYouMailResponse(response);
                 }
                 catch (WebException we)
                 {
-                    YouMailException yme = we.ConvertException();
-                    if (yme.StatusCode == HttpStatusCode.Forbidden && auth)
+                    YouMailException yme = ConvertException(we);
+                    if (yme != null)
                     {
-                        weRetry = yme;
-                        fRetryAuthentication = true;
+                        if (yme.StatusCode == HttpStatusCode.Forbidden && auth)
+                        {
+                            weRetry = yme;
+                            fRetryAuthentication = true;
+                        }
+                        else
+                        {
+                            throw yme;
+                        }
                     }
                     else
                     {
-                        throw yme;
+                        throw;
                     }
                 }
                 catch (YouMailException re)
@@ -525,12 +532,17 @@ namespace MagikInfo.YouMailAPI
                             }
                         }
                         while (redirect);
-                        response.EnsureYouMailResponse();
+                        EnsureYouMailResponse(response);
                     }
                     catch (WebException we)
                     {
                         // Convert the WebException to a YouMailException
-                        throw we.ConvertException();
+                        var yme = ConvertException(we);
+                        if (yme != null)
+                        {
+                            throw yme;
+                        }
+                        throw we;
                     }
                 }
             }
@@ -809,10 +821,115 @@ namespace MagikInfo.YouMailAPI
             return serializedObject;
         }
 
+        /// <summary>
+        /// Take an object and serialize it as an HttpContentType
+        /// </summary>
+        /// <typeparam name="T">The type of the object that we are serializing</typeparam>
+        /// <param name="obj">The object that we are serializing</param>
+        /// <param name="rootObject">For Json, a root node name that is inserted</param>
+        /// <returns>An HttpContent object</returns>
         private HttpContent SerializeObjectToHttpContent<T>(T obj, string rootObject = null) where T : class
         {
             var serializedString = SerializeObject(obj, rootObject);
             return new StringContent(serializedString, Encoding.UTF8, ResponseFormatString);
+        }
+
+        /// <summary>
+        /// Throws an exception if the API call failed
+        /// </summary>
+        /// <param name="responseMessage">The ResponseMessage returned from the API</param>
+        private void EnsureYouMailResponse(HttpResponseMessage responseMessage)
+        {
+            if (!responseMessage.IsSuccessStatusCode)
+            {
+                string message = null;
+                YouMailAPIError apiError = null;
+                var messageStream = responseMessage.GetResponseStream();
+                if (messageStream != null)
+                {
+                    try
+                    {
+                        apiError = DeserializeObject<YouMailAPIError>(messageStream);
+                        message = apiError.GetErrorMessage();
+                    }
+                    catch
+                    {
+                    }
+                }
+                throw new YouMailException(message, apiError, responseMessage.StatusCode, null);
+            }
+        }
+
+        /// <summary>
+        /// Get the error message from the YouMail response stream
+        /// </summary>
+        /// <param name="s">The ResponseStream</param>
+        /// <returns>A string with the error message</returns>
+        private string GetYouMailMessageFromStream(Stream s)
+        {
+            string message = null;
+            bool fFoundMessage = false;
+            try
+            {
+                var apiError = DeserializeObjectDebug<YouMailAPIError>(s);
+                if (apiError != null)
+                {
+                    foreach (var error in apiError.Errors)
+                    {
+                        if (!string.IsNullOrEmpty(error.LongMessage))
+                        {
+                            message = error.LongMessage;
+                            fFoundMessage = true;
+                            break;
+                        }
+                    }
+
+                    if (!fFoundMessage)
+                    {
+                        foreach (var error in apiError.Errors)
+                        {
+                            if (!string.IsNullOrEmpty(error.ShortMessage))
+                            {
+                                message = error.ShortMessage;
+                                fFoundMessage = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+            return message;
+        }
+
+        /// <summary>
+        /// Convert a WebException into a YouMailException
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        private YouMailException ConvertException(WebException e)
+        {
+            if (e is WebException)
+            {
+                WebException we = e as WebException;
+                if (we.Response is HttpWebResponse)
+                {
+                    var webResponse = we.Response as HttpWebResponse;
+                    var s = webResponse.GetResponseStream();
+                    YouMailAPIError error = null;
+                    try
+                    {
+                        error = DeserializeObject<YouMailAPIError>(s);
+                        return new YouMailException(error.GetErrorMessage(), error, webResponse.StatusCode, e);
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+            return null;
         }
 
         /// <summary>

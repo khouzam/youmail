@@ -324,6 +324,10 @@ namespace MagikInfo.YouMailAPI
         public const string c_createTime = "createTime";
         public const string c_includeList = "includeList";
         public const string c_trash = "trash";
+        public const string c_error = "error";
+        public const string c_errors = "errors";
+        public const string c_errorCode = "errorCode";
+
 
         public const string c_greetingImageUrl = "http://www.ymstat.com/dyn/community/img/{0}.png";
 

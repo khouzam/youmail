@@ -44,7 +44,7 @@ namespace MagikInfo.YouMailAPI.Tests
             }
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         public async Task UploadContacts()
         {
             try

@@ -74,7 +74,7 @@ namespace MagikInfo.YouMailAPI
                             var registrations = DeserializeObject<YouMailPushRegistrations>(response.GetResponseStream());
                             if (registrations != null)
                             {
-                                returnValue = registrations.PushRegistrations;
+                                returnValue = registrations.PushRegistrations ?? new YouMailPushRegistration[0];
                             }
                         }
                     }

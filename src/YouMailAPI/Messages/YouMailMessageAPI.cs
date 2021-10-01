@@ -536,18 +536,27 @@ namespace MagikInfo.YouMailAPI
                         if (IsConnected)
                         {
                             response = await GetMessageDownloadResponseAsync(URL);
-                            response.EnsureYouMailResponse();
+                            EnsureYouMailResponse(response);
                         }
                     }
                     catch (WebException we)
                     {
-                        weRetry = we.ConvertException();
-                        if (weRetry.StatusCode == HttpStatusCode.Forbidden)
+                        weRetry = ConvertException(we);
+                        if (weRetry != null)
                         {
-                            fRetry = true;
+                            if (weRetry.StatusCode == HttpStatusCode.Forbidden)
+                            {
+                                fRetry = true;
+                            }
+                            else
+                            {
+                                throw weRetry;
+                            }
                         }
                         else
+                        {
                             throw;
+                        }
                     }
                     catch (YouMailException re)
                     {
@@ -557,7 +566,9 @@ namespace MagikInfo.YouMailAPI
                             fRetry = true;
                         }
                         else
+                        {
                             throw;
+                        }
                     }
                     if (fRetry)
                     {

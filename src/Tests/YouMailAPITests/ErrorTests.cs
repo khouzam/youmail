@@ -17,51 +17,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /*************************************************************************************************/
 
-namespace MagikInfo.YouMailAPI
+namespace MagikInfo.YouMailAPI.Tests
 {
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Net;
+    using System.Threading.Tasks;
 
-    public class YouMailException : Exception
+    [TestClass]
+    public class ErrorTests
     {
-        public HttpStatusCode StatusCode { get; private set; }
-
-        public bool HasMessage { get; private set; }
-
-        public YouMailException(string message, HttpStatusCode statusCode, Exception innerException)
-            : base(message, innerException)
+        [TestMethod]
+        public async Task GetYouMailError()
         {
-            HasMessage = message != null;
-            StatusCode = statusCode;
-        }
+            var service = YouMailTestService.Service;
 
-        public YouMailException(string message, WebException we) :
-            base(message, we)
-        {
-            HasMessage = message != null;
-            using (var response = (we.Response) as HttpWebResponse)
+            try
             {
-                StatusCode = response.StatusCode;
+                // Issue a call that will fail
+                await service.CreateFolderAsync(string.Empty, string.Empty);
             }
-        }
-
-        public override string Message
-        {
-            get
+            catch (YouMailException yme)
             {
-                if (HasMessage)
-                {
-                    return base.Message;
-                }
-                else if (InnerException != null)
-                {
-                    return InnerException.Message;
-                }
-                else
-                {
-                    return base.Message;
-                }
+                Assert.IsNotNull(yme.Error, "Did not get a YouMailError");
+                Assert.IsNotNull(yme.Error.Errors, "Did not get an internal set of errors");
+                Assert.IsNotNull(yme.Error.Errors[0].ErrorCode, "Did not get an ErrorCode");
+                Assert.IsNotNull(yme.Error.Errors[0].ShortMessage, "Did not get a ShortMessage");
+                Assert.IsNotNull(yme.Error.Errors[0].LongMessage, "Did not get a LongMessage");
+                return;
             }
+            Assert.Fail("YouMailException was not thrown");
         }
     }
 }
