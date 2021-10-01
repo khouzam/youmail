@@ -394,7 +394,7 @@ namespace MagikInfo.YouMailAPI
         public const string c_confirmTextMessages = c_server + "/api/v4/accounts/confirmation/{0}";
         public const string c_confirmTextMessagesValidation = c_server + "/api/v4/accounts/confirmation/{0}/{1}";
 
-        public const string c_directoryLookup = "www.youmail.com/phone-lookup/number/{0}?xml";
+        public const string c_directoryLookup = "directory.youmail.com/directory/phone/{0}?xml";
 
         public const string c_spamSettings = c_server + "/api/v4/messagebox/settings/spam";
         public const string c_spamSettingsSet = c_server + "/api/v4/messagebox/settings/spam/{0}";

@@ -27,11 +27,11 @@ namespace MagikInfo.YouMailAPI.Tests
     {
         YouMailService service = YouMailTestService.Service;
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public async Task TestDirectory()
         {
             var phoneRecord = await service.LookupPhoneNumberAsync("0002320012");
-            Assert.IsTrue(phoneRecord.DisplayName.Equals("ISeeVM Support"));
+            Assert.IsFalse(string.IsNullOrEmpty(phoneRecord.DisplayName));
         }
     }
 }
