@@ -26,16 +26,16 @@ namespace MagikInfo.YouMailAPI
     {
         public HttpStatusCode StatusCode { get; private set; }
 
-        public YouMailAPIError Error { get; private set; }
+        public YouMailResponse Response { get; private set; }
 
         public YouMailException(
             string message,
-            YouMailAPIError error,
+            YouMailResponse response,
             HttpStatusCode statusCode,
             Exception innerException)
             : base(message, innerException)
         {
-            Error = error;
+            Response = response;
             StatusCode = statusCode;
         }
 
@@ -44,9 +44,9 @@ namespace MagikInfo.YouMailAPI
             get
             {
                 string message = null;
-                if (Error != null)
+                if (Response != null)
                 {
-                    message = Error.GetErrorMessage();
+                    message = Response.GetErrorMessage();
                 }
                 if (string.IsNullOrEmpty(message))
                 {

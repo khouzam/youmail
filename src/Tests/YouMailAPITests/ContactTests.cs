@@ -44,6 +44,24 @@ namespace MagikInfo.YouMailAPI.Tests
             }
         }
 
+        [TestMethod]
+        public async Task CreateAndDeleteContact()
+        {
+            var rand = new Random();
+            var randValue = rand.Next(100);
+            var contact = new YouMailContact
+            {
+                FirstName = "Test",
+                LastName = $"Contact {randValue}",
+                MobileNumber = "(123) 456-7890"
+            };
+
+            var id = await service.CreateContactAsync(contact);
+            Assert.IsTrue(id != 0, "Contact id returned was 0, contact wasn't properly created");
+
+            await service.DeleteContactAsync(id);
+        }
+
         [TestMethod, Ignore]
         public async Task UploadContacts()
         {

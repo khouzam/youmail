@@ -1,5 +1,5 @@
 /*************************************************************************************************
- * Copyright (c) 2018 Gilles Khouzam
+ * Copyright (c) 2021 Gilles Khouzam
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software withou
@@ -34,49 +34,5 @@ namespace MagikInfo.YouMailAPI
         [XmlElement(YMST.c_value)]
         [JsonProperty(YMST.c_value)]
         public string Value { get; set; }
-    }
-
-    [XmlType(AnonymousType = true)]
-    [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_response)]
-    public class YouMailCustomResponse : YouMailResponse
-    {
-        [XmlArray(YMST.c_customs)]
-        [XmlArrayItem(YMST.c_custom)]
-        [JsonProperty(YMST.c_customs)]
-        public YouMailCustom[] Customs
-        {
-            set
-            {
-                Properties = new Dictionary<string, string>();
-                foreach (var item in value)
-                {
-                    Properties.Add(item.Key, item.Value);
-                }
-            }
-            get
-            {
-                List<YouMailCustom> customs = null;
-                if (Properties != null)
-                {
-                    customs = new List<YouMailCustom>();
-                    foreach (var item in Properties)
-                    {
-                        customs.Add(new YouMailCustom
-                        {
-                            Key = item.Key,
-                            Value = item.Value
-                        });
-                    }
-                }
-                return customs?.ToArray();
-            }
-        }
-
-        /// <summary>
-        /// A Dictionary representation of the custom properties
-        /// </summary>
-        [XmlIgnore]
-        [JsonIgnore]
-        public IDictionary<string, string> Properties { get; set; }
     }
 }

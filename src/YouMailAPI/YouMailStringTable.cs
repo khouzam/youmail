@@ -246,6 +246,7 @@ namespace MagikInfo.YouMailAPI
         public const string c_state = "state";
         public const string c_country = "country";
         public const string c_contact = "contact";
+        public const string c_contactId = "contactId";
         public const string c_defaultImage = "defaultImage";
         public const string c_baseImage = "baseImage";
         public const string c_contacts = "contacts";

@@ -19,34 +19,22 @@
 
 namespace MagikInfo.YouMailAPI.Tests
 {
+    using MagikInfo.YouMailAPI;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System;
     using System.Net;
     using System.Threading.Tasks;
 
     [TestClass]
-    public class ErrorTests
+    public class AlertsTests
     {
         [TestMethod]
-        public async Task GetYouMailError()
+        public async Task GetAlertsTest()
         {
             var service = YouMailTestService.Service;
-
-            try
-            {
-                // Issue a call that will fail
-                await service.CreateFolderAsync(string.Empty, string.Empty);
-            }
-            catch (YouMailException yme)
-            {
-                Assert.IsNotNull(yme.Response, "Did not get a YouMailError");
-                Assert.IsNotNull(yme.Response.Errors, "Did not get an internal set of errors");
-                Assert.IsNotNull(yme.Response.Errors[0].ErrorCode, "Did not get an ErrorCode");
-                Assert.IsNotNull(yme.Response.Errors[0].ShortMessage, "Did not get a ShortMessage");
-                Assert.IsNotNull(yme.Response.Errors[0].LongMessage, "Did not get a LongMessage");
-                return;
-            }
-            Assert.Fail("YouMailException was not thrown");
+            var alerts = await service.GetAlertSettingsAsync();
+            Assert.IsNotNull(alerts, "Did not get an AlertsSettings back");
+            Assert.IsTrue(alerts.EmailFormat != 0, $"Email Format is invalid with a value of {alerts.EmailFormat}");
+            Assert.IsTrue(alerts.PushConditions != 0, $"PushConditions are unexpected with a value of {alerts.PushConditions}");
         }
     }
 }

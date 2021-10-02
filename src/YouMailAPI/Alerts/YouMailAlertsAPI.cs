@@ -40,8 +40,7 @@ namespace MagikInfo.YouMailAPI
                     {
                         if (response != null)
                         {
-                            var ymAlerts = DeserializeObject<YouMailAlerts>(response.GetResponseStream());
-                            returnValue = ymAlerts;
+                            returnValue = DeserializeObject<YouMailAlerts>(response.GetResponseStream(), YMST.c_alertSettings);
                         }
                     }
                 }

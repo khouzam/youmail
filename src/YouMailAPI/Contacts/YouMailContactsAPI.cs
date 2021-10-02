@@ -346,10 +346,10 @@ namespace MagikInfo.YouMailAPI
                 AddPendingOp();
                 if (await LoginWaitAsync())
                 {
-                    using (var response = await YouMailApiAsync(YMST.c_createContact, SerializeObjectToHttpContent(contact), HttpMethod.Post))
+                    using (var response = await YouMailApiAsync(YMST.c_createContact, SerializeObjectToHttpContent(contact, YMST.c_contact), HttpMethod.Post))
                     {
-                        YouMailContact returned = DeserializeObject<YouMailContact>(response.GetResponseStream());
-                        id = returned.Id;
+                        var ymResponse = DeserializeObject<YouMailResponse>(response.GetResponseStream());
+                        id = long.Parse(ymResponse.Properties[YMST.c_contactId]);
                     }
                 }
             }

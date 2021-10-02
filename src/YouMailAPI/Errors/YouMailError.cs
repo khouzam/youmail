@@ -38,37 +38,4 @@ namespace MagikInfo.YouMailAPI
         [JsonProperty(YMST.c_shortMessage)]
         public string ShortMessage;
     }
-
-    /// <summary>
-    /// A class representing an error returned by a YouMail API
-    /// </summary>
-    [XmlType(AnonymousType = true)]
-    [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_response)]
-    public class YouMailAPIError
-    {
-        [XmlElement(YMST.c_statusCode)]
-        [JsonProperty(YMST.c_statusCode)]
-        public int StatusCode;
-
-        [XmlArray(YMST.c_errors)]
-        [XmlArrayItem(YMST.c_error)]
-        [JsonProperty(YMST.c_errors)]
-        public YouMailError[] Errors;
-
-        public string GetErrorMessage()
-        {
-            foreach (var error in Errors)
-            {
-                if (!string.IsNullOrEmpty(error.LongMessage))
-                {
-                    return error.LongMessage;
-                }
-                else if (!string.IsNullOrEmpty(error.ShortMessage))
-                {
-                    return error.ShortMessage;
-                }
-            }
-            return null;
-        }
-    }
 }

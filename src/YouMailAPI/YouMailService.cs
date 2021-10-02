@@ -843,13 +843,13 @@ namespace MagikInfo.YouMailAPI
             if (!responseMessage.IsSuccessStatusCode)
             {
                 string message = null;
-                YouMailAPIError apiError = null;
+                YouMailResponse apiError = null;
                 var messageStream = responseMessage.GetResponseStream();
                 if (messageStream != null)
                 {
                     try
                     {
-                        apiError = DeserializeObject<YouMailAPIError>(messageStream);
+                        apiError = DeserializeObject<YouMailResponse>(messageStream);
                         message = apiError.GetErrorMessage();
                     }
                     catch
@@ -871,7 +871,7 @@ namespace MagikInfo.YouMailAPI
             bool fFoundMessage = false;
             try
             {
-                var apiError = DeserializeObjectDebug<YouMailAPIError>(s);
+                var apiError = DeserializeObjectDebug<YouMailResponse>(s);
                 if (apiError != null)
                 {
                     foreach (var error in apiError.Errors)
@@ -918,10 +918,10 @@ namespace MagikInfo.YouMailAPI
                 {
                     var webResponse = we.Response as HttpWebResponse;
                     var s = webResponse.GetResponseStream();
-                    YouMailAPIError error = null;
+                    YouMailResponse error = null;
                     try
                     {
-                        error = DeserializeObject<YouMailAPIError>(s);
+                        error = DeserializeObject<YouMailResponse>(s);
                         return new YouMailException(error.GetErrorMessage(), error, webResponse.StatusCode, e);
                     }
                     catch
