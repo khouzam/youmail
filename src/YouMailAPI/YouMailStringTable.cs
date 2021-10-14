@@ -315,7 +315,7 @@ namespace MagikInfo.YouMailAPI
         public const string c_accountExists = "AccountExists";
         public const string c_validationError = "ValidationError";
         public const string c_virtualNumber = "virtualNumber";
-        public const string c_virtualNumbers = "virtualNumbers";
+        public const string c_virtualNumberSettingsList = "virtualNumberSettingsList";
         public const string c_nickname = "nickname";
         public const string c_nickName = "nickName";
         public const string c_additionalPhoneNumbers = "additionalPhoneNumbers";
@@ -405,7 +405,7 @@ namespace MagikInfo.YouMailAPI
         public const string c_spamSettings = c_server + "/api/v4/messagebox/settings/spam";
         public const string c_spamSettingsSet = c_server + "/api/v4/messagebox/settings/spam/{0}";
 
-        public const string c_extraLines = c_server + "/api/v4/virtualnumbers";
+        public const string c_virtualNumbersSettings = c_server + "/api/v4/virtualnumbers/settings";
         public const string c_getVirtualNumber = c_server + "/api/v4/virtualnumbers/phone/{0}"; // {phonenumber}
 
         #endregion API URLs

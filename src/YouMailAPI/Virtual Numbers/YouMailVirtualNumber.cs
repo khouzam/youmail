@@ -23,7 +23,7 @@ namespace MagikInfo.YouMailAPI
     using System.Xml.Serialization;
 
     [XmlType(AnonymousType = true)]
-    [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_virtualNumbers)]
+    [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_virtualNumberSettingsList)]
     public partial class YouMailVirtualNumbers
     {
         [XmlElement(YMST.c_virtualNumber)]
@@ -35,9 +35,9 @@ namespace MagikInfo.YouMailAPI
     [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_virtualNumber)]
     public class YouMailVirtualNumber
     {
-        [XmlElement(YMST.c_virtualNumber)]
-        [JsonProperty(YMST.c_virtualNumber)]
-        public string VirtualNumber { get; set; }
+        [XmlElement(YMST.c_phoneNumber)]
+        [JsonProperty(YMST.c_phoneNumber)]
+        public string PhoneNumber { get; set; }
 
         [XmlElement(YMST.c_nickname)]
         [JsonProperty(YMST.c_nickname)]

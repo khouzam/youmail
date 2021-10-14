@@ -22,10 +22,8 @@ namespace MagikInfo.YouMailAPI
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
-    using XmlSerializerExtensions;
 
     /// <summary>
     /// A Class to access the YouMail Service APIs
@@ -203,32 +201,6 @@ namespace MagikInfo.YouMailAPI
                     }
                 }
                 return times;
-            }
-            finally
-            {
-                RemovePendingOp();
-            }
-        }
-
-        /// <summary>
-        /// Get the list of virtual numbers for the user
-        /// </summary>
-        /// <returns></returns>
-        public async Task<YouMailVirtualNumber[]> GetVirtualNumbersAsync()
-        {
-            YouMailVirtualNumber[] returnValue = null;
-            try
-            {
-                AddPendingOp();
-                if (await LoginWaitAsync())
-                {
-                    using (var response = await YouMailApiAsync(YMST.c_extraLines, null, HttpMethod.Get))
-                    {
-                        var numbers = response.GetResponseStream().FromXml<YouMailVirtualNumbers>();
-                        returnValue = numbers.VirtualNumbers.ToArray();
-                    }
-                }
-                return returnValue;
             }
             finally
             {

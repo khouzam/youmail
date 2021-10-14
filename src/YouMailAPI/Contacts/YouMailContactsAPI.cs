@@ -75,7 +75,7 @@ namespace MagikInfo.YouMailAPI
                                 {
                                     using (StreamWriter writer = new StreamWriter(gzStream))
                                     {
-                                        var serializedContacts = SerializeObject(currentContacts.Contacts);
+                                        var serializedContacts = SerializeObject(currentContacts.Contacts, YMST.c_contacts);
                                         writer.Write(serializedContacts);
                                     }
                                 }

@@ -60,6 +60,9 @@ namespace MagikInfo.YouMailAPI.Tests
             var id = await service.CreateContactAsync(contact);
             Assert.IsTrue(id != 0, "Contact id returned was 0, contact wasn't properly created");
 
+            // Wait for the contact to be created
+            await Task.Delay(1000);
+
             var newContact = await service.GetContactAsync(id);
 
             Assert.IsNotNull(newContact, "Should have found the updated contact");
@@ -75,64 +78,57 @@ namespace MagikInfo.YouMailAPI.Tests
             Assert.IsNull(contactLookup, "Contact should not have been found");
 
             // Now that we have completed the test, verify that everything is proper
-            Assert.IsTrue(newContact.Id == id);
+            Assert.IsTrue(newContact.Id == id, "Contact Id doesn't match");
             Assert.AreEqual(newContact.Organization, updatedContact.Organization, "Organization doesn't match");
             Assert.AreEqual(newContact.FirstName, contact.FirstName, "Contact first name doesn't match");
             Assert.AreEqual(newContact.LastName, contact.LastName, "Contact last name doesn't match");
             Assert.AreEqual(updatedContact.Organization, newContact.Organization, "The contact was not updated as expected");
         }
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public async Task UploadContacts()
         {
-            try
+            var contacts = new YouMailContacts
             {
-                var contacts = new YouMailContacts
+                Contacts = new YouMailContact[]
                 {
-                    Contacts = new YouMailContact[]
+                    new YouMailContact
                     {
-                        new YouMailContact
-                        {
-                            DisplayName = "Test Contact",
-                            FirstName = "Test",
-                            LastName = "Contact",
-                            MobileNumber = "4255551212"
-                        },
-                        new YouMailContact
-                        {
-                            DisplayName = "John Doe",
-                            FirstName = "John",
-                            LastName = "Doe",
-                            MobileNumber = "2065551212"
-                        }
-                    }
-                };
-
-                var uploadTime = DateTime.Now;
-                await service.UploadContactsAsync(contacts);
-
-                var result = await service.GetContactsAsync(uploadTime, 96, YouMailContactType.Personal);
-
-                int found = 0;
-                foreach (var contact in result.Data)
-                {
-                    if (contact.MobileNumber == contacts.Contacts[0].MobileNumber ||
-                        contact.MobileNumber == contacts.Contacts[1].MobileNumber)
+                        DisplayName = "Test Contact",
+                        FirstName = "Test",
+                        LastName = "Contact",
+                        MobileNumber = "4255551212"
+                    },
+                    new YouMailContact
                     {
-                        var lookup = await service.GetContactAsync(contact.Id, 200);
-                        Assert.IsTrue(contact.MobileNumber == lookup.MobileNumber &&
-                            contact.LastName == lookup.LastName);
-                        await service.DeleteContactAsync(contact.Id);
-                        found++;
+                        DisplayName = "John Doe",
+                        FirstName = "John",
+                        LastName = "Doe",
+                        MobileNumber = "2065551212"
                     }
                 }
+            };
 
-                Assert.IsTrue(found == 2);
-            }
-            catch (YouMailException yme)
+            var uploadTime = DateTime.Now;
+            await service.UploadContactsAsync(contacts);
+
+            var result = await service.GetContactsAsync(uploadTime, 96, YouMailContactType.Personal);
+
+            int found = 0;
+            foreach (var contact in result.Data)
             {
-                Assert.Fail(yme.Message);
+                if (contact.MobileNumber == contacts.Contacts[0].MobileNumber ||
+                    contact.MobileNumber == contacts.Contacts[1].MobileNumber)
+                {
+                    var lookup = await service.GetContactAsync(contact.Id, 200);
+                    Assert.IsTrue(contact.MobileNumber == lookup.MobileNumber &&
+                        contact.LastName == lookup.LastName);
+                    await service.DeleteContactAsync(contact.Id);
+                    found++;
+                }
             }
+
+            Assert.IsTrue(found == 2);
         }
     }
 }
