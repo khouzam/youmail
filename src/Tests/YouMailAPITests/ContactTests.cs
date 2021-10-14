@@ -54,7 +54,7 @@ namespace MagikInfo.YouMailAPI.Tests
             {
                 FirstName = "Test",
                 LastName = $"Contact {randValue}",
-                MobileNumber = "(123) 456-7890"
+                MobileNumber = $"(123) 456-78{randValue}"
             };
 
             var id = await service.CreateContactAsync(contact);
@@ -69,6 +69,8 @@ namespace MagikInfo.YouMailAPI.Tests
             newContact.Organization = "Test Org";
 
             await service.UpdateContactAsync(newContact, newContact.Id);
+
+            await Task.Delay(1000);
 
             var updatedContact = await service.GetContactAsync(id);
             await service.DeleteContactAsync(id);
@@ -88,23 +90,24 @@ namespace MagikInfo.YouMailAPI.Tests
         [TestMethod]
         public async Task UploadContacts()
         {
+            Random rand = new Random();
             var contacts = new YouMailContacts
             {
                 Contacts = new YouMailContact[]
                 {
                     new YouMailContact
                     {
-                        DisplayName = "Test Contact",
+                        DisplayName = $"Test Contact {rand.Next(100)}",
                         FirstName = "Test",
                         LastName = "Contact",
-                        MobileNumber = "4255551212"
+                        MobileNumber = $"42555512{rand.Next(100)}"
                     },
                     new YouMailContact
                     {
-                        DisplayName = "John Doe",
+                        DisplayName = $"John Doe {rand.Next(100)}",
                         FirstName = "John",
                         LastName = "Doe",
-                        MobileNumber = "2065551212"
+                        MobileNumber = $"20655512 {rand.Next(100)}"
                     }
                 }
             };
@@ -117,18 +120,14 @@ namespace MagikInfo.YouMailAPI.Tests
             int found = 0;
             foreach (var contact in result.Data)
             {
-                if (contact.MobileNumber == contacts.Contacts[0].MobileNumber ||
-                    contact.MobileNumber == contacts.Contacts[1].MobileNumber)
-                {
-                    var lookup = await service.GetContactAsync(contact.Id, 200);
-                    Assert.IsTrue(contact.MobileNumber == lookup.MobileNumber &&
-                        contact.LastName == lookup.LastName);
-                    await service.DeleteContactAsync(contact.Id);
-                    found++;
-                }
+                var lookup = await service.GetContactAsync(contact.Id, 200);
+                Assert.AreEqual(contact.MobileNumber, lookup.MobileNumber, "Mobile numbers don't match");
+                Assert.AreEqual(contact.LastName, lookup.LastName, "Last names don't match");
+                await service.DeleteContactAsync(contact.Id);
+                found++;
             }
 
-            Assert.IsTrue(found == 2);
+            Assert.IsTrue(found == 2, "Did not find the two contacts");
         }
     }
 }
