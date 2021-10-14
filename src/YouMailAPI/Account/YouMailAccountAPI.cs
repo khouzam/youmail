@@ -152,10 +152,7 @@ namespace MagikInfo.YouMailAPI
                     string uri = string.Format(YMST.c_accountDetailsUrl, user);
                     using (var response = await YouMailApiAsync(uri, null, HttpMethod.Get))
                     {
-                        if (response != null)
-                        {
-                            returnValue = DeserializeObject<YouMailUserInfo>(response.GetResponseStream(), YMST.c_account);
-                        }
+                        returnValue = DeserializeObject<YouMailUserInfo>(response.GetResponseStream(), YMST.c_account);
                     }
                 }
             }
@@ -205,11 +202,8 @@ namespace MagikInfo.YouMailAPI
                 {
                     using (var response = await YouMailApiAsync(YMST.c_settingsUserId, null, HttpMethod.Get))
                     {
-                        if (response != null)
-                        {
-                            var userId = DeserializeObject<YouMailUserId>(response.GetResponseStream(), YMST.c_settings);
-                            returnValue = userId.UserId;
-                        }
+                        var userId = DeserializeObject<YouMailUserId>(response.GetResponseStream(), YMST.c_settings);
+                        returnValue = userId.UserId;
                     }
                 }
             }

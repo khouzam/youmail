@@ -40,10 +40,7 @@ namespace MagikInfo.YouMailAPI
                 {
                     using (var response = await YouMailApiAsync(YMST.c_devicePushRegistrations, SerializeObjectToHttpContent(pushRegistration, YMST.c_pushRegistration), HttpMethod.Post))
                     {
-                        if (response != null)
-                        {
-                            registration = DeserializeObject<YouMailPushRegistration>(response.GetResponseStream(), YMST.c_pushRegistration);
-                        }
+                        registration = DeserializeObject<YouMailPushRegistration>(response.GetResponseStream(), YMST.c_pushRegistration);
                     }
                 }
 
@@ -69,13 +66,10 @@ namespace MagikInfo.YouMailAPI
                 {
                     using (var response = await YouMailApiAsync(YMST.c_devicePushRegistrations, null, HttpMethod.Get))
                     {
-                        if (response != null)
+                        var registrations = DeserializeObject<YouMailPushRegistrations>(response.GetResponseStream());
+                        if (registrations != null)
                         {
-                            var registrations = DeserializeObject<YouMailPushRegistrations>(response.GetResponseStream());
-                            if (registrations != null)
-                            {
-                                returnValue = registrations.PushRegistrations ?? new YouMailPushRegistration[0];
-                            }
+                            returnValue = registrations.PushRegistrations ?? new YouMailPushRegistration[0];
                         }
                     }
                 }

@@ -87,6 +87,7 @@ namespace MagikInfo.YouMailAPI
         public const string c_ids = "ids";
         public const string c_data = "data";
         public const string c_dataUrl = "dataUrl";
+        public const string c_audioData = "audioData";
         public const string c_name = "name";
         public const string c_ackEntryCount = "ackEntryCount";
         public const string c_newEntryCount = "newEntryCount";
@@ -102,6 +103,7 @@ namespace MagikInfo.YouMailAPI
         public const string c_duration = "duration";
         public const string c_greeting = "greeting";
         public const string c_greetings = "greetings";
+        public const string c_greetingId = "greetingId";
         public const string c_recommendation = "recommendation";
         public const string c_mobileProductUrl = "mobileProductUrl";
         public const string c_pitch = "pitch";
@@ -151,6 +153,7 @@ namespace MagikInfo.YouMailAPI
         public const string c_created = "created";
         public const string c_updated = "updated";
         public const string c_messageData = "messageData";
+        public const string c_messageDataType = "messageDataType";
         public const string c_messageDataUrl = "messageDataUrl";
         public const string c_folderId = "folderId";
         public const string c_imageUrl = "imageUrl";
@@ -250,7 +253,6 @@ namespace MagikInfo.YouMailAPI
         public const string c_defaultImage = "defaultImage";
         public const string c_baseImage = "baseImage";
         public const string c_contacts = "contacts";
-        public const string c_greetingId = "greetingId";
         public const string c_actionType = "actionType";
         public const string c_phonebookSourceType = "phonebookSourceType";
         public const string c_phonebookSourceId = "phonebookSourceId";
@@ -340,6 +342,7 @@ namespace MagikInfo.YouMailAPI
         public const string c_messageboxFlagUrl = c_server + "/api/v4/messagebox/entry/flag/{0}/{1}";
         public const string c_historyClearMessage = c_server + "/api/v4/messagebox/entry/history/clear/{0}";
         public const string c_messageBoxEntryQuery = c_server + "/api/v4/messagebox/entry/query";
+        public const string c_messageBoxEntryCreate = c_server + "/api/v4/messagebox/entry/create";
         public const string c_messageBoxEntryDetails = c_server + "/api/v4/messagebox/entry/{0}/details";
         public const string c_messageBoxHistoryQuery = c_server + "/api/v4/messagebox/entry/history/query";
         public const string c_messageTranscriptionRequest = c_server + "/api/v4/messagebox/entry/{0}/transcript/request";
@@ -362,7 +365,9 @@ namespace MagikInfo.YouMailAPI
         public const string c_uploadContactsSummary = c_server + "/api/v4/contacts/upload/summary";
 
         public const string c_getGreetings = c_server + "/api/v4/greetings/query";
+        public const string c_getGreeting = c_server + "/api/v4/greetings/{0}";
         public const string c_deleteGreeting = c_server + "/api/v4/greetings/{0}";
+        public const string c_createGreeting = c_server + "/api/v4/greetings";
         public const string c_statusGreetings = c_server + "/api/v4/greetings/status";
         public const string c_registrationVerify = c_server + "/api/v4/accounts/registration/verify/{0}";
         public const string c_createAccountUrl = c_server + "/api/v4/accounts";

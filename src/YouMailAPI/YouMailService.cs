@@ -871,7 +871,7 @@ namespace MagikInfo.YouMailAPI
             bool fFoundMessage = false;
             try
             {
-                var apiError = DeserializeObjectDebug<YouMailResponse>(s);
+                var apiError = DeserializeObject<YouMailResponse>(s);
                 if (apiError != null)
                 {
                     foreach (var error in apiError.Errors)

@@ -31,31 +31,40 @@ namespace MagikInfo.YouMailAPI.Tests
         [TestMethod]
         public async Task GetGreetings()
         {
-            try
-            {
-                var greetings = await service.GetGreetingsAsync(DateTime.MinValue);
-                Assert.IsNotNull(greetings);
-                Assert.IsTrue(greetings.LastUpdated < DateTime.Now + TimeSpan.FromMinutes(1), $"LastUpdated: {greetings.LastUpdated}, Time: {DateTime.Now}");
-                Assert.IsTrue(greetings.LastUpdated > DateTime.MinValue);
-            }
-            catch (YouMailException yme)
-            {
-                Assert.Fail(yme.Message);
-            }
+            var greetings = await service.GetGreetingsAsync(DateTime.MinValue);
+            Assert.IsNotNull(greetings);
+            Assert.IsTrue(greetings.LastUpdated < DateTime.Now + TimeSpan.FromMinutes(1), $"LastUpdated: {greetings.LastUpdated}, Time: {DateTime.Now}");
+            Assert.IsTrue(greetings.LastUpdated > DateTime.MinValue);
         }
 
         [TestMethod]
         public async Task GetGreetingStatuses()
         {
-            try
-            {
-                var statuses = await service.GetGreetingStatusesAsync();
-                Assert.IsTrue(statuses.Statuses.Count > 0);
-            }
-            catch (YouMailException yme)
-            {
-                Assert.Fail(yme.Message);
-            }
+            var statuses = await service.GetGreetingStatusesAsync();
+            Assert.IsTrue(statuses.Statuses.Count > 0);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(statuses.Statuses[0].Name));
+        }
+
+        [TestMethod]
+        public async Task CreateGreeting()
+        {
+            byte[] data = System.IO.File.ReadAllBytes(@"Data\Recording.wav");
+            var rand = new Random();
+            var now = DateTime.Now;
+            string name = $"New Test Greeting {rand.Next(100)}";
+            string description = $"Creating a new test greeting";
+            var response = await service.CreateGreetingAsync(name, description, data);
+            var greetingId = long.Parse(response.Properties[YMST.c_greetingId]);
+
+            Assert.IsTrue(greetingId != 0, "The newly created greeting has an invalid Id");
+
+            var greeting = await service.GetGreetingAsync(greetingId);
+            Assert.IsNotNull(greeting);
+
+            await service.DeleteGreetingAsync(greeting.Id);
+
+            Assert.AreEqual(name, greeting.Name, "Greeting name doesn't match");
+            Assert.AreEqual(greetingId, greeting.Id, "Greeting Id doesn't match");
         }
 
     }

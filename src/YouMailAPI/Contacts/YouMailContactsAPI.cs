@@ -165,7 +165,7 @@ namespace MagikInfo.YouMailAPI
         /// </summary>
         /// <param name="id">The id of the contact</param>
         /// <returns>The YouMailContact</returns>
-        public async Task<YouMailContact> GetContactAsync(long id, int imageSize)
+        public async Task<YouMailContact> GetContactAsync(long id, int imageSize = 100)
         {
             YouMailContact contact = null;
             try
@@ -201,23 +201,20 @@ namespace MagikInfo.YouMailAPI
                 count = 0;
                 using (response = await YouMailApiAsync(YMST.c_getContacts + query.GetQueryString(), null, HttpMethod.Get))
                 {
-                    if (response != null)
+                    var contactResponse = DeserializeObject<YouMailContactsResponse>(response.GetResponseStream());
+                    if (contactResponse != null)
                     {
-                        var contactResponse = DeserializeObject<YouMailContactsResponse>(response.GetResponseStream());
-                        if (contactResponse != null)
+                        count = contactResponse.Contacts.Length;
+                        if (count > 0)
                         {
-                            count = contactResponse.Contacts.Length;
-                            if (count > 0)
-                            {
-                                contacts.AddRange(contactResponse.Contacts);
-                            }
+                            contacts.AddRange(contactResponse.Contacts);
                         }
+                    }
 
-                        if (lastQueryUpdated == DateTime.MinValue)
-                        {
-                            var date = response.Headers.Date.ToString();
-                            lastQueryUpdated = DateTime.Parse(date);
-                        }
+                    if (lastQueryUpdated == DateTime.MinValue)
+                    {
+                        var date = response.Headers.Date.ToString();
+                        lastQueryUpdated = DateTime.Parse(date);
                     }
                 }
                 query.Page++;
@@ -361,10 +358,10 @@ namespace MagikInfo.YouMailAPI
         }
 
         /// <summary>
-        /// Create a new contact
+        /// Update and existing contact
         /// </summary>
-        /// <param name="contact"></param>
-        /// <returns></returns>
+        /// <param name="contact">The new contact to update</param>
+        /// <param name="id">The id of the contact to update</param>
         public async Task UpdateContactAsync(YouMailContact contact, long id)
         {
             try
@@ -372,8 +369,8 @@ namespace MagikInfo.YouMailAPI
                 AddPendingOp();
                 if (await LoginWaitAsync())
                 {
-
-                    using (await YouMailApiAsync(string.Format(YMST.c_updateContact, id), SerializeObjectToHttpContent(contact), HttpMethod.Put))
+                    string ser = SerializeObject(contact, YMST.c_contact);
+                    using (await YouMailApiAsync(string.Format(YMST.c_updateContact, id), SerializeObjectToHttpContent(contact, YMST.c_contact), HttpMethod.Put))
                     {
                     }
                 }

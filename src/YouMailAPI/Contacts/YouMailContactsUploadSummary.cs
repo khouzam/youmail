@@ -19,35 +19,43 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using System.Net.Http;
-    using System.Threading.Tasks;
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
 
-    public partial class YouMailService
+    namespace MagikInfo.YouMailAPI.Contacts
     {
-        /// <summary>
-        /// Get the YouMail alert settings
-        /// </summary>
-        /// <returns></returns>
-        public async Task<YouMailAlerts> GetAlertSettingsAsync()
+        class YouMailContactsUploadSummary
         {
-            try
-            {
-                AddPendingOp();
-                YouMailAlerts returnValue = null;
-                if (await LoginWaitAsync())
-                {
-                    using (var response = await YouMailApiAsync(YMST.c_alertSettingsUrl, null, HttpMethod.Get))
-                    {
-                        returnValue = DeserializeObject<YouMailAlerts>(response.GetResponseStream(), YMST.c_alertSettings);
-                    }
-                }
-
-                return returnValue;
-            }
-            finally
-            {
-                RemovePendingOp();
-            }
+            // contactUploadSummary": {
+            public string ClientRefId { get; set; }
+            public int Status { get; set; }
+            public string Started { get; set; }
+            public string Ended { get; set; }
+            public int DeletedCount { get; set; }
+            public int ErrorCount { get; set; }
+            public int ExactMactchCount { get; set; }
+            public bool Expired { get; set; }
+            public int IgnoredCount { get; set; }
+            public int ImportingTotal { get; set; }
+            public int MergedCount { get; set; }
+            public int NewCount { get; set; }
+            public int Processed { get; set; }
+            public int YmTotak { get; set; }
+            //"clientRefId": "string",
+            //"status": 1,
+            //"started": "string",
+            //"ended": "string",
+            //"deletedCount": 0,
+            //"errorCount": 0,
+            //"exactMatchCount": 0,
+            //"expired": true,
+            //"ignoredCount": 0,
+            //"importingTotal": 0,
+            //"mergedCount": 0,
+            //"newCount": 0,
+            //"processed": 0,
+            //"ymTotal": 0
         }
-    }
+    };
 }

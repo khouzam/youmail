@@ -20,7 +20,6 @@
 namespace MagikInfo.YouMailAPI
 {
     using Newtonsoft.Json;
-    using System.Collections.Generic;
     using System.Xml.Serialization;
 
     [XmlType(AnonymousType = true)]

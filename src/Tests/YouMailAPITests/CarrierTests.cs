@@ -37,6 +37,7 @@ namespace MagikInfo.YouMailAPI.Tests
             {
                 var carrierInfo = await Service.GetCarrierInfoAsync();
                 var forwardingInfo = await Service.GetForwardingInstructionsAsync();
+                Assert.IsTrue(carrierInfo.Id != 0);
                 Assert.IsTrue(carrierInfo.Id == forwardingInfo.CarrierId);
                 var carriers = await Service.GetSupportedCarriersAsync();
                 // Pick a new random carrier
@@ -80,17 +81,37 @@ namespace MagikInfo.YouMailAPI.Tests
 
             foreach (var carrier in carriers.Carriers)
             {
-                try
+                if (carrier.ActiveFlag)
                 {
                     await Service.SetCarrierInfoAsync(carrier.Id);
                     var info = await Service.GetForwardingInstructionsAsync();
-                }
-                catch (YouMailException yme)
-                {
-                    Debug.WriteLine($"Failed to set the carrier {carrier.Name}, Supported: {carrier.SupportedFlag}");
-                    Debug.WriteLine($"Failed with {yme.Message}");
+                    Assert.AreEqual(carrier.Id, info.CarrierId, $"Carrier Id doesn't match");
                 }
             }
+        }
+
+        /// <summary>
+        /// Ignoring this test because apparently GetAccessPointAsybc is not available.
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod, Ignore]
+        public async Task GetCarrierForPhoneNumber()
+        {
+            var carrierInfo = await Service.GetCarrierInfoAsync();
+
+            var carrier = await Service.GetAccessPointAsync(Service.Username);
+
+            Assert.IsTrue(carrier.Id == carrierInfo.Id);
+
+        }
+
+        [TestMethod, Ignore]
+        public async Task VerifyCallSetup()
+        {
+            var callSetup = await Service.VerifyCallSetupGetStatusAsync();
+
+            Assert.IsNotNull(callSetup);
+            Assert.IsTrue(!string.IsNullOrEmpty(callSetup.InitiatedTime));
         }
     }
 }

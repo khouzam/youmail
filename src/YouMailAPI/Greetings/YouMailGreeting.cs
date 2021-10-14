@@ -84,9 +84,9 @@ namespace MagikInfo.YouMailAPI
         [JsonProperty(YMST.c_dataUrl)]
         public string DataUrl { get; set; }
 
-        [XmlElement(YMST.c_data)]
-        [JsonProperty(YMST.c_data)]
-        public string Data { get; set; }
+        [XmlElement(YMST.c_audioData)]
+        [JsonProperty(YMST.c_audioData)]
+        public string AudioData { get; set; }
 
         [XmlElement(YMST.c_greetingType)]
         [JsonProperty(YMST.c_greetingType)]

@@ -177,100 +177,32 @@ namespace MagikInfo.YouMailAPI
                     string apiCall = string.Format(YMST.c_pollMessages, userId[userId.Length - 1], userId);
                     using (var response = await YouMailApiAsync(apiCall, null, HttpMethod.Get, false))
                     {
-                        if (response != null)
+                        Stream s = response.GetResponseStream();
+
+                        if (s != null)
                         {
-                            Stream s = response.GetResponseStream();
+                            TextReader reader = new StreamReader(s);
+                            string stamps = reader.ReadToEnd();
+                            string[] values = stamps.Split(',');
 
-                            if (s != null)
+                            times = new DateTime[values.Length];
+
+                            for (int i = 0; i < values.Length; i++)
                             {
-                                TextReader reader = new StreamReader(s);
-                                string stamps = reader.ReadToEnd();
-                                string[] values = stamps.Split(',');
-
-                                times = new DateTime[values.Length];
-
-                                for (int i = 0; i < values.Length; i++)
+                                try
                                 {
-                                    try
-                                    {
-                                        // Convert epoch to DateTime
-                                        times[i] = long.Parse(values[i]).FromMillisecondsFromEpoch();
-                                    }
-                                    catch (ArgumentOutOfRangeException)
-                                    {
-                                        // We got an invalid value. Ignore it for now
-                                    }
+                                    // Convert epoch to DateTime
+                                    times[i] = long.Parse(values[i]).FromMillisecondsFromEpoch();
+                                }
+                                catch (ArgumentOutOfRangeException)
+                                {
+                                    // We got an invalid value. Ignore it for now
                                 }
                             }
                         }
                     }
                 }
                 return times;
-            }
-            finally
-            {
-                RemovePendingOp();
-            }
-        }
-
-        public async Task VerifyCallSetup()
-        {
-            try
-            {
-                AddPendingOp();
-                if (await LoginWaitAsync())
-                {
-                    using (var response = await YouMailApiAsync(string.Format(YMST.c_verifyCallSetupInitiate, Username), null, HttpMethod.Post))
-                    {
-                    }
-                }
-            }
-            finally
-            {
-                RemovePendingOp();
-            }
-        }
-
-        /// <summary>
-        /// Send a text message to confirm that the user can receive them.
-        /// </summary>
-        /// <returns></returns>
-        public async Task ConfirmTextMessageStatusAsync()
-        {
-            try
-            {
-                AddPendingOp();
-                if (await LoginWaitAsync())
-                {
-                    var url = string.Format(YMST.c_confirmTextMessages, Username);
-                    using (var response = await YouMailApiAsync(url, null, HttpMethod.Post))
-                    {
-                    }
-                }
-            }
-            finally
-            {
-                RemovePendingOp();
-            }
-        }
-
-        /// <summary>
-        /// Confirm that the text message has been received by the user.
-        /// </summary>
-        /// <param name="code"></param>
-        /// <returns></returns>
-        public async Task ConfirmTextMessageStatusValidationAsync(string code)
-        {
-            try
-            {
-                AddPendingOp();
-                if (await LoginWaitAsync())
-                {
-                    var url = string.Format(YMST.c_confirmTextMessagesValidation, Username, code.ToUpper());
-                    using (var response = await YouMailApiAsync(url, null, HttpMethod.Put))
-                    {
-                    }
-                }
             }
             finally
             {
@@ -292,20 +224,16 @@ namespace MagikInfo.YouMailAPI
                 {
                     using (var response = await YouMailApiAsync(YMST.c_extraLines, null, HttpMethod.Get))
                     {
-                        if (response != null)
-                        {
-                            var numbers = response.GetResponseStream().FromXml<YouMailVirtualNumbers>();
-                            returnValue = numbers.VirtualNumbers.ToArray();
-                        }
+                        var numbers = response.GetResponseStream().FromXml<YouMailVirtualNumbers>();
+                        returnValue = numbers.VirtualNumbers.ToArray();
                     }
                 }
+                return returnValue;
             }
             finally
             {
                 RemovePendingOp();
             }
-
-            return returnValue;
         }
     }
 }

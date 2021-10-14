@@ -39,10 +39,7 @@ namespace MagikInfo.YouMailAPI
                     string url = string.Format(YMST.c_getForwardingInstructions, _username);
                     using (var response = await YouMailApiAsync(url, null, HttpMethod.Get))
                     {
-                        if (response != null)
-                        {
-                            instructions = DeserializeObject<YouMailForwardingInstructions>(response.GetResponseStream(), YMST.c_phoneForwardingInstruction);
-                        }
+                        instructions = DeserializeObject<YouMailForwardingInstructions>(response.GetResponseStream(), YMST.c_phoneForwardingInstruction);
                     }
                 }
             }
@@ -69,10 +66,7 @@ namespace MagikInfo.YouMailAPI
                     string url = string.Format(YMST.c_getCarrierInfo, _username);
                     using (var response = await YouMailApiAsync(url, null, HttpMethod.Get))
                     {
-                        if (response != null)
-                        {
-                            carrier = DeserializeObject<YouMailCarrier>(response.GetResponseStream(), YMST.c_carrier);
-                        }
+                        carrier = DeserializeObject<YouMailCarrier>(response.GetResponseStream(), YMST.c_carrier);
                     }
                 }
             }
@@ -124,10 +118,7 @@ namespace MagikInfo.YouMailAPI
                 {
                     using (var response = await YouMailApiAsync(YMST.c_getSupportedCarriers, null, HttpMethod.Get))
                     {
-                        if (response != null)
-                        {
-                            carriers = DeserializeObject<YouMailCarriers>(response.GetResponseStream());
-                        }
+                        carriers = DeserializeObject<YouMailCarriers>(response.GetResponseStream());
                     }
                 }
             }
@@ -155,10 +146,7 @@ namespace MagikInfo.YouMailAPI
                     string site = string.Format(YMST.c_accesspoint, phonenumber);
                     using (var response = await YouMailApiAsync(site, null, HttpMethod.Get))
                     {
-                        if (response != null)
-                        {
-                            returnValue = DeserializeObject<YouMailAccessPoint>(response.GetResponseStream());
-                        }
+                        returnValue = DeserializeObject<YouMailAccessPoint>(response.GetResponseStream());
                     }
                 }
             }
@@ -171,10 +159,32 @@ namespace MagikInfo.YouMailAPI
         }
 
         /// <summary>
+        /// Start a CallSetup Verification
+        /// </summary>
+        /// <returns></returns>
+        public async Task VerifyCallSetupAsync()
+        {
+            try
+            {
+                AddPendingOp();
+                if (await LoginWaitAsync())
+                {
+                    using (var response = await YouMailApiAsync(string.Format(YMST.c_verifyCallSetupInitiate, Username), null, HttpMethod.Post))
+                    {
+                    }
+                }
+            }
+            finally
+            {
+                RemovePendingOp();
+            }
+        }
+
+        /// <summary>
         /// Verify the call setup for a user
         /// </summary>
         /// <returns></returns>
-        public async Task<YouMailCallVerifyStatus> VerifyCallSetupGetStatus()
+        public async Task<YouMailCallVerifyStatus> VerifyCallSetupGetStatusAsync()
         {
             YouMailCallVerifyStatus retVal = null;
             try
@@ -184,14 +194,58 @@ namespace MagikInfo.YouMailAPI
                 {
                     using (var response = await YouMailApiAsync(YMST.c_verifyCallSetupValidate, null, HttpMethod.Get))
                     {
-                        if (response != null)
-                        {
-                            retVal = DeserializeObject<YouMailCallVerifyStatus>(response.GetResponseStream());
-                        }
+                        retVal = DeserializeObject<YouMailCallVerifyStatus>(response.GetResponseStream());
                     }
                 }
 
                 return retVal;
+            }
+            finally
+            {
+                RemovePendingOp();
+            }
+        }
+
+        /// <summary>
+        /// Send a text message to confirm that the user can receive them.
+        /// </summary>
+        /// <returns></returns>
+        public async Task ConfirmTextMessageStatusAsync()
+        {
+            try
+            {
+                AddPendingOp();
+                if (await LoginWaitAsync())
+                {
+                    var url = string.Format(YMST.c_confirmTextMessages, Username);
+                    using (var response = await YouMailApiAsync(url, null, HttpMethod.Post))
+                    {
+                    }
+                }
+            }
+            finally
+            {
+                RemovePendingOp();
+            }
+        }
+
+        /// <summary>
+        /// Confirm that the text message has been received by the user.
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public async Task ConfirmTextMessageStatusValidationAsync(string code)
+        {
+            try
+            {
+                AddPendingOp();
+                if (await LoginWaitAsync())
+                {
+                    var url = string.Format(YMST.c_confirmTextMessagesValidation, Username, code.ToUpper());
+                    using (var response = await YouMailApiAsync(url, null, HttpMethod.Put))
+                    {
+                    }
+                }
             }
             finally
             {

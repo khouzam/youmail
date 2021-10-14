@@ -19,35 +19,30 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using System.Net.Http;
-    using System.Threading.Tasks;
+    using Newtonsoft.Json;
+    using System.Xml.Serialization;
 
-    public partial class YouMailService
+
+    public partial class YouMailMessageCreateEntry : YouMailMessage
     {
-        /// <summary>
-        /// Get the YouMail alert settings
-        /// </summary>
-        /// <returns></returns>
-        public async Task<YouMailAlerts> GetAlertSettingsAsync()
+        [XmlElement(YMST.c_messageDataType)]
+        [JsonProperty(YMST.c_messageDataType)]
+        public int _messageDataTypeInt
         {
-            try
-            {
-                AddPendingOp();
-                YouMailAlerts returnValue = null;
-                if (await LoginWaitAsync())
-                {
-                    using (var response = await YouMailApiAsync(YMST.c_alertSettingsUrl, null, HttpMethod.Get))
-                    {
-                        returnValue = DeserializeObject<YouMailAlerts>(response.GetResponseStream(), YMST.c_alertSettings);
-                    }
-                }
-
-                return returnValue;
-            }
-            finally
-            {
-                RemovePendingOp();
-            }
+            get { return (int)MessageDataType; }
+            set { MessageDataType = (DataFormat)value; }
         }
+
+        [XmlIgnore]
+        [JsonIgnore]
+        public DataFormat MessageDataType { get; set; }
+
+        [XmlElement(YMST.c_messageData)]
+        [JsonProperty(YMST.c_messageData)]
+        public string MessageData { get; set; }
+
+        [XmlElement("silentMode")]
+        [JsonProperty("silentMode")]
+        public bool SilentMode { get; set; }
     }
 }

@@ -115,7 +115,7 @@ namespace MagikInfo.YouMailAPI
             return new GetUpdateResult<YouMailMessage[]>(DateTime.Parse(date), list.ToArray());
         }
 
-        public async Task<GetUpdateResult<YouMailMessage[]>> GetMessagesFromQuery(YouMailMessageQuery query)
+        public async Task<GetUpdateResult<YouMailMessage[]>> GetMessagesFromQueryAsync(YouMailMessageQuery query)
         {
             try
             {
@@ -166,13 +166,10 @@ namespace MagikInfo.YouMailAPI
                             var uri = string.Format(YMST.c_messageBoxEntryDetails, item);
                             using (var response = await YouMailApiAsync(uri, null, HttpMethod.Get))
                             {
-                                if (response != null)
+                                var resp = DeserializeObject<YouMailMessageResponse>(response.GetResponseStream());
+                                if (resp != null)
                                 {
-                                    var resp = DeserializeObject<YouMailMessageResponse>(response.GetResponseStream());
-                                    if (resp != null)
-                                    {
-                                        message.Transcription = resp.Message.Transcription;
-                                    }
+                                    message.Transcription = resp.Message.Transcription;
                                 }
                             }
                         }
@@ -344,25 +341,22 @@ namespace MagikInfo.YouMailAPI
 
                 using (response = await YouMailApiAsync(YMST.c_messageBoxHistoryQuery + queryString, null, HttpMethod.Get))
                 {
-                    if (response != null)
+                    var histories = DeserializeObject<YouMailHistories>(response.GetResponseStream());
+
+                    // Get all the call histories where the result is no message left
+                    if (histories != null && histories.Histories != null)
                     {
-                        var histories = DeserializeObject<YouMailHistories>(response.GetResponseStream());
+                        var messageQuery = from c in histories.Histories
+                                           where c.Result != VoicemailResult.LeftMessage
+                                           select c;
 
-                        // Get all the call histories where the result is no message left
-                        if (histories != null && histories.Histories != null)
-                        {
-                            var messageQuery = from c in histories.Histories
-                                               where c.Result != VoicemailResult.LeftMessage
-                                               select c;
-
-                            count = messageQuery.Count();
-                            callList.AddRange(messageQuery);
-                        }
-                        if (lastQueryUpdated == DateTime.MinValue)
-                        {
-                            var date = response.Headers.Date.ToString();
-                            lastQueryUpdated = DateTime.Parse(date);
-                        }
+                        count = messageQuery.Count();
+                        callList.AddRange(messageQuery);
+                    }
+                    if (lastQueryUpdated == DateTime.MinValue)
+                    {
+                        var date = response.Headers.Date.ToString();
+                        lastQueryUpdated = DateTime.Parse(date);
                     }
                 }
                 query.Page++;
@@ -490,15 +484,12 @@ namespace MagikInfo.YouMailAPI
 
                         using (var response = await YouMailApiAsync(YMST.c_messageBoxEntryQuery + post, null, HttpMethod.Get))
                         {
-                            if (response != null)
-                            {
-                                var messages = DeserializeObject<YouMailMessages>(response.GetResponseStream());
+                            var messages = DeserializeObject<YouMailMessages>(response.GetResponseStream());
 
-                                if (messages != null && messages.Messages != null)
-                                {
-                                    count = messages.Messages.Length;
-                                    list.AddRange(messages.Messages);
-                                }
+                            if (messages != null && messages.Messages != null)
+                            {
+                                count = messages.Messages.Length;
+                                list.AddRange(messages.Messages);
                             }
                         }
                         query.Page++;
@@ -513,6 +504,28 @@ namespace MagikInfo.YouMailAPI
             }
 
             return returnValue;
+        }
+
+        public async Task<YouMailResponse> CreateMessageEntryAsync(YouMailMessageCreateEntry message)
+        {
+            YouMailResponse youmailResponse = null;
+            try
+            {
+                AddPendingOp();
+                if (await LoginWaitAsync())
+                {
+                    using (var response = await YouMailApiAsync(YMST.c_messageBoxEntryCreate, SerializeObjectToHttpContent(message, YMST.c_entry), HttpMethod.Post))
+                    {
+                        youmailResponse = DeserializeObject<YouMailResponse>(response.GetResponseStream());
+                    }
+                }
+            }
+            finally
+            {
+                RemovePendingOp();
+            }
+
+            return youmailResponse;
         }
 
         /// <summary>
@@ -578,18 +591,14 @@ namespace MagikInfo.YouMailAPI
                             response = await GetMessageDownloadResponseAsync(URL);
                         }
                     }
-                    if (response != null)
-                    {
-                        returnValue = response.GetResponseStream();
-                    }
+                    returnValue = response.GetResponseStream();
                 }
+                return returnValue;
             }
             finally
             {
                 RemovePendingOp();
             }
-
-            return returnValue;
         }
 
         private async Task<HttpResponseMessage> GetMessageDownloadResponseAsync(string URL)

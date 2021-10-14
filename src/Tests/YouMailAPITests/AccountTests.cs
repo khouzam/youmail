@@ -19,7 +19,6 @@
 
 namespace MagikInfo.YouMailAPI.Tests
 {
-    using MagikInfo.YouMailAPI;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Net;
     using System.Threading.Tasks;

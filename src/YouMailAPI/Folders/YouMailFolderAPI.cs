@@ -86,24 +86,21 @@ namespace MagikInfo.YouMailAPI
                 {
                     using (var response = await YouMailApiAsync(YMST.c_messageboxFoldersUrl, null, HttpMethod.Get))
                     {
-                        if (response != null)
+                        var folders = DeserializeObject<YouMailFolders>(response.GetResponseStream());
+
+                        if (folders != null && folders.Folders != null)
                         {
-                            var folders = DeserializeObject<YouMailFolders>(response.GetResponseStream());
-
-                            if (folders != null && folders.Folders != null)
+                            var list = folders.Folders.ToList();
+                            foreach (var folder in list)
                             {
-                                var list = folders.Folders.ToList();
-                                foreach (var folder in list)
+                                if (!folder.IsValid())
                                 {
-                                    if (!folder.IsValid())
-                                    {
-                                        list.Remove(folder);
-                                    }
+                                    list.Remove(folder);
                                 }
-
-                                list.Sort(CompareFolderIdPairs);
-                                folderList = list.ToArray();
                             }
+
+                            list.Sort(CompareFolderIdPairs);
+                            folderList = list.ToArray();
                         }
                     }
                 }
@@ -138,10 +135,7 @@ namespace MagikInfo.YouMailAPI
 
                     using (var response = await YouMailApiAsync(YMST.c_createFolder, SerializeObjectToHttpContent(folder, "folder"), HttpMethod.Post))
                     {
-                        if (response != null)
-                        {
-                            newFolder = DeserializeObject<YouMailFolder>(response.GetResponseStream(), YMST.c_folder);
-                        }
+                        newFolder = DeserializeObject<YouMailFolder>(response.GetResponseStream(), YMST.c_folder);
                     }
                 }
                 return newFolder;

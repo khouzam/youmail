@@ -21,6 +21,7 @@ namespace MagikInfo.YouMailAPI.Tests
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
+    using System.Net;
     using System.Threading.Tasks;
 
     [TestClass]
@@ -29,7 +30,7 @@ namespace MagikInfo.YouMailAPI.Tests
         private YouMailService service = YouMailTestService.Service;
 
         [TestMethod]
-        public async Task Contacts()
+        public async Task GetContacts()
         {
             try
             {
@@ -45,7 +46,7 @@ namespace MagikInfo.YouMailAPI.Tests
         }
 
         [TestMethod]
-        public async Task CreateAndDeleteContact()
+        public async Task CreateUpdateAndDeleteContact()
         {
             var rand = new Random();
             var randValue = rand.Next(100);
@@ -59,7 +60,26 @@ namespace MagikInfo.YouMailAPI.Tests
             var id = await service.CreateContactAsync(contact);
             Assert.IsTrue(id != 0, "Contact id returned was 0, contact wasn't properly created");
 
+            var newContact = await service.GetContactAsync(id);
+
+            Assert.IsNotNull(newContact, "Should have found the updated contact");
+            newContact.Organization = "Test Org";
+
+            await service.UpdateContactAsync(newContact, newContact.Id);
+
+            var updatedContact = await service.GetContactAsync(id);
             await service.DeleteContactAsync(id);
+
+            // Try to get the contact again, it should be deleted
+            var contactLookup = await service.GetContactAsync(id);
+            Assert.IsNull(contactLookup, "Contact should not have been found");
+
+            // Now that we have completed the test, verify that everything is proper
+            Assert.IsTrue(newContact.Id == id);
+            Assert.AreEqual(newContact.Organization, updatedContact.Organization, "Organization doesn't match");
+            Assert.AreEqual(newContact.FirstName, contact.FirstName, "Contact first name doesn't match");
+            Assert.AreEqual(newContact.LastName, contact.LastName, "Contact last name doesn't match");
+            Assert.AreEqual(updatedContact.Organization, newContact.Organization, "The contact was not updated as expected");
         }
 
         [TestMethod, Ignore]

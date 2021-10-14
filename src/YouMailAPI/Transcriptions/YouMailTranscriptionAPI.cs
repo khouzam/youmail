@@ -46,11 +46,8 @@ namespace MagikInfo.YouMailAPI
                     string uri = string.Format(YMST.c_messageTranscriptionRequest, id);
                     using (var response = await YouMailApiAsync(uri, null, verb))
                     {
-                        if (response != null)
-                        {
-                            var transcriptionResponse = DeserializeObject<YouMailTranscriptionRequestResponse>(response.GetResponseStream());
-                            retVal = transcriptionResponse.TranscriptionState;
-                        }
+                        var transcriptionResponse = DeserializeObject<YouMailTranscriptionRequestResponse>(response.GetResponseStream());
+                        retVal = transcriptionResponse.TranscriptionState;
                     }
                 }
             }
@@ -76,12 +73,9 @@ namespace MagikInfo.YouMailAPI
                 {
                     using (var response = await YouMailApiAsync(YMST.c_transcriptionStatusApi, null, HttpMethod.Get))
                     {
-                        if (response != null)
-                        {
-                            // TODO: This only supports XML
-                            //returnValue = DeserializeObject<YouMailTranscriptionStatus>(response.GetResponseStream());
-                            returnValue = response.GetResponseStream().FromXml<YouMailTranscriptionStatus>();
-                        }
+                        // TODO: This only supports XML
+                        //returnValue = DeserializeObject<YouMailTranscriptionStatus>(response.GetResponseStream());
+                        returnValue = response.GetResponseStream().FromXml<YouMailTranscriptionStatus>();
                     }
                 }
             }
@@ -109,10 +103,7 @@ namespace MagikInfo.YouMailAPI
                 {
                     using (var response = await YouMailApiAsync(YMST.c_transcriptionSettingsApi, null, HttpMethod.Get))
                     {
-                        if (response != null)
-                        {
-                            returnValue = DeserializeObject<TranscriptionSettings>(response.GetResponseStream(), YMST.c_transcriptionSettings);
-                        }
+                        returnValue = DeserializeObject<TranscriptionSettings>(response.GetResponseStream(), YMST.c_transcriptionSettings);
                     }
                 }
             }
