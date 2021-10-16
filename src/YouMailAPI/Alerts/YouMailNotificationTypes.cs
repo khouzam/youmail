@@ -22,11 +22,12 @@ namespace MagikInfo.YouMailAPI
     using System;
 
     [Flags]
-    public enum MissedCall
+    public enum NotificationTypes
     {
         None = 0,
         SendEmail = 1,
         SendText = 2,
-        SendPush = 8
+        SendPush = 8,
+        SendAll = SendEmail | SendText | SendPush,
     }
 }

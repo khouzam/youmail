@@ -162,17 +162,25 @@ namespace MagikInfo.YouMailAPI
         /// Start a CallSetup Verification
         /// </summary>
         /// <returns></returns>
-        public async Task VerifyCallSetupAsync()
+        public async Task<string> VerifyCallSetupAsync()
         {
             try
             {
+                string retVal = null;
                 AddPendingOp();
                 if (await LoginWaitAsync())
                 {
                     using (var response = await YouMailApiAsync(string.Format(YMST.c_verifyCallSetupInitiate, Username), null, HttpMethod.Post))
                     {
+                        var youMailResponse = DeserializeObject<YouMailResponse>(response.GetResponseStream());
+                        if (youMailResponse != null && youMailResponse.Properties != null)
+                        {
+                            retVal = youMailResponse.Properties[YMST.c_callSetUuid];
+                        }
                     }
                 }
+
+                return retVal;
             }
             finally
             {
@@ -184,7 +192,7 @@ namespace MagikInfo.YouMailAPI
         /// Verify the call setup for a user
         /// </summary>
         /// <returns></returns>
-        public async Task<YouMailCallVerifyStatus> VerifyCallSetupGetStatusAsync()
+        public async Task<YouMailCallVerifyStatus> VerifyCallSetupGetStatusAsync(string uuid)
         {
             YouMailCallVerifyStatus retVal = null;
             try
@@ -192,9 +200,14 @@ namespace MagikInfo.YouMailAPI
                 AddPendingOp();
                 if (await LoginWaitAsync())
                 {
-                    using (var response = await YouMailApiAsync(YMST.c_verifyCallSetupValidate, null, HttpMethod.Get))
+                    string URL = string.Format(YMST.c_verifyCallSetupValidate, Username, uuid);
+                    using (var response = await YouMailApiAsync(URL, null, HttpMethod.Get))
                     {
-                        retVal = DeserializeObject<YouMailCallVerifyStatus>(response.GetResponseStream());
+                        var details = DeserializeObject<YouMailTestCallDetails>(response.GetResponseStream());
+                        if (details != null && details.TestCallDetails != null && details.TestCallDetails.Length >= 1)
+                        {
+                            retVal = details.TestCallDetails[0];
+                        }
                     }
                 }
 

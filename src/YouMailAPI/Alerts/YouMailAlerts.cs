@@ -30,52 +30,100 @@ namespace MagikInfo.YouMailAPI
     public class YouMailAlerts
     {
         [XmlElement(YMST.c_ditchedCall)]
-        [JsonProperty(YMST.c_ditchedCall)]
+        [JsonIgnore]
         public int _ditchedCallInt
         {
             get { return (int)DitchedCall; }
-            set { DitchedCall = (DitchedCall)value; }
+            set { DitchedCall = (NotificationTypes)value; }
         }
 
         [XmlIgnore]
+        [JsonProperty(YMST.c_ditchedCallAlertEmail)]
+        public bool DitchedCallEmail { get; set; }
+
+        [XmlIgnore]
+        [JsonProperty(YMST.c_ditchedCallAlertTxt)]
+        public bool DitchedCallText { get; set; }
+
+        [XmlIgnore]
+        [JsonProperty(YMST.c_ditchedCallAlertPush)]
+        public bool DitchedCallPush { get; set; }
+
+        [XmlIgnore]
         [JsonIgnore]
-        public DitchedCall DitchedCall { get; set; }
+        public NotificationTypes DitchedCall
+        {
+            get
+            {
+                return FromNotificationTypes(DitchedCallEmail, DitchedCallEmail, DitchedCallPush);
+            }
+            set
+            {
+                DitchedCallEmail = value.HasFlag(NotificationTypes.SendEmail);
+                DitchedCallText = value.HasFlag(NotificationTypes.SendText);
+                DitchedCallPush = value.HasFlag(NotificationTypes.SendPush);
+            }
+        }
 
         [XmlElement(YMST.c_ditchedCallMask)]
-        [JsonProperty(YMST.c_ditchedCallMask)]
+        [JsonIgnore]
         public int _ditchedCallMaskInt
         {
             get { return (int)DitchedCallMask; }
-            set { DitchedCallMask = (DitchedCall)value; }
+            set { DitchedCallMask = (NotificationTypes)value; }
         }
 
         [XmlIgnore]
         [JsonIgnore]
-        public DitchedCall DitchedCallMask { get; set; }
+        public NotificationTypes DitchedCallMask { get; set; } = NotificationTypes.SendAll;
 
         [XmlElement(YMST.c_newSpamMessage)]
-        [JsonProperty(YMST.c_newSpamMessage)]
+        [JsonIgnore]
         public int _newSpamMessageInt
         {
             get { return (int)SpamMessage; }
-            set { SpamMessage = (SpamMessage)value; }
+            set { SpamMessage = (NotificationTypes)value; }
         }
 
         [XmlIgnore]
+        [JsonProperty(YMST.c_spamMessageAlertEmail)]
+        public bool SpamMessageEmail { get; set; }
+
+        [XmlIgnore]
+        [JsonProperty(YMST.c_spamMessageAlertTxt)]
+        public bool SpamMessageText { get; set; }
+
+        [XmlIgnore]
+        [JsonProperty(YMST.c_spamMessageAlertPush)]
+        public bool SpamMessagePush { get; set; }
+
+        [XmlIgnore]
         [JsonIgnore]
-        public SpamMessage SpamMessage { get; set; }
+        public NotificationTypes SpamMessage
+        {
+            get
+            {
+                return FromNotificationTypes(SpamMessageEmail, SpamMessageText, SpamMessagePush);
+            }
+            set
+            {
+                SpamMessageEmail = value.HasFlag(NotificationTypes.SendEmail);
+                SpamMessageText = value.HasFlag(NotificationTypes.SendText);
+                SpamMessagePush = value.HasFlag(NotificationTypes.SendPush);
+            }
+        }
 
         [XmlElement(YMST.c_newSpamMessageMask)]
         [JsonProperty(YMST.c_newSpamMessageMask)]
         public int _spamMessageMaskInt
         {
             get { return (int)SpamMessageMask; }
-            set { SpamMessageMask = (SpamMessage)value; }
+            set { SpamMessageMask = (NotificationTypes)value; }
         }
 
         [XmlIgnore]
         [JsonIgnore]
-        public SpamMessage SpamMessageMask { get; set; }
+        public NotificationTypes SpamMessageMask { get; set; } = NotificationTypes.SendAll;
 
         [XmlElement(YMST.c_emailAttachment)]
         [JsonProperty(YMST.c_emailAttachment)]
@@ -114,52 +162,100 @@ namespace MagikInfo.YouMailAPI
         public EmailFormat EmailFormat { get; set; }
 
         [XmlElement(YMST.c_missedCall)]
-        [JsonProperty(YMST.c_missedCall)]
+        [JsonIgnore]
         public int _missedCallInt
         {
             get { return (int)MissedCall; }
-            set { MissedCall = (MissedCall)value; }
+            set { MissedCall = (NotificationTypes)value; }
         }
 
         [XmlIgnore]
+        [JsonProperty(YMST.c_missedCallAlertEmail)]
+        public bool MissedCallEmail { get; set; }
+
+        [XmlIgnore]
+        [JsonProperty(YMST.c_missedCallAlertTxt)]
+        public bool MissedCallText { get; set; }
+
+        [XmlIgnore]
+        [JsonProperty(YMST.c_missedCallAlertPush)]
+        public bool MissedCallPush { get; set; }
+
+        [XmlIgnore]
         [JsonIgnore]
-        public MissedCall MissedCall { get; set; }
+        public NotificationTypes MissedCall
+        {
+            get
+            {
+                return FromNotificationTypes(MissedCallEmail, MissedCallText, MissedCallPush);
+            }
+            set
+            {
+                MissedCallEmail = value.HasFlag(NotificationTypes.SendEmail);
+                MissedCallText = value.HasFlag(NotificationTypes.SendText);
+                MissedCallPush = value.HasFlag(NotificationTypes.SendPush);
+            }
+        }
 
         [XmlElement(YMST.c_missedCallMask)]
-        [JsonProperty(YMST.c_missedCallMask)]
-        public int _missedCallMask
+        [JsonIgnore]
+        public int _missedCallMaskInt
         {
             get { return (int)MissedCallMask; }
-            set { MissedCallMask = (MissedCall)value; }
+            set { MissedCallMask = (NotificationTypes)value; }
         }
 
         [XmlIgnore]
         [JsonIgnore]
-        public MissedCall MissedCallMask { get; set; }
+        public NotificationTypes MissedCallMask { get; set; } = NotificationTypes.SendAll;
+
+        [XmlIgnore]
+        [JsonProperty(YMST.c_messageAlertEmail)]
+        public bool MessageEmail { get; set; }
+
+        [XmlIgnore]
+        [JsonProperty(YMST.c_messageAlertTxt)]
+        public bool MessageText { get; set; }
+
+        [XmlIgnore]
+        [JsonProperty(YMST.c_messageAlertPush)]
+        public bool MessagePush { get; set; }
 
         [XmlElement(YMST.c_newMessage)]
-        [JsonProperty(YMST.c_newMessage)]
+        [JsonIgnore]
         public int _newMessageInt
         {
             get { return (int)NewMessage; }
-            set { NewMessage = (NewMessage)value; }
+            set { NewMessage = (NotificationTypes)value; }
         }
 
         [XmlIgnore]
         [JsonIgnore]
-        public NewMessage NewMessage { get; set; }
+        public NotificationTypes NewMessage
+        {
+            get
+            {
+                return FromNotificationTypes(MessageEmail, MessageText, MessagePush);
+            }
+            set
+            {
+                MessageEmail = value.HasFlag(NotificationTypes.SendEmail);
+                MessageText = value.HasFlag(NotificationTypes.SendText);
+                MessagePush = value.HasFlag(NotificationTypes.SendPush);
+            }
+        }
 
         [XmlElement(YMST.c_newMessageMask)]
-        [JsonProperty(YMST.c_newMessageMask)]
+        [JsonIgnore]
         public int _newMessageMaskInt
         {
             get { return (int)NewMessageMask; }
-            set { NewMessageMask = (NewMessage)value; }
+            set { NewMessageMask = (NotificationTypes)value; }
         }
 
         [XmlIgnore]
         [JsonIgnore]
-        public NewMessage NewMessageMask { get; set; }
+        public NotificationTypes NewMessageMask { get; set; } = NotificationTypes.SendAll;
 
         [XmlElement(YMST.c_pushConditions)]
         [JsonProperty(YMST.c_pushConditions)]
@@ -184,5 +280,12 @@ namespace MagikInfo.YouMailAPI
         [XmlElement(YMST.c_carrierSupportsSms)]
         [JsonProperty(YMST.c_carrierSupportsSms)]
         public bool CarrierSupportsSms { get; set; }
+
+        private static NotificationTypes FromNotificationTypes(bool email, bool text, bool push)
+        {
+            return (email ? NotificationTypes.SendEmail : NotificationTypes.None) |
+                (text ? NotificationTypes.SendText : NotificationTypes.None) |
+                (push ? NotificationTypes.SendPush : NotificationTypes.None);
+        }
     }
 }

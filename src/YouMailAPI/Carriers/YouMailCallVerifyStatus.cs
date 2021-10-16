@@ -22,6 +22,13 @@ namespace MagikInfo.YouMailAPI
     using Newtonsoft.Json;
     using System.Xml.Serialization;
 
+    public class YouMailTestCallDetails
+    {
+        [XmlElement(YMST.c_testCallDetails)]
+        [JsonProperty(YMST.c_testCallDetails)]
+        public YouMailCallVerifyStatus[] TestCallDetails;
+    }
+
     /// <summary>
     /// A class representing the different alerts
     /// </summary>

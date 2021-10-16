@@ -330,6 +330,8 @@ namespace MagikInfo.YouMailAPI
         public const string c_error = "error";
         public const string c_errors = "errors";
         public const string c_errorCode = "errorCode";
+        public const string c_callSetUuid = "callSetUuid";
+        public const string c_testCallDetails = "testCallDetails";
 
 
         public const string c_greetingImageUrl = "http://www.ymstat.com/dyn/community/img/{0}.png";
@@ -395,7 +397,7 @@ namespace MagikInfo.YouMailAPI
         public const string c_deviceUpdateRegistration = c_server + "/api/v4/settings/alertSettings/pushRegistrations/{0}/renew/{1}";
 
         public const string c_verifyCallSetupInitiate = c_server + "/api/v4/tui/call/?phoneNumber={0}";
-        public const string c_verifyCallSetupValidate = c_server + "/api/v4/tui/call/result/mostrecent";
+        public const string c_verifyCallSetupValidate = c_server + "/api/v4/tui/call/result/{0}/callset/{1}?maxResults=1";
 
         public const string c_confirmTextMessages = c_server + "/api/v4/accounts/confirmation/{0}";
         public const string c_confirmTextMessagesValidation = c_server + "/api/v4/accounts/confirmation/{0}/{1}";
@@ -431,16 +433,28 @@ namespace MagikInfo.YouMailAPI
 
         public const string c_ditchedCall = "ditchedCall";
         public const string c_ditchedCallMask = "ditchedCallMask";
+        public const string c_ditchedCallAlertEmail = "ditchedCallAlertEmail";
+        public const string c_ditchedCallAlertTxt = "ditchedCallAlertTxt";
+        public const string c_ditchedCallAlertPush = "ditchedCallAlertPush";
         public const string c_emailAttachment = "emailAttachment";
         public const string c_emailAttachmentType = "emailAttachmentType";
         public const string c_emailCustomFormat = "emailCustomFormat";
         public const string c_emailFormat = "emailFormat";
         public const string c_missedCall = "missedCall";
         public const string c_missedCallMask = "missedCallMask";
+        public const string c_missedCallAlertEmail = "missedCallAlertEmail";
+        public const string c_missedCallAlertTxt = "missedCallAlertTxt";
+        public const string c_missedCallAlertPush = "missedCallAlertPush";
         public const string c_newMessage = "newMessage";
         public const string c_newMessageMask = "newMessageMask";
+        public const string c_messageAlertEmail = "messageAlertEmail";
+        public const string c_messageAlertTxt = "messageAlertTxt";
+        public const string c_messageAlertPush = "messageAlertPush";
         public const string c_newSpamMessage = "newSpamMessage";
         public const string c_newSpamMessageMask = "newSpamMessageMask";
+        public const string c_spamMessageAlertEmail = "spamMessageAlertEmail";
+        public const string c_spamMessageAlertTxt = "spamMessageAlertTxt";
+        public const string c_spamMessageAlertPush = "spamMessageAlertPush";
         public const string c_pushConditions = "pushConditions";
         public const string c_emailCCEnabled = "emailCCEnabled";
         public const string c_emailCCList = "emailCCList";

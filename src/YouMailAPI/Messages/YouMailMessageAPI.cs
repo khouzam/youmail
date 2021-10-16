@@ -73,11 +73,9 @@ namespace MagikInfo.YouMailAPI
         {
             HttpResponseMessage response = null;
             List<YouMailMessage> list = new List<YouMailMessage>();
-            int count;
+            int count = 0;
             do
             {
-                count = 0;
-                query.Offset = count;
                 if (query.MaxResults < query.PageLength)
                 {
                     query.PageLength = query.MaxResults;
@@ -86,11 +84,6 @@ namespace MagikInfo.YouMailAPI
 
                 using (response = await YouMailApiAsync(YMST.c_messageBoxEntryQuery + queryString, null, HttpMethod.Get))
                 {
-                    // If we didn't get a response, break out of the loop and return null
-                    if (response == null)
-                    {
-                        return null;
-                    }
                     try
                     {
                         YouMailMessages messages = DeserializeObject<YouMailMessages>(response.GetResponseStream());
@@ -106,6 +99,7 @@ namespace MagikInfo.YouMailAPI
                     }
                     query.Offset += count;
                     query.MaxResults -= count;
+                    query.Page++;
                 }
             } while (count == query.PageLength && query.MaxResults > 0);
 

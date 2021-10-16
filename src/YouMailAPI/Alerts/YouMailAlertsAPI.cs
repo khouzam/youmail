@@ -38,11 +38,30 @@ namespace MagikInfo.YouMailAPI
                 {
                     using (var response = await YouMailApiAsync(YMST.c_alertSettingsUrl, null, HttpMethod.Get))
                     {
-                        returnValue = DeserializeObject<YouMailAlerts>(response.GetResponseStream(), YMST.c_alertSettings);
+                        returnValue = DeserializeObjectDebug<YouMailAlerts>(response.GetResponseStream(), YMST.c_alertSettings);
                     }
                 }
 
                 return returnValue;
+            }
+            finally
+            {
+                RemovePendingOp();
+            }
+        }
+
+        public async Task SetAlertSettingsAsync(YouMailAlerts alerts)
+        {
+            try
+            {
+                AddPendingOp();
+                if (await LoginWaitAsync())
+                {
+                    var content = SerializeObjectToHttpContent(alerts);
+                    using (var response = await YouMailApiAsync(YMST.c_alertSettingsUrl, content, HttpMethod.Put))
+                    {
+                    }
+                }
             }
             finally
             {

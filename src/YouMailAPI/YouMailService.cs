@@ -980,6 +980,7 @@ namespace MagikInfo.YouMailAPI
         private AsyncSemaphore _disconnectedSemaphore = new AsyncSemaphore(1, 1);
 
         public const int InboxFolder = 0;
+        public const int TrashFolder = 5322;
         public const int DitchedCallerGreeting = 9132;
 
         private static ITraceLog s_logger = null;
