@@ -87,7 +87,7 @@ namespace MagikInfo.YouMailAPI.Tests
             Assert.AreEqual(updatedContact.Organization, newContact.Organization, "The contact was not updated as expected");
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         public async Task UploadContacts()
         {
             Random rand = new Random();

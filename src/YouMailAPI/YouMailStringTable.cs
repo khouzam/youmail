@@ -332,6 +332,7 @@ namespace MagikInfo.YouMailAPI
         public const string c_errorCode = "errorCode";
         public const string c_callSetUuid = "callSetUuid";
         public const string c_testCallDetails = "testCallDetails";
+        public const string c_accessPointInfo = "accessPointInfo";
 
 
         public const string c_greetingImageUrl = "http://www.ymstat.com/dyn/community/img/{0}.png";
@@ -351,7 +352,7 @@ namespace MagikInfo.YouMailAPI
         public const string c_alertSettingsUrl = c_server + "/api/v4/settings/alertSettings";
         public const string c_setAlertSettingUrl = c_server + "/api/v4/settings/alertSettings/{0}/{1}";
         public const string c_getForwardingInstructions = c_server + "/api/v4/accounts/forwardinginstructions/phonenumber/{0}"; // {phonenumber}
-        public const string c_accesspoint = c_server + "/api/v4/accounts/accesspoint/phone/{0}"; // {phonenumber}
+        public const string c_accesspoint = c_server + "/api/v4/accounts/accesspoint/{0}"; // {phonenumber}
         public const string c_getCarrierInfo = c_server + "/api/v4/accounts/carrier/{0}"; // {phonenumber}
         public const string c_setCarrierInfo = c_server + "/api/v4/accounts/carrier/{0}/{1}"; // {phonenumber}/{newcarrierid}
         public const string c_getSupportedCarriers = c_server + "/api/v4/lookup/carrier/all/supported";

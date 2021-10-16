@@ -146,7 +146,7 @@ namespace MagikInfo.YouMailAPI
                     string site = string.Format(YMST.c_accesspoint, phonenumber);
                     using (var response = await YouMailApiAsync(site, null, HttpMethod.Get))
                     {
-                        returnValue = DeserializeObject<YouMailAccessPoint>(response.GetResponseStream());
+                        returnValue = DeserializeObject<YouMailAccessPoint>(response.GetResponseStream(), YMST.c_accessPointInfo);
                     }
                 }
             }

@@ -23,28 +23,20 @@ namespace MagikInfo.YouMailAPI
     using System.Xml.Serialization;
 
     [XmlType(AnonymousType = true)]
-    [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_accessPoint)]
+    [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_accessPointInfo)]
     public class YouMailAccessPoint
     {
         [XmlElement(YMST.c_id)]
         [JsonProperty(YMST.c_id)]
         public int Id { get; set; }
 
-        [XmlElement(YMST.c_carrierId)]
-        [JsonProperty(YMST.c_carrierId)]
-        public int CarrierId { get; set; }
-
-        [XmlElement(YMST.c_forwardToNumber)]
-        [JsonProperty(YMST.c_forwardToNumber)]
+        [XmlElement(YMST.c_forwardingNumber)]
+        [JsonProperty(YMST.c_forwardingNumber)]
         public string ForwardToNumber { get; set; }
 
-        [XmlElement(YMST.c_pickupNumber)]
-        [JsonProperty(YMST.c_pickupNumber)]
+        [XmlElement(YMST.c_retrievalNumber)]
+        [JsonProperty(YMST.c_retrievalNumber)]
         public string PickupNumber { get; set; }
-
-        [XmlElement(YMST.c_forwardingNotRequired)]
-        [JsonProperty(YMST.c_forwardingNotRequired)]
-        public bool ForwardingNotRequired { get; set; }
 
         [XmlElement(YMST.c_conferenceNumber)]
         [JsonProperty(YMST.c_conferenceNumber)]

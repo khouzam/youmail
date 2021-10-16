@@ -63,6 +63,7 @@ namespace MagikInfo.YouMailAPI.Tests
             //await service.MoveAllMessageFromFolderAsync(newFolder.Id, service.Trash)
 
             // Delete the folder first in case the name or description doesn't match
+            await Task.Delay(1000);
             await service.DeleteFolderAsync(newFolder.Id);
 
             Assert.IsTrue(newFolder.Name.CompareTo(folderName) == 0, $"Folder name doesn't match.{Environment.NewLine}Expected: {folderName}, got {newFolder.Name}");

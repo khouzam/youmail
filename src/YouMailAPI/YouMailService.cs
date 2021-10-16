@@ -994,7 +994,6 @@ namespace MagikInfo.YouMailAPI
         private JsonSerializerSettings _jsonSettings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore,
-            DefaultValueHandling = DefaultValueHandling.Ignore
         };
     }
 }

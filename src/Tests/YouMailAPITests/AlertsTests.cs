@@ -36,5 +36,30 @@ namespace MagikInfo.YouMailAPI.Tests
             Assert.IsTrue(alerts.EmailFormat != 0, $"Email Format is invalid with a value of {alerts.EmailFormat}");
             Assert.IsTrue(alerts.PushConditions != 0, $"PushConditions are unexpected with a value of {alerts.PushConditions}");
         }
+
+        [TestMethod]
+        public async Task ChangeAlerts()
+        {
+            var service = YouMailTestService.Service;
+
+            var alerts = await service.GetAlertSettingsAsync();
+
+            // Don't change text settings since that requires a premium plan
+            alerts.DitchedCallEmail = !alerts.DitchedCallEmail;
+            alerts.MessageEmail = !alerts.MessageEmail;
+            alerts.MissedCallEmail = !alerts.MissedCallEmail;
+            alerts.SpamMessageEmail = !alerts.SpamMessageEmail;
+
+            await service.SetAlertSettingsAsync(alerts);
+
+            await Task.Delay(1000);
+
+            var newAlerts = await service.GetAlertSettingsAsync();
+
+            Assert.AreEqual(alerts.DitchedCallEmail, newAlerts.DitchedCallEmail, "DitchCallEmail wasn't changed");
+            Assert.AreEqual(alerts.MessageEmail, newAlerts.MessageEmail, "MessageEmail wasn't changed");
+            Assert.AreEqual(alerts.MissedCallEmail, newAlerts.MissedCallEmail, "MissedCallPush wasn't changed");
+            Assert.AreEqual(alerts.SpamMessageEmail, newAlerts.SpamMessageEmail, "SpamMessageEmail wasn't changed");
+        }
     }
 }

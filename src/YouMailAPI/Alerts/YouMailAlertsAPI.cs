@@ -38,7 +38,7 @@ namespace MagikInfo.YouMailAPI
                 {
                     using (var response = await YouMailApiAsync(YMST.c_alertSettingsUrl, null, HttpMethod.Get))
                     {
-                        returnValue = DeserializeObjectDebug<YouMailAlerts>(response.GetResponseStream(), YMST.c_alertSettings);
+                        returnValue = DeserializeObject<YouMailAlerts>(response.GetResponseStream(), YMST.c_alertSettings);
                     }
                 }
 
@@ -57,7 +57,7 @@ namespace MagikInfo.YouMailAPI
                 AddPendingOp();
                 if (await LoginWaitAsync())
                 {
-                    var content = SerializeObjectToHttpContent(alerts);
+                    var content = SerializeObjectToHttpContent(alerts, YMST.c_alertSettings);
                     using (var response = await YouMailApiAsync(YMST.c_alertSettingsUrl, content, HttpMethod.Put))
                     {
                     }

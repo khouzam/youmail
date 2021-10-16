@@ -22,7 +22,6 @@ namespace MagikInfo.YouMailAPI.Tests
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Threading.Tasks;
 
     [TestClass]
@@ -85,7 +84,7 @@ namespace MagikInfo.YouMailAPI.Tests
                 {
                     await Service.SetCarrierInfoAsync(carrier.Id);
                     var info = await Service.GetForwardingInstructionsAsync();
-                    Assert.AreEqual(carrier.Id, info.CarrierId, $"Carrier Id doesn't match");
+                    Assert.AreEqual(carrier.Id, info.CarrierId, "Carrier Id doesn't match");
                 }
             }
         }
@@ -94,15 +93,16 @@ namespace MagikInfo.YouMailAPI.Tests
         /// Ignoring this test because apparently GetAccessPointAsybc is not available.
         /// </summary>
         /// <returns></returns>
-        [TestMethod, Ignore]
+        [TestMethod]
         public async Task GetCarrierForPhoneNumber()
         {
-            var carrierInfo = await Service.GetCarrierInfoAsync();
+            var accessPoint = await Service.GetAccessPointAsync(Service.Username);
 
-            var carrier = await Service.GetAccessPointAsync(Service.Username);
-
-            Assert.IsTrue(carrier.Id == carrierInfo.Id);
-
+            Assert.AreNotEqual(0, accessPoint.Id, "Accesspoint Id should not be 0");
+            Assert.IsFalse(string.IsNullOrEmpty(accessPoint.PickupNumber), "PickupNumber is empty");
+            Assert.IsFalse(string.IsNullOrEmpty(accessPoint.ForwardToNumber), "ForwardToNumber is empty");
+            Assert.IsFalse(string.IsNullOrEmpty(accessPoint.ConferenceNumber), "ConferenceNumber is empty");
+            Assert.IsFalse(string.IsNullOrEmpty(accessPoint.DefaultConferenceNumber), "DefaultConferenceNumber is empty");
         }
 
         [TestMethod]

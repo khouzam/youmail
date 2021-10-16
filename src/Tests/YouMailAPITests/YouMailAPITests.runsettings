@@ -14,5 +14,6 @@
     <Parameter name="PrivateAuthToken" value="" />
     <Parameter name="DefaultUserAgent" value="MagikInfo.YouMailAPITests" />
     <Parameter name="AccountCreationEmail" value="SetValue" />
+    <Parameter name="ResponseFormat" value="JSON" />
   </TestRunParameters>
 </RunSettings>
