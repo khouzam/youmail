@@ -31,7 +31,7 @@ namespace MagikInfo.YouMailAPI
         /// <returns>YouMailCustomResponse</returns>
         public async Task<YouMailResponse> AccountRegistrationVerificationAsync(string phoneNumber)
         {
-            YouMailResponse customResponse = null;
+            YouMailResponse youmailResponse = null;
             try
             {
                 AddPendingOp();
@@ -40,7 +40,7 @@ namespace MagikInfo.YouMailAPI
                     string url = string.Format(YMST.c_registrationVerify, phoneNumber);
                     using (var response = await YouMailApiAsync(url, null, HttpMethod.Get))
                     {
-                        customResponse = DeserializeObject<YouMailResponse>(response.GetResponseStream());
+                        youmailResponse = DeserializeObject<YouMailResponse>(response.GetResponseStream());
                     }
                 }
             }
@@ -49,7 +49,7 @@ namespace MagikInfo.YouMailAPI
                 RemovePendingOp();
             }
 
-            return customResponse;
+            return youmailResponse;
         }
 
         /// <summary>

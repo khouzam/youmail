@@ -23,7 +23,7 @@ namespace MagikInfo.YouMailAPI.Tests
     using System.Net;
     using System.Threading.Tasks;
 
-    [TestClass, Ignore]
+    [TestClass]
     public class AccountTests
     {
         private static string _defaultEmail;
@@ -36,7 +36,7 @@ namespace MagikInfo.YouMailAPI.Tests
             _testUsername = context.Properties["TestUsername"].ToString();
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         public async Task CreateAccount()
         {
             string user = "0002091234";
@@ -90,7 +90,7 @@ namespace MagikInfo.YouMailAPI.Tests
         [TestMethod]
         public async Task VerifyNonExistentAccount()
         {
-            await VerifyAccountAsync("0000000000", false);
+            await VerifyAccountAsync("0004561299", false);
         }
 
         [TestMethod]

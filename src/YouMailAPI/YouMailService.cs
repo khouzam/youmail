@@ -851,6 +851,10 @@ namespace MagikInfo.YouMailAPI
                     {
                         apiError = DeserializeObject<YouMailResponse>(messageStream);
                         message = apiError.GetErrorMessage();
+                        if (message == null)
+                        {
+                            message = apiError.LongMessage;
+                        }
                     }
                     catch
                     {

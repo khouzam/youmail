@@ -20,6 +20,7 @@
 namespace MagikInfo.YouMailAPI
 {
     using Newtonsoft.Json;
+    using System;
     using System.Xml.Serialization;
 
     public class YouMailTestCallDetails
@@ -54,10 +55,38 @@ namespace MagikInfo.YouMailAPI
 
         [XmlElement(YMST.c_initiatedTime)]
         [JsonProperty(YMST.c_initiatedTime)]
-        public string InitiatedTime { get; set; }
+        public long _initiatedTime
+        {
+            get
+            {
+                return InitiatedTime.ToMillisecondsFromEpoch();
+            }
+            set
+            {
+                InitiatedTime = value.FromMillisecondsFromEpoch();
+            }
+        }
+
+        [XmlIgnore]
+        [JsonIgnore]
+        public DateTime InitiatedTime { get; set; }
 
         [XmlElement(YMST.c_completedTime)]
         [JsonProperty(YMST.c_completedTime)]
-        public string CompletedTime { get; set; }
+        public long _completedTime
+        {
+            get
+            {
+                return CompletedTime.ToMillisecondsFromEpoch();
+            }
+            set
+            {
+                CompletedTime = value.FromMillisecondsFromEpoch();
+            }
+        }
+
+        [XmlIgnore]
+        [JsonIgnore]
+        public DateTime CompletedTime { get; set; }
     }
 }

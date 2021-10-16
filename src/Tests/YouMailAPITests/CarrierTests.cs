@@ -105,13 +105,18 @@ namespace MagikInfo.YouMailAPI.Tests
 
         }
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public async Task VerifyCallSetup()
         {
-            var callSetup = await Service.VerifyCallSetupGetStatusAsync();
+            DateTime start = DateTime.Now - TimeSpan.FromMinutes(1);
+            var uuid = await Service.VerifyCallSetupAsync();
+
+            var callSetup = await Service.VerifyCallSetupGetStatusAsync(uuid);
 
             Assert.IsNotNull(callSetup);
-            Assert.IsTrue(!string.IsNullOrEmpty(callSetup.InitiatedTime));
+            Assert.IsTrue(callSetup.InitiatedTime >= start, "InitiatedTime should be greater than the start of the test");
+            Assert.IsTrue(callSetup.InitiatedTime < DateTime.Now + TimeSpan.FromMinutes(1), "InitiatedTime should be less than now");
+            Assert.AreEqual(Service.Username, callSetup.UserPhoneNumber, "User phone number should match");
         }
     }
 }
