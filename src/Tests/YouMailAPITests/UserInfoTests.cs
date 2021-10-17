@@ -31,53 +31,43 @@ namespace MagikInfo.YouMailAPI.Tests
         [TestMethod]
         public async Task GetUserInfo()
         {
-            try
-            {
-                var userInfo = await service.GetUserInfoAsync();
-                Assert.AreEqual(service.Username, userInfo.PrimaryPhoneNumber);
-            }
-            catch (YouMailException yme)
-            {
-                Assert.Fail(yme.Message);
-            }
+            var userInfo = await service.GetUserInfoAsync();
+            Assert.AreEqual(service.Username, userInfo.PrimaryPhoneNumber);
         }
 
         [TestMethod]
         public async Task ChangePin()
         {
-            try
-            {
-                var userInfo = await service.GetUserInfoAsync();
-                userInfo.Pin = "1234";
-                await service.SetUserInfoAsync(userInfo);
-            }
-            catch (YouMailException yme)
-            {
-                Assert.Fail(yme.Message);
-            }
+            var userInfo = await service.GetUserInfoAsync();
+            userInfo.Pin = "1234";
+            await service.SetUserInfoAsync(userInfo);
         }
 
         [TestMethod]
         public async Task ChangePassword()
         {
             var newService = YouMailTestService.NewService;
-            var userInfo = await newService.GetUserInfoAsync();
-            userInfo.Password = "Abc12345";
-            await newService.SetUserInfoAsync(userInfo);
 
-            try
+            var ymPasswordChange = new YouMailPasswordChange
             {
-                // Try a bad password
-                userInfo.Password = "abc";
-                await newService.SetUserInfoAsync(userInfo);
-            }
-            catch (YouMailException e)
-            {
-                Assert.IsTrue(e.StatusCode == HttpStatusCode.BadRequest);
-            }
+                CurrentPassword = newService.Password,
+                NewPassword = "MyNewPassword123"
+            };
 
-            userInfo.Password = newService.Password;
-            await newService.SetUserInfoAsync(userInfo);
+            var ymPasswordRestore = new YouMailPasswordChange
+            {
+                CurrentPassword = ymPasswordChange.NewPassword,
+                NewPassword = ymPasswordChange.CurrentPassword
+            };
+
+            await newService.ChangePasswordAsync(ymPasswordChange);
+
+            // Verify that we can login with the new password
+            var verifyService = new YouMailService(newService.Username, ymPasswordChange.NewPassword, null, YouMailTestService.UserAgent, YouMailTestService.ResponseFormat);
+            var userInfo = await verifyService.GetUserInfoAsync();
+
+            // Restore the password
+            await verifyService.ChangePasswordAsync(ymPasswordRestore);
         }
     }
 }

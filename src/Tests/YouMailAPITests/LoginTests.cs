@@ -20,7 +20,6 @@
 namespace MagikInfo.YouMailAPI.Tests
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System;
     using System.Net;
     using System.Threading.Tasks;
 
@@ -30,36 +29,22 @@ namespace MagikInfo.YouMailAPI.Tests
         [TestMethod]
         public async Task Login()
         {
-            try
-            {
-                var service = YouMailTestService.NewService;
-                var task = service.LoginAsync();
-                Assert.IsTrue(await service.LoginWaitAsync());
-                Assert.IsTrue(task.IsCompleted && !task.IsFaulted);
-                Assert.IsTrue(service.IsLoggedIn);
-                Assert.IsTrue(service.HasCredentials);
-                Assert.IsTrue(service.HasTriedLogin);
-            }
-            catch
-            {
-                Assert.Fail("Failed to login to YouMail Service");
-            }
+            var service = YouMailTestService.NewService;
+            var task = service.LoginAsync();
+            Assert.IsTrue(await service.LoginWaitAsync());
+            Assert.IsTrue(task.IsCompleted && !task.IsFaulted);
+            Assert.IsTrue(service.IsLoggedIn);
+            Assert.IsTrue(service.HasCredentials);
+            Assert.IsTrue(service.HasTriedLogin);
         }
 
         [TestMethod, Ignore]
         public async Task Private_Login()
         {
-            try
-            {
-                var youmail = YouMailTestService.PrivateService;
-                youmail.AuthToken = null;
-                await youmail.LoginAsync();
-                Assert.IsTrue(!string.IsNullOrWhiteSpace(youmail.AuthToken));
-            }
-            catch (Exception e)
-            {
-                Assert.Fail("Private login failed: {0}", e.Message);
-            }
+            var youmail = YouMailTestService.PrivateService;
+            youmail.AuthToken = null;
+            await youmail.LoginAsync();
+            Assert.IsTrue(!string.IsNullOrWhiteSpace(youmail.AuthToken));
         }
 
         [TestMethod]
@@ -83,14 +68,8 @@ namespace MagikInfo.YouMailAPI.Tests
         {
             var service = YouMailTestService.NewService;
 
-            try
-            {
-                await service.GetUserIdAsync();
-            }
-            catch (YouMailException yme)
-            {
-                Assert.Fail(yme.Message);
-            }
+            // Call any API that needs to login
+            await service.GetUserIdAsync();
         }
     }
 }

@@ -58,6 +58,7 @@ namespace MagikInfo.YouMailAPI.Tests
         public static string TestPassword { get; private set; }
         public static string TestFullName { get; private set; }
         public static string UserAgent { get; private set; }
+        public static ResponseFormat ResponseFormat { get { return _responseFormat; } }
 
         public static YouMailService Service
         {

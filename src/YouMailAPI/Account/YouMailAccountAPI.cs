@@ -189,6 +189,29 @@ namespace MagikInfo.YouMailAPI
         }
 
         /// <summary>
+        /// Change the current user's password. This will invalidate any authTokens that were issued before
+        /// </summary>
+        /// <param name="passwordChange"></param>
+        /// <returns></returns>
+        public async Task ChangePasswordAsync(YouMailPasswordChange passwordChange)
+        {
+            try
+            {
+                AddPendingOp();
+                if (await LoginWaitAsync())
+                {
+                    using (var response = await YouMailApiAsync(YMST.c_changePassword, SerializeObjectToHttpContent(passwordChange, YMST.c_passwordChange), HttpMethod.Put))
+                    {
+                    }
+                }
+            }
+            finally
+            {
+                RemovePendingOp();
+            }
+        }
+
+        /// <summary>
         /// Get the UserId for the current user
         /// </summary>
         /// <returns></returns>

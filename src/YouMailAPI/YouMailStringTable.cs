@@ -220,6 +220,9 @@ namespace MagikInfo.YouMailAPI
         public const string c_displayName = "displayName";
         public const string c_email = "emailAddress";
         public const string c_password = "password";
+        public const string c_passwordChange = "passwordChange";
+        public const string c_currentPassword = "currentPassword";
+        public const string c_newPassword = "newPassword";
         public const string c_pin = "pin";
         public const string c_phoneModel = "phoneModel";
         public const string c_phoneModelWP7 = "51224";
@@ -375,6 +378,7 @@ namespace MagikInfo.YouMailAPI
         public const string c_registrationVerify = c_server + "/api/v4/accounts/registration/verify/{0}";
         public const string c_createAccountUrl = c_server + "/api/v4/accounts";
         public const string c_accountDetailsUrl = c_server + "/api/v4/accounts/phone/{0}";
+        public const string c_changePassword = c_server + "/api/v4/accounts/password";
         public const string c_settingsUserId = c_server + "/api/v4/settings/";
 
         public const string c_ecommerce = c_server + "/api/v4/status/accountStatus/ecommerceStatus";
