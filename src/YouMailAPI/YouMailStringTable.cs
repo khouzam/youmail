@@ -424,16 +424,17 @@ namespace MagikInfo.YouMailAPI
         public const string c_storeUrl = "https://store.youmail.com/store/home.do?auth={0}";
         public const string c_storeProductUrl = "https://store.youmail.com/store/cart/productAddCart.do?sku={0}&auth={1}";
         public const string c_recoverUrl = "https://www.youmail.com/login/user/password/recover";
-        public const string c_receiptsUrl = "https://www.youmail.com/youmail/user/autoreply?auth={0}";
-        public const string c_spamUrl = "https://www.youmail.com/youmail/user/spam/edit?auth={0}";
+        public const string c_receiptsUrl = "https://dashboard.youmail.com/settings/auto-reply?auth={0}";
+        public const string c_spamUrl = "https://dashboard.youmail.com/settings/call-protection?auth={0}";
         public const string c_TOSUrl = "http://www.youmail.com/termsofuse.html";
         public const string c_PrivacyUrl = "http://www.youmail.com/home/corp/privacy";
         public const string c_greetingStatus = "https://www.youmail.com/youmail/greeting/status/edit?auth={0}";
-        public const string c_changePin = "https://www.youmail.com/youmail/user/password/edit?auth={0}";
-        public const string c_userProfile = "https://www.youmail.com/youmail/user/personal?auth={0}";
-        public const string c_userPhones = "https://www.youmail.com/youmail/user/phones?auth={0}";
+        public const string c_changePin = "https://dashboard.youmail.com/settings/security?auth={0}";
+        public const string c_userProfile = "https://dashboard.youmail.com/settings/information?auth={0}";
+        public const string c_userPhones = "https://dashboard.youmail.com/settings/phones?auth={0}";
         public const string c_webLinkVirtualNumbers = "https://www.youmail.com/youmail/user/virtual-numbers?auth={0}";
         public const string c_paymentMethods = "https://store.youmail.com/store/cart/payment?auth={0}&r=/youmail/user/statements";
+        public const string c_ordersUrl = "https://go.youmail.com/vieworders?auth={0}";
         #endregion
 
         public const string c_ditchedCall = "ditchedCall";
