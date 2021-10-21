@@ -17,16 +17,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /*************************************************************************************************/
 
-namespace MagikInfo.YouMailAPI
+namespace MagikInfo.YouMailAPI.Tests
 {
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
+    using System.Net;
+    using System.Threading.Tasks;
 
-    [Flags]
-    public enum MissedCall
+    [TestClass]
+    public class ErrorTests
     {
-        None = 0,
-        SendEmail = 1,
-        SendText = 2,
-        SendPush = 8
+        [TestMethod]
+        public async Task GetYouMailError()
+        {
+            var service = YouMailTestService.Service;
+
+            try
+            {
+                // Issue a call that will fail
+                await service.CreateFolderAsync(string.Empty, string.Empty);
+            }
+            catch (YouMailException yme)
+            {
+                Assert.IsNotNull(yme.Response, "Did not get a YouMailError");
+                Assert.IsNotNull(yme.Response.Errors, "Did not get an internal set of errors");
+                Assert.IsNotNull(yme.Response.Errors[0].ErrorCode, "Did not get an ErrorCode");
+                Assert.IsNotNull(yme.Response.Errors[0].ShortMessage, "Did not get a ShortMessage");
+                Assert.IsNotNull(yme.Response.Errors[0].LongMessage, "Did not get a LongMessage");
+                return;
+            }
+            Assert.Fail("YouMailException was not thrown");
+        }
     }
 }

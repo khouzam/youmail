@@ -19,7 +19,6 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using MagikInfo.XmlSerializerExtensions;
     using System.Net.Http;
     using System.Threading.Tasks;
 
@@ -39,11 +38,8 @@ namespace MagikInfo.YouMailAPI
                 {
                     using (var response = await YouMailApiAsync(YMST.c_spamSettings, null, HttpMethod.Get))
                     {
-                        if (response != null)
-                        {
-                            var spamSettings = response.GetResponseStream().FromXml<YouMailSpamSettings>();
-                            retVal = spamSettings.SpamLevel;
-                        }
+                        var spamSettings = DeserializeObject<YouMailSpamSettings>(response.GetResponseStream());
+                        retVal = spamSettings.SpamLevel;
                     }
                 }
             }

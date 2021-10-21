@@ -19,49 +19,48 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using Newtonsoft.Json;
-    using System.Xml.Serialization;
+    using System;
+    using System.Net;
 
-    [XmlType(AnonymousType = true)]
-    [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_folders)]
-    public class YouMailFolders
+    public class YouMailException : Exception
     {
-        [XmlElement(YMST.c_folder)]
-        [JsonProperty(YMST.c_folders)]
-        public YouMailFolder[] Folders;
-    }
+        public HttpStatusCode StatusCode { get; private set; }
 
-    [XmlType(AnonymousType = true)]
-    [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_folder)]
-    public class YouMailFolder
-    {
-        [XmlElement(YMST.c_name)]
-        [JsonProperty(YMST.c_name)]
-        public string Name { get; set; }
+        public YouMailResponse Response { get; private set; }
 
-        [XmlElement(YMST.c_description)]
-        [JsonProperty(YMST.c_description)]
-        public string Description { get; set; }
-
-        [XmlElement(YMST.c_id)]
-        [JsonProperty(YMST.c_id)]
-        public int Id { get; set; }
-
-        [XmlElement(YMST.c_newEntryCount)]
-        [JsonProperty(YMST.c_newEntryCount)]
-        public int UnreadCount { get; set; }
-
-        [XmlElement(YMST.c_ackEntryCount)]
-        [JsonProperty(YMST.c_ackEntryCount)]
-        public int AckCount { get; set; }
-
-        [XmlElement(YMST.c_visibleEntryCount)]
-        [JsonProperty(YMST.c_visibleEntryCount)]
-        public int VisibleCount { get; set; }
-
-        public bool IsValid()
+        public YouMailException(
+            string message,
+            YouMailResponse response,
+            HttpStatusCode statusCode,
+            Exception innerException)
+            : base(message, innerException)
         {
-            return (!string.IsNullOrEmpty(Name) && Id >= 0);
+            Response = response;
+            StatusCode = statusCode;
+        }
+
+        public override string Message
+        {
+            get
+            {
+                string message = null;
+                if (Response != null)
+                {
+                    message = Response.GetErrorMessage();
+                }
+                if (string.IsNullOrEmpty(message))
+                {
+                    if (!string.IsNullOrEmpty(base.Message))
+                    {
+                        return base.Message;
+                    }
+                    if (InnerException != null)
+                    {
+                        return InnerException.Message;
+                    }
+                }
+                return message;
+            }
         }
     }
 }

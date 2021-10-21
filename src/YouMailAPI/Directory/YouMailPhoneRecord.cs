@@ -19,6 +19,7 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System.Collections.Generic;
     using System.Xml.Serialization;
 
@@ -27,6 +28,7 @@ namespace MagikInfo.YouMailAPI
     public partial class YouMailPhoneRecords
     {
         [XmlElement(YMST.c_phoneRecord)]
+        [JsonProperty(YMST.c_phoneRecord)]
         public List<YouMailPhoneRecord> PhoneRecords;
     }
 
@@ -35,18 +37,23 @@ namespace MagikInfo.YouMailAPI
     public class YouMailPhoneRecord
     {
         [XmlElement(YMST.c_displayName)]
+        [JsonProperty(YMST.c_displayName)]
         public string DisplayName { get; set; }
 
         [XmlElement(YMST.c_displayImageSource)]
+        [JsonProperty(YMST.c_displayImageSource)]
         public string DisplayImageSource { get; set; }
 
         [XmlElement(YMST.c_displayImageMedium)]
+        [JsonProperty(YMST.c_displayImageMedium)]
         public string DisplayImageMedium { get; set; }
 
         [XmlElement(YMST.c_displayImageLarge)]
+        [JsonProperty(YMST.c_displayImageLarge)]
         public string DisplayImageLarge { get; set; }
 
         [XmlElement(YMST.c_displayImageExtraLarge)]
+        [JsonProperty(YMST.c_displayImageExtraLarge)]
         public string DisplayImageExtraLarge { get; set; }
     }
 }

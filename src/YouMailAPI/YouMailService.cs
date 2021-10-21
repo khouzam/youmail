@@ -19,8 +19,9 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using MagikInfo.Synchronization;
-    using MagikInfo.XmlSerializerExtensions;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+    using Synchronization;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -31,6 +32,7 @@ namespace MagikInfo.YouMailAPI
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
+    using XmlSerializerExtensions;
 
 #if WINDOWS_UWP
     using Windows.Networking.Connectivity;
@@ -108,6 +110,7 @@ namespace MagikInfo.YouMailAPI
                 return GZipSupport;
             }
         }
+
         /// <summary>
         /// Create a new YouMail object
         /// </summary>
@@ -115,12 +118,20 @@ namespace MagikInfo.YouMailAPI
         /// <param name="password">The user's password</param>
         /// <param name="authToken">An authentication token to user</param>
         /// <param name="userAgent">The UserAgent to use for the web requests</param>
+        /// <param name="responseFormat">The format of the response, JSON or XML</param>
         /// <param name="secureConnections">Flag to specify if we use secure connections for our requests</param>
-        public YouMailService(string username, string password, string authToken, string userAgent, bool secureConnections = true)
+        public YouMailService(
+            string username,
+            string password,
+            string authToken,
+            string userAgent,
+            ResponseFormat responseFormat = ResponseFormat.JSON,
+            bool secureConnections = true)
         {
             _username = username;
             _password = password;
             _userAgent = userAgent;
+            _responseFormat = responseFormat;
 
             // Create the HttpClient before setting the AuthToken
             var handler = new HttpClientHandler
@@ -129,6 +140,23 @@ namespace MagikInfo.YouMailAPI
             };
             _httpClient = new HttpClient(handler);
             _httpClient.DefaultRequestHeaders.Add("User-Agent", _userAgent);
+
+            // Set the response format for the requests
+            if (_responseFormat == ResponseFormat.JSON)
+            {
+                _responseFormatString = "application/json";
+            }
+            else if (_responseFormat == ResponseFormat.XML)
+            {
+                _responseFormatString = "application/xml";
+            }
+            else
+            {
+                throw new InvalidOperationException(string.Format("Unsupported ResponseFormat: {0}, is not supported.", _responseFormat.ToString()));
+            }
+
+            _httpClient.DefaultRequestHeaders.Add("Accept", ResponseFormatString);
+
             if (s_gzipSupported)
             {
                 _httpClient.DefaultRequestHeaders.Add("Accept-Encoding", "gzip,defalte");
@@ -441,19 +469,26 @@ namespace MagikInfo.YouMailAPI
                         }
                     }
                     while (redirect);
-                    response.EnsureYouMailResponse();
+                    EnsureYouMailResponse(response);
                 }
                 catch (WebException we)
                 {
-                    YouMailException yme = we.ConvertException();
-                    if (yme.StatusCode == HttpStatusCode.Forbidden && auth)
+                    YouMailException yme = ConvertException(we);
+                    if (yme != null)
                     {
-                        weRetry = yme;
-                        fRetryAuthentication = true;
+                        if (yme.StatusCode == HttpStatusCode.Forbidden && auth)
+                        {
+                            weRetry = yme;
+                            fRetryAuthentication = true;
+                        }
+                        else
+                        {
+                            throw yme;
+                        }
                     }
                     else
                     {
-                        throw yme;
+                        throw;
                     }
                 }
                 catch (YouMailException re)
@@ -497,12 +532,17 @@ namespace MagikInfo.YouMailAPI
                             }
                         }
                         while (redirect);
-                        response.EnsureYouMailResponse();
+                        EnsureYouMailResponse(response);
                     }
                     catch (WebException we)
                     {
                         // Convert the WebException to a YouMailException
-                        throw we.ConvertException();
+                        var yme = ConvertException(we);
+                        if (yme != null)
+                        {
+                            throw yme;
+                        }
+                        throw we;
                     }
                 }
             }
@@ -664,6 +704,238 @@ namespace MagikInfo.YouMailAPI
             }
         }
 
+
+        /// <summary>
+        /// Take an object and deserialize it base on the requested format for the serivce.
+        /// </summary>
+        /// <typeparam name="T">The type to deserialize to</typeparam>
+        /// <param name="s">The stream that has the data</param>
+        /// <param name="rootElement">An optional root element for JSON that will contain the object</param>
+        /// <returns>The object requested</returns>
+        private T DeserializeObject<T>(Stream s, string rootElement = null) where T : class
+        {
+            T returnObject = null;
+            switch (_responseFormat)
+            {
+                case ResponseFormat.JSON:
+
+                    var serializer = new JsonSerializer();
+                    using (var sr = new StreamReader(s))
+                    {
+                        using (var jsonTextReader = new JsonTextReader(sr))
+                        {
+                            if (!string.IsNullOrEmpty(rootElement))
+                            {
+                                var root = (JObject)serializer.Deserialize(jsonTextReader, typeof(JObject));
+                                returnObject = root[rootElement].ToObject<T>();
+                            }
+                            else
+                            {
+                                returnObject = (T)serializer.Deserialize(jsonTextReader, typeof(T));
+                            }
+                        }
+                    }
+
+                    break;
+
+                case ResponseFormat.XML:
+                    returnObject = s.FromXml<T>();
+                    break;
+
+                default:
+                    throw new InvalidOperationException("Invalid conversion format");
+            }
+
+            return returnObject;
+        }
+
+        /// <summary>
+        /// Take an object and deserialize it base on the requested format for the serivce.
+        /// This will also print out the response receieved to the debug console
+        /// </summary>
+        /// <typeparam name="T">The type to deserialize to</typeparam>
+        /// <param name="s">The stream that has the data</param>
+        /// <param name="rootElement">An optional root element for JSON that will contain the object</param>
+        /// <returns>The object requested</returns>
+        private T DeserializeObjectDebug<T>(Stream s, string rootElement = null) where T : class
+        {
+            T returnObject = null;
+            switch (_responseFormat)
+            {
+                case ResponseFormat.JSON:
+                    {
+                        using (var sr = new StreamReader(s))
+                        {
+                            var content = sr.ReadToEnd();
+                            Debug.WriteLine(content);
+                            if (!string.IsNullOrEmpty(rootElement))
+                            {
+                                var root = JObject.Parse(content);
+                                returnObject = root[rootElement].ToObject<T>();
+                            }
+                            else
+                            {
+                                returnObject = JsonConvert.DeserializeObject<T>(content);
+                            }
+                        }
+                    }
+                    break;
+
+                case ResponseFormat.XML:
+                    returnObject = s.FromXmlDebug<T>();
+                    break;
+
+                default:
+                    throw new InvalidOperationException("Invalid conversion format");
+            }
+
+            return returnObject;
+        }
+
+        private string SerializeObject<T>(T obj, string rootObject = null) where T : class
+        {
+            string serializedObject = null;
+            switch (_responseFormat)
+            {
+                case ResponseFormat.JSON:
+                    if (rootObject != null)
+                    {
+                        // Wrap the object into an object to add the root node.
+                        var objSer = new Dictionary<string, Object> { { rootObject, obj } };
+                        serializedObject = JsonConvert.SerializeObject(objSer, _jsonSettings);
+                    }
+                    else
+                    {
+                        serializedObject = JsonConvert.SerializeObject(obj, _jsonSettings);
+                    }
+                    break;
+
+                case ResponseFormat.XML:
+                    serializedObject = obj.ToXml();
+                    break;
+
+                default:
+                    throw new InvalidOperationException("Invalid conversion format specified");
+            }
+
+            return serializedObject;
+        }
+
+        /// <summary>
+        /// Take an object and serialize it as an HttpContentType
+        /// </summary>
+        /// <typeparam name="T">The type of the object that we are serializing</typeparam>
+        /// <param name="obj">The object that we are serializing</param>
+        /// <param name="rootObject">For Json, a root node name that is inserted</param>
+        /// <returns>An HttpContent object</returns>
+        private HttpContent SerializeObjectToHttpContent<T>(T obj, string rootObject = null) where T : class
+        {
+            var serializedString = SerializeObject(obj, rootObject);
+            return new StringContent(serializedString, Encoding.UTF8, ResponseFormatString);
+        }
+
+        /// <summary>
+        /// Throws an exception if the API call failed
+        /// </summary>
+        /// <param name="responseMessage">The ResponseMessage returned from the API</param>
+        private void EnsureYouMailResponse(HttpResponseMessage responseMessage)
+        {
+            if (!responseMessage.IsSuccessStatusCode)
+            {
+                string message = null;
+                YouMailResponse apiError = null;
+                var messageStream = responseMessage.GetResponseStream();
+                if (messageStream != null)
+                {
+                    try
+                    {
+                        apiError = DeserializeObject<YouMailResponse>(messageStream);
+                        message = apiError.GetErrorMessage();
+                        if (message == null)
+                        {
+                            message = apiError.LongMessage;
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+                throw new YouMailException(message, apiError, responseMessage.StatusCode, null);
+            }
+        }
+
+        /// <summary>
+        /// Get the error message from the YouMail response stream
+        /// </summary>
+        /// <param name="s">The ResponseStream</param>
+        /// <returns>A string with the error message</returns>
+        private string GetYouMailMessageFromStream(Stream s)
+        {
+            string message = null;
+            bool fFoundMessage = false;
+            try
+            {
+                var apiError = DeserializeObject<YouMailResponse>(s);
+                if (apiError != null)
+                {
+                    foreach (var error in apiError.Errors)
+                    {
+                        if (!string.IsNullOrEmpty(error.LongMessage))
+                        {
+                            message = error.LongMessage;
+                            fFoundMessage = true;
+                            break;
+                        }
+                    }
+
+                    if (!fFoundMessage)
+                    {
+                        foreach (var error in apiError.Errors)
+                        {
+                            if (!string.IsNullOrEmpty(error.ShortMessage))
+                            {
+                                message = error.ShortMessage;
+                                fFoundMessage = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+            return message;
+        }
+
+        /// <summary>
+        /// Convert a WebException into a YouMailException
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        private YouMailException ConvertException(WebException e)
+        {
+            if (e is WebException)
+            {
+                WebException we = e as WebException;
+                if (we.Response is HttpWebResponse)
+                {
+                    var webResponse = we.Response as HttpWebResponse;
+                    var s = webResponse.GetResponseStream();
+                    YouMailResponse error = null;
+                    try
+                    {
+                        error = DeserializeObject<YouMailResponse>(s);
+                        return new YouMailException(error.GetErrorMessage(), error, webResponse.StatusCode, e);
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+            return null;
+        }
+
         /// <summary>
         /// The user's Username
         /// </summary>
@@ -687,6 +959,13 @@ namespace MagikInfo.YouMailAPI
         }
 #endif
 
+        public string ResponseFormatString
+        {
+            get { return _responseFormatString; }
+        }
+
+        private readonly ResponseFormat _responseFormat;
+        private readonly string _responseFormatString;
         private readonly string _username;
         private readonly string _password;
         private readonly string _userAgent;
@@ -705,9 +984,16 @@ namespace MagikInfo.YouMailAPI
         private AsyncSemaphore _disconnectedSemaphore = new AsyncSemaphore(1, 1);
 
         public const int InboxFolder = 0;
+        public const int TrashFolder = 5322;
         public const int DitchedCallerGreeting = 9132;
 
         private static ITraceLog s_logger = null;
         private HttpClient _httpClient = null;
+
+        // Serializer
+        private JsonSerializerSettings _jsonSettings = new JsonSerializerSettings
+        {
+            NullValueHandling = NullValueHandling.Ignore,
+        };
     }
 }

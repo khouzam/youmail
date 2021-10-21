@@ -19,9 +19,6 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using System;
-    using System.Text;
-
     public class YouMailMessageQuery : YouMailQuery
     {
         public YouMailMessageQuery(QueryType type)

@@ -120,6 +120,11 @@ namespace MagikInfo.YouMailAPI
         public string DestinationName { get; set; }
         #endregion
 
+        #region SMS
+        [DataMember]
+        public string Body { get; set; }
+        #endregion
+
         #region Flags
         public bool IsMissedCallNotification
         {
@@ -157,6 +162,16 @@ namespace MagikInfo.YouMailAPI
         public bool IsIncomingExtraLineNotification
         {
             get { return PushType.HasFlag(YouMailPushType.IncomingExtraLine); }
+        }
+
+        public bool IsSMSNotification
+        {
+            get { return PushType.HasFlag(YouMailPushType.SMS); }
+        }
+
+        public bool IsMMSNotification
+        {
+            get { return PushType.HasFlag(YouMailPushType.MMS); }
         }
         #endregion
     }

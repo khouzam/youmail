@@ -19,6 +19,7 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System.Xml.Serialization;
 
     [XmlType(AnonymousType = true)]
@@ -26,12 +27,15 @@ namespace MagikInfo.YouMailAPI
     public class TranscriptionSettings
     {
         [XmlElement(YMST.c_active)]
+        [JsonProperty(YMST.c_active)]
         public bool Active { get; set; }
 
         [XmlElement(YMST.c_enabled)]
+        [JsonProperty(YMST.c_enabled)]
         public bool Enabled { get; set; }
 
         [XmlElement(YMST.c_smsCount)]
+        [JsonProperty(YMST.c_smsCount)]
         public int SmsCount { get; set; }
     }
 }

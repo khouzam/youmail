@@ -19,14 +19,30 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using System;
+    using Newtonsoft.Json;
+    using System.Xml.Serialization;
 
-    [Flags]
-    public enum DitchedCall
+
+    public partial class YouMailMessageCreateEntry : YouMailMessage
     {
-        None = 0,
-        SendEmail = 1,
-        SendText = 2,
-        SendPush = 8,
+        [XmlElement(YMST.c_messageDataType)]
+        [JsonProperty(YMST.c_messageDataType)]
+        public int _messageDataTypeInt
+        {
+            get { return (int)MessageDataType; }
+            set { MessageDataType = (DataFormat)value; }
+        }
+
+        [XmlIgnore]
+        [JsonIgnore]
+        public DataFormat MessageDataType { get; set; }
+
+        [XmlElement(YMST.c_messageData)]
+        [JsonProperty(YMST.c_messageData)]
+        public string MessageData { get; set; }
+
+        [XmlElement("silentMode")]
+        [JsonProperty("silentMode")]
+        public bool SilentMode { get; set; }
     }
 }

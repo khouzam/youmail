@@ -19,11 +19,9 @@
 
 namespace MagikInfo.YouMailAPI.Tests
 {
-    using MagikInfo.XmlSerializerExtensions;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Threading.Tasks;
 
     [TestClass]
@@ -38,6 +36,7 @@ namespace MagikInfo.YouMailAPI.Tests
             {
                 var carrierInfo = await Service.GetCarrierInfoAsync();
                 var forwardingInfo = await Service.GetForwardingInstructionsAsync();
+                Assert.IsTrue(carrierInfo.Id != 0);
                 Assert.IsTrue(carrierInfo.Id == forwardingInfo.CarrierId);
                 var carriers = await Service.GetSupportedCarriersAsync();
                 // Pick a new random carrier
@@ -81,17 +80,43 @@ namespace MagikInfo.YouMailAPI.Tests
 
             foreach (var carrier in carriers.Carriers)
             {
-                try
+                if (carrier.ActiveFlag)
                 {
                     await Service.SetCarrierInfoAsync(carrier.Id);
                     var info = await Service.GetForwardingInstructionsAsync();
-                    Debug.WriteLine(info.ToXml());
-                }
-                catch (YouMailException)
-                {
-                    Debug.WriteLine($"Failed to set the carrier {carrier.Name}, Supported: {carrier.SupportedFlag}");
+                    Assert.AreEqual(carrier.Id, info.CarrierId, "Carrier Id doesn't match");
                 }
             }
+        }
+
+        /// <summary>
+        /// Ignoring this test because apparently GetAccessPointAsybc is not available.
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public async Task GetCarrierForPhoneNumber()
+        {
+            var accessPoint = await Service.GetAccessPointAsync(Service.Username);
+
+            Assert.AreNotEqual(0, accessPoint.Id, "Accesspoint Id should not be 0");
+            Assert.IsFalse(string.IsNullOrEmpty(accessPoint.PickupNumber), "PickupNumber is empty");
+            Assert.IsFalse(string.IsNullOrEmpty(accessPoint.ForwardToNumber), "ForwardToNumber is empty");
+            Assert.IsFalse(string.IsNullOrEmpty(accessPoint.ConferenceNumber), "ConferenceNumber is empty");
+            Assert.IsFalse(string.IsNullOrEmpty(accessPoint.DefaultConferenceNumber), "DefaultConferenceNumber is empty");
+        }
+
+        [TestMethod]
+        public async Task VerifyCallSetup()
+        {
+            DateTime start = DateTime.Now - TimeSpan.FromMinutes(1);
+            var uuid = await Service.VerifyCallSetupAsync();
+
+            var callSetup = await Service.VerifyCallSetupGetStatusAsync(uuid);
+
+            Assert.IsNotNull(callSetup);
+            Assert.IsTrue(callSetup.InitiatedTime >= start, "InitiatedTime should be greater than the start of the test");
+            Assert.IsTrue(callSetup.InitiatedTime < DateTime.Now + TimeSpan.FromMinutes(1), "InitiatedTime should be less than now");
+            Assert.AreEqual(Service.Username, callSetup.UserPhoneNumber, "User phone number should match");
         }
     }
 }

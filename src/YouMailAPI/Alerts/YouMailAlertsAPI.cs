@@ -19,7 +19,6 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using MagikInfo.XmlSerializerExtensions;
     using System.Net.Http;
     using System.Threading.Tasks;
 
@@ -39,15 +38,30 @@ namespace MagikInfo.YouMailAPI
                 {
                     using (var response = await YouMailApiAsync(YMST.c_alertSettingsUrl, null, HttpMethod.Get))
                     {
-                        if (response != null)
-                        {
-                            var ymAlerts = response.GetResponseStream().FromXml<YouMailAlerts>();
-                            returnValue = ymAlerts;
-                        }
+                        returnValue = DeserializeObject<YouMailAlerts>(response.GetResponseStream(), YMST.c_alertSettings);
                     }
                 }
 
                 return returnValue;
+            }
+            finally
+            {
+                RemovePendingOp();
+            }
+        }
+
+        public async Task SetAlertSettingsAsync(YouMailAlerts alerts)
+        {
+            try
+            {
+                AddPendingOp();
+                if (await LoginWaitAsync())
+                {
+                    var content = SerializeObjectToHttpContent(alerts, YMST.c_alertSettings);
+                    using (var response = await YouMailApiAsync(YMST.c_alertSettingsUrl, content, HttpMethod.Put))
+                    {
+                    }
+                }
             }
             finally
             {

@@ -19,7 +19,6 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using MagikInfo.XmlSerializerExtensions;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -46,6 +45,7 @@ namespace MagikInfo.YouMailAPI
                 {
                     int currentIndex = 0;
                     YouMailContacts currentContacts = new YouMailContacts();
+
                     // We can only send 15 contacts at a time
                     var contactsList = new List<YouMailContact>();
                     do
@@ -73,7 +73,11 @@ namespace MagikInfo.YouMailAPI
                             {
                                 using (GZipStream gzStream = new GZipStream(stream, CompressionMode.Compress, true))
                                 {
-                                    currentContacts.ToXml(gzStream);
+                                    using (StreamWriter writer = new StreamWriter(gzStream))
+                                    {
+                                        var serializedContacts = SerializeObject(currentContacts.Contacts, YMST.c_contacts);
+                                        writer.Write(serializedContacts);
+                                    }
                                 }
 
                                 // Seek back to the origin of the stream to stick it into the http message
@@ -81,10 +85,10 @@ namespace MagikInfo.YouMailAPI
 
                                 using (var compressedContacts = new ByteArrayContent(stream.ToArray()))
                                 {
-                                    compressedContacts.Headers.ContentType = new MediaTypeHeaderValue("application/gzip");
+                                    compressedContacts.Headers.ContentType = new MediaTypeHeaderValue(ResponseFormatString);
                                     compressedContacts.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
                                     {
-                                        FileName = "contacts.xml.gz",
+                                        FileName = "contacts.gz",
                                         Name = "datafile"
                                     };
                                     content.Add(compressedContacts);
@@ -101,7 +105,7 @@ namespace MagikInfo.YouMailAPI
                             // We've uploaded a batch of contacts, poll to see if we can send the next ones
                             using (var response = await YouMailApiAsync(YMST.c_uploadContactsStatus, null, HttpMethod.Get))
                             {
-                                var status = response.GetResponseStream().FromXml<YouMailContactsUploadStatus>();
+                                var status = DeserializeObject<YouMailContactsUploadStatus>(response.GetResponseStream(), YMST.c_contactSyncSummary);
                                 if (status.Status == YouMailContactsUploadStatus.StatusEnum.Started ||
                                     status.Status == YouMailContactsUploadStatus.StatusEnum.Pending)
                                 {
@@ -161,7 +165,7 @@ namespace MagikInfo.YouMailAPI
         /// </summary>
         /// <param name="id">The id of the contact</param>
         /// <returns>The YouMailContact</returns>
-        public async Task<YouMailContact> GetContactAsync(long id, int imageSize)
+        public async Task<YouMailContact> GetContactAsync(long id, int imageSize = 100)
         {
             YouMailContact contact = null;
             try
@@ -197,24 +201,20 @@ namespace MagikInfo.YouMailAPI
                 count = 0;
                 using (response = await YouMailApiAsync(YMST.c_getContacts + query.GetQueryString(), null, HttpMethod.Get))
                 {
-                    if (response != null)
+                    var contactResponse = DeserializeObject<YouMailContactsResponse>(response.GetResponseStream());
+                    if (contactResponse != null)
                     {
-                        var stream = response.GetResponseStream();
-                        var contactResponse = stream.FromXml<YouMailContactsResponse>();
-                        if (contactResponse != null)
+                        count = contactResponse.Contacts.Length;
+                        if (count > 0)
                         {
-                            count = contactResponse.Contacts.Contacts.Length;
-                            if (count > 0)
-                            {
-                                contacts.AddRange(contactResponse.Contacts.Contacts);
-                            }
+                            contacts.AddRange(contactResponse.Contacts);
                         }
+                    }
 
-                        if (lastQueryUpdated == DateTime.MinValue)
-                        {
-                            var date = response.Headers.Date.ToString();
-                            lastQueryUpdated = DateTime.Parse(date);
-                        }
+                    if (lastQueryUpdated == DateTime.MinValue)
+                    {
+                        var date = response.Headers.Date.ToString();
+                        lastQueryUpdated = DateTime.Parse(date);
                     }
                 }
                 query.Page++;
@@ -316,9 +316,9 @@ namespace MagikInfo.YouMailAPI
                 AddPendingOp();
                 if (await LoginWaitAsync())
                 {
-                    using (var response = await YouMailApiAsync(string.Format(YMST.c_getOrCreateContact, number), contact.ToXmlHttpContent(), HttpMethod.Post))
+                    using (var response = await YouMailApiAsync(string.Format(YMST.c_getOrCreateContact, number), SerializeObjectToHttpContent(contact), HttpMethod.Post))
                     {
-                        return response.GetResponseStream().FromXml<YouMailContact>();
+                        return DeserializeObject<YouMailContact>(response.GetResponseStream());
                     }
                 }
             }
@@ -343,10 +343,10 @@ namespace MagikInfo.YouMailAPI
                 AddPendingOp();
                 if (await LoginWaitAsync())
                 {
-                    using (var response = await YouMailApiAsync(YMST.c_createContact, contact.ToXmlHttpContent(), HttpMethod.Post))
+                    using (var response = await YouMailApiAsync(YMST.c_createContact, SerializeObjectToHttpContent(contact, YMST.c_contact), HttpMethod.Post))
                     {
-                        YouMailContact returned = response.GetResponseStream().FromXml<YouMailContact>();
-                        id = returned.Id;
+                        var ymResponse = DeserializeObject<YouMailResponse>(response.GetResponseStream());
+                        id = long.Parse(ymResponse.Properties[YMST.c_contactId]);
                     }
                 }
             }
@@ -358,10 +358,10 @@ namespace MagikInfo.YouMailAPI
         }
 
         /// <summary>
-        /// Create a new contact
+        /// Update and existing contact
         /// </summary>
-        /// <param name="contact"></param>
-        /// <returns></returns>
+        /// <param name="contact">The new contact to update</param>
+        /// <param name="id">The id of the contact to update</param>
         public async Task UpdateContactAsync(YouMailContact contact, long id)
         {
             try
@@ -369,8 +369,8 @@ namespace MagikInfo.YouMailAPI
                 AddPendingOp();
                 if (await LoginWaitAsync())
                 {
-
-                    using (await YouMailApiAsync(string.Format(YMST.c_updateContact, id), contact.ToXmlHttpContent(), HttpMethod.Put))
+                    string ser = SerializeObject(contact, YMST.c_contact);
+                    using (await YouMailApiAsync(string.Format(YMST.c_updateContact, id), SerializeObjectToHttpContent(contact, YMST.c_contact), HttpMethod.Put))
                     {
                     }
                 }

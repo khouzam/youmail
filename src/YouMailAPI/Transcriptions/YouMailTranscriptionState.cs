@@ -19,6 +19,7 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System.Xml.Serialization;
 
     [XmlType(AnonymousType = true)]
@@ -26,6 +27,7 @@ namespace MagikInfo.YouMailAPI
     public class YouMailTranscriptionRequestResponse
     {
         [XmlElement(YMST.c_transcriptionState)]
+        [JsonProperty(YMST.c_transcriptionState)]
         public int TranscriptionStateInt
         {
             get
@@ -39,6 +41,7 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public TranscriptionState TranscriptionState
         {
             get;

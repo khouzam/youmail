@@ -19,6 +19,7 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System.Xml.Serialization;
 
     /// <remarks/>
@@ -28,6 +29,7 @@ namespace MagikInfo.YouMailAPI
     {
         /// <remarks/>
         [XmlElement(YMST.c_pushRegistration)]
+        [JsonProperty(YMST.c_pushRegistrations)]
         public YouMailPushRegistration[] PushRegistrations { get; set; }
     }
 
@@ -37,10 +39,12 @@ namespace MagikInfo.YouMailAPI
     public partial class YouMailPushRegistration
     {
         [XmlIgnore]
+        [JsonIgnore]
         public YouMailPushClientType ClientType { get; set; }
 
         /// <remarks/>
         [XmlElement(YMST.c_clientType)]
+        [JsonProperty(YMST.c_clientType)]
         public int ClientTypeInt
         {
             get { return (int)ClientType; }
@@ -49,17 +53,21 @@ namespace MagikInfo.YouMailAPI
 
         /// <remarks/>
         [XmlElement(YMST.c_deviceId)]
+        [JsonProperty(YMST.c_deviceId)]
         public string DeviceId { get; set; }
 
         /// <remarks/>
         [XmlElement(YMST.c_id)]
+        [JsonProperty(YMST.c_id)]
         public int Id { get; set; }
 
         [XmlIgnore]
+        [JsonIgnore]
         public YouMailPushType PushType { get; set; }
 
         /// <remarks/>
         [XmlElement(YMST.c_pushType)]
+        [JsonProperty(YMST.c_pushType)]
         public int PushTypeInt
         {
             get { return (int)PushType; }
@@ -68,10 +76,12 @@ namespace MagikInfo.YouMailAPI
 
         ///
         [XmlElement(YMST.c_appVersion)]
+        [JsonProperty(YMST.c_appVersion)]
         public string AppVersion { get; set; }
 
         /// <remarks/>
         [XmlElement(YMST.c_status)]
+        [JsonProperty(YMST.c_status)]
         public int StatusInt
         {
             get { return (int)Status; }
@@ -79,14 +89,21 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public YouMailPushRegistrationStatus Status { get; set; }
 
         /// <remarks/>
         [XmlElement(YMST.c_validUntil)]
+        [JsonProperty(YMST.c_validUntil)]
         public long ValidUntil { get; set; }
 
         /// <remarks/>
         [XmlElement(YMST.c_version)]
+        [JsonProperty(YMST.c_version)]
         public byte Version { get; set; }
+
+        [XmlElement(YMST.c_messageTypes)]
+        [JsonProperty(YMST.c_messageTypes)]
+        public string MessageTypes { get; set; }
     }
 }

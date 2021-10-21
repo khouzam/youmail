@@ -19,15 +19,28 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using System;
+    using Newtonsoft.Json;
+    using System.Xml.Serialization;
 
-    [Flags]
-    public enum NewMessage
+    [XmlType(AnonymousType = true)]
+    [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_virtualNumberSettingsList)]
+    public partial class YouMailVirtualNumbers
     {
-        None = 0,
-        SendEmail = 1,
-        SendText = 2,
-        SendMWI = 4,
-        SendPush = 8
+        [XmlElement(YMST.c_virtualNumber)]
+        [JsonProperty(YMST.c_virtualNumber)]
+        public YouMailVirtualNumber[] VirtualNumbers;
+    }
+
+    [XmlType(AnonymousType = true)]
+    [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_virtualNumber)]
+    public class YouMailVirtualNumber
+    {
+        [XmlElement(YMST.c_phoneNumber)]
+        [JsonProperty(YMST.c_phoneNumber)]
+        public string PhoneNumber { get; set; }
+
+        [XmlElement(YMST.c_nickname)]
+        [JsonProperty(YMST.c_nickname)]
+        public string Nickname { get; set; }
     }
 }

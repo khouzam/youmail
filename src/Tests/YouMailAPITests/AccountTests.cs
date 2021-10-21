@@ -19,7 +19,6 @@
 
 namespace MagikInfo.YouMailAPI.Tests
 {
-    using MagikInfo.YouMailAPI;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Net;
     using System.Threading.Tasks;
@@ -37,7 +36,7 @@ namespace MagikInfo.YouMailAPI.Tests
             _testUsername = context.Properties["TestUsername"].ToString();
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         public async Task CreateAccount()
         {
             string user = "0002091234";
@@ -48,7 +47,8 @@ namespace MagikInfo.YouMailAPI.Tests
             {
                 try
                 {
-                    await youmail.DeleteAccountAsync();
+                    var newService = new YouMailService(user, password, null, YouMailTestService.UserAgent);
+                    await newService.DeleteAccountAsync();
                 }
                 catch (YouMailException)
                 {
@@ -58,7 +58,8 @@ namespace MagikInfo.YouMailAPI.Tests
 
             await youmail.CreateAccountAsync(user, password, "Test", "Account", string.Format(_defaultEmail, user));
             {
-                var newService = new YouMailService(user, password, null, YouMailTestService.UserAgent, true);
+                // Reset the service in case we already had logged in with old credentials
+                var newService = new YouMailService(user, password, null, YouMailTestService.UserAgent);
                 await newService.DeleteAccountAsync();
 
                 // This should fail the second time
@@ -89,7 +90,7 @@ namespace MagikInfo.YouMailAPI.Tests
         [TestMethod]
         public async Task VerifyNonExistentAccount()
         {
-            await VerifyAccountAsync("0000000000", false);
+            await VerifyAccountAsync("0004561299", false);
         }
 
         [TestMethod]
@@ -111,7 +112,7 @@ namespace MagikInfo.YouMailAPI.Tests
         private async Task VerifyAccountAsync(string user, bool expected)
         {
             var youmail = YouMailTestService.PrivateService;
-            var registration = await youmail.AccountRegistrationVerification(user);
+            var registration = await youmail.AccountRegistrationVerificationAsync(user);
             bool found = registration.Properties[YMST.c_registrationStatus] == YMST.c_accountExists;
 
             Assert.IsTrue(found == expected);

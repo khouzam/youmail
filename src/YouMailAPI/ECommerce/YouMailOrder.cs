@@ -19,12 +19,14 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System.Xml.Serialization;
 
     [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_order)]
     public class YouMailOrder
     {
         [XmlElement(YMST.c_orderType)]
+        [JsonProperty(YMST.c_orderType)]
         public int _orderTypeInt
         {
             get { return (int)OrderType; }
@@ -32,12 +34,15 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public OrderType OrderType { get; set; }
 
         [XmlElement(YMST.c_productName)]
+        [JsonProperty(YMST.c_productName)]
         public string ProductName { get; set; }
 
         [XmlElement(YMST.c_productType)]
+        [JsonProperty(YMST.c_productType)]
         public int _productTypeInt
         {
             get { return (int)ProductType; }
@@ -45,9 +50,11 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public ProductType ProductType { get; set; }
 
         [XmlElement(YMST.c_status)]
+        [JsonProperty(YMST.c_status)]
         public int _productStatusInt
         {
             get { return (int)ProductStatus; }
@@ -55,6 +62,7 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public ProductStatus ProductStatus { get; set; }
     }
 }

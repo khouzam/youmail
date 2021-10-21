@@ -20,48 +20,42 @@
 namespace MagikInfo.YouMailAPI
 {
     using System;
-    using System.Net;
+    using System.Collections.Generic;
+    using System.Text;
 
-    public class YouMailException : Exception
+    namespace MagikInfo.YouMailAPI.Contacts
     {
-        public HttpStatusCode StatusCode { get; private set; }
-
-        public bool HasMessage { get; private set; }
-
-        public YouMailException(string message, HttpStatusCode statusCode, Exception innerException)
-            : base(message, innerException)
+        class YouMailContactsUploadSummary
         {
-            HasMessage = message != null;
-            StatusCode = statusCode;
+            // contactUploadSummary": {
+            public string ClientRefId { get; set; }
+            public int Status { get; set; }
+            public string Started { get; set; }
+            public string Ended { get; set; }
+            public int DeletedCount { get; set; }
+            public int ErrorCount { get; set; }
+            public int ExactMactchCount { get; set; }
+            public bool Expired { get; set; }
+            public int IgnoredCount { get; set; }
+            public int ImportingTotal { get; set; }
+            public int MergedCount { get; set; }
+            public int NewCount { get; set; }
+            public int Processed { get; set; }
+            public int YmTotak { get; set; }
+            //"clientRefId": "string",
+            //"status": 1,
+            //"started": "string",
+            //"ended": "string",
+            //"deletedCount": 0,
+            //"errorCount": 0,
+            //"exactMatchCount": 0,
+            //"expired": true,
+            //"ignoredCount": 0,
+            //"importingTotal": 0,
+            //"mergedCount": 0,
+            //"newCount": 0,
+            //"processed": 0,
+            //"ymTotal": 0
         }
-
-        public YouMailException(string message, WebException we) :
-            base(message, we)
-        {
-            HasMessage = message != null;
-            using (var response = (we.Response) as HttpWebResponse)
-            {
-                StatusCode = response.StatusCode;
-            }
-        }
-
-        public override string Message
-        {
-            get
-            {
-                if (HasMessage)
-                {
-                    return base.Message;
-                }
-                else if (InnerException != null)
-                {
-                    return InnerException.Message;
-                }
-                else
-                {
-                    return base.Message;
-                }
-            }
-        }
-    }
+    };
 }

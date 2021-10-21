@@ -19,7 +19,6 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using MagikInfo.XmlSerializerExtensions;
     using System.Net.Http;
     using System.Threading.Tasks;
 
@@ -39,18 +38,14 @@ namespace MagikInfo.YouMailAPI
                 {
                     using (var response = await YouMailApiAsync(YMST.c_ecommerce, null, HttpMethod.Get))
                     {
-                        if (response != null)
+                        eCommerceResult = DeserializeObject<YouMailECommerce>(response.GetResponseStream(), YMST.c_ecommerceStatus);
+                        if (eCommerceResult != null &&
+                            eCommerceResult.TranscriptionPlan != null &&
+                            eCommerceResult.TranscriptionPlan.ProductStatus == ProductStatus.Active)
                         {
-                            var s = response.GetResponseStream();
-                            eCommerceResult = s.FromXml<YouMailECommerce>();
-                            if (eCommerceResult != null &&
-                                eCommerceResult.TranscriptionPlan != null &&
-                                eCommerceResult.TranscriptionPlan.ProductStatus == ProductStatus.Active)
-                            {
-                                var status = await GetTranscriptionStatusAsync();
-                                eCommerceResult.TranscriptionStatus = status;
-                                eCommerceResult.TranscriptionPlan.ProductStatus = status.Active ? ProductStatus.Active : ProductStatus.Canceled;
-                            }
+                            var status = await GetTranscriptionStatusAsync();
+                            eCommerceResult.TranscriptionStatus = status;
+                            eCommerceResult.TranscriptionPlan.ProductStatus = status.Active ? ProductStatus.Active : ProductStatus.Canceled;
                         }
                     }
                 }

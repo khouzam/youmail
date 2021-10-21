@@ -19,9 +19,9 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using MagikInfo.XmlSerializerExtensions;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using XmlSerializerExtensions;
 
     public partial class YouMailService
     {
@@ -36,13 +36,12 @@ namespace MagikInfo.YouMailAPI
                     var url = string.Format(YMST.c_directoryLookup, number);
                     using (var response = await YouMailApiAsync(url, null, HttpMethod.Get, true, null))
                     {
-                        if (response != null)
+                        // TODO: Directory access is always in XML
+                        var records = response.GetResponseStream().FromXml<YouMailPhoneRecords>();
+                        // var records = DeserializeObject<YouMailPhoneRecords>(response.GetResponseStream());
+                        if (records != null && records.PhoneRecords != null && records.PhoneRecords.Count > 0)
                         {
-                            var records = response.GetResponseStream().FromXml<YouMailPhoneRecords>();
-                            if (records != null && records.PhoneRecords != null && records.PhoneRecords.Count > 0)
-                            {
-                                phoneRecord = records.PhoneRecords[0];
-                            }
+                            phoneRecord = records.PhoneRecords[0];
                         }
                     }
                 }

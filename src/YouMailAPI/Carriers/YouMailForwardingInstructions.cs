@@ -19,28 +19,35 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System.Xml.Serialization;
 
     [XmlType(AnonymousType = true)]
-    [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_phoneForwardingInstructions)]
+    [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_phoneForwardingInstruction)]
     public class YouMailForwardingInstructions
     {
         [XmlElement(YMST.c_carrierId)]
+        [JsonProperty(YMST.c_carrierId)]
         public int CarrierId { get; set; }
 
         [XmlElement(YMST.c_carrierName)]
+        [JsonProperty(YMST.c_carrierName)]
         public string CarrierName { get; set; }
 
         [XmlElement(YMST.c_activatingCodePrimary)]
+        [JsonProperty(YMST.c_activatingCodePrimary)]
         public string ActivatingCodePrimary { get; set; }
 
         [XmlElement(YMST.c_activatingCodeSecondary)]
+        [JsonProperty(YMST.c_activatingCodeSecondary)]
         public string ActivatingCodeSecondary { get; set; }
 
         [XmlElement(YMST.c_deactivatingCode)]
+        [JsonProperty(YMST.c_deactivatingCode)]
         public string DeactivatingCode { get; set; }
 
         [XmlIgnore]
+        [JsonIgnore]
         public string[] ForwardToYoumail
         {
             get
@@ -64,9 +71,11 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlElement(YMST.c_enableMessage)]
+        [JsonProperty(YMST.c_enableMessage)]
         public string EnableMessage { get; set; }
 
         [XmlIgnore]
+        [JsonIgnore]
         public string[] CancelYoumail
         {
             get
@@ -81,66 +90,87 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlElement(YMST.c_disableMessage)]
+        [JsonProperty(YMST.c_disableMessage)]
         public string DisableMessage { get; set; }
 
         [XmlElement(YMST.c_carrierSupportsForwarding)]
+        [JsonProperty(YMST.c_carrierSupportsForwarding)]
         public bool CarrierSupportsForwarding { get; set; }
 
         [XmlElement(YMST.c_carrierManagesForwarding)]
+        [JsonProperty(YMST.c_carrierManagesForwarding)]
         public bool CarrierManagesForwarding { get; set; }
 
         [XmlElement(YMST.c_carrierHasForwardingCharges)]
+        [JsonProperty(YMST.c_carrierHasForwardingCharges)]
         public bool CarrierHasForwardingCharges { get; set; }
 
         [XmlElement(YMST.c_carrierOffersPrepaid)]
+        [JsonProperty(YMST.c_carrierOffersPrepaid)]
         public bool CarrierOffersPrepaid { get; set; }
 
         [XmlElement(YMST.c_carrierSupportsPrepaidForwarding)]
+        [JsonProperty(YMST.c_carrierSupportsPrepaidForwarding)]
         public bool CarrierSupportsPrepaidForwarding { get; set; }
 
         [XmlElement(YMST.c_carrierOnlineAccountRequired)]
+        [JsonProperty(YMST.c_carrierOnlineAccountRequired)]
         public bool CarrierOnlineAccountRequired { get; set; }
 
         [XmlElement(YMST.c_callingCarrierSupportRequired)]
+        [JsonProperty(YMST.c_callingCarrierSupportRequired)]
         public bool CallingCarrierSupportRequired { get; set; }
 
         [XmlElement(YMST.c_didNumberRequired)]
+        [JsonProperty(YMST.c_didNumberRequired)]
         public bool DidNumberRequired { get; set; }
 
         [XmlElement(YMST.c_localNumberRequired)]
+        [JsonProperty(YMST.c_localNumberRequired)]
         public bool LocalNumberRequired { get; set; }
 
         [XmlElement(YMST.c_dropboxOnly)]
+        [JsonProperty(YMST.c_dropboxOnly)]
         public bool DropboxOnly { get; set; }
 
         [XmlElement(YMST.c_carrierForwardingUrl)]
+        [JsonProperty(YMST.c_carrierForwardingUrl)]
         public string CarrierForwardingUrl { get; set; }
 
         [XmlElement(YMST.c_carrierSupportNumber)]
+        [JsonProperty(YMST.c_carrierSupportNumber)]
         public string CarrierSupportNumber { get; set; }
 
         [XmlElement(YMST.c_forwardingInstructions)]
+        [JsonProperty(YMST.c_forwardingInstructions)]
         public string ForwardingInstructions { get; set; }
 
         [XmlElement(YMST.c_deactivatingInstructions)]
+        [JsonProperty(YMST.c_deactivatingInstructions)]
         public string DeactivatingInstructions { get; set; }
 
         [XmlElement(YMST.c_specialInstructions)]
+        [JsonProperty(YMST.c_specialInstructions)]
         public string SpecialInstructions { get; set; }
 
         [XmlElement(YMST.c_notes)]
+        [JsonProperty(YMST.c_notes)]
         public string Notes { get; set; }
 
         [XmlElement(YMST.c_forwardingNumber)]
+        [JsonProperty(YMST.c_forwardingNumber)]
         public string ForwardingNumber { get; set; }
 
         [XmlElement(YMST.c_retrievalNumber)]
+        [JsonProperty(YMST.c_retrievalNumber)]
         public string RetrievalNumber { get; set; }
 
         [XmlElement(YMST.c_userPhoneNumber)]
+        [JsonProperty(YMST.c_userPhoneNumber)]
         public string UserPhoneNumber { get; set; }
 
         [XmlElement(YMST.c_anyNotesToShow)]
+        [JsonProperty(YMST.c_anyNotesToShow)]
         public bool AnyNotesToShow { get; set; }
     }
 }

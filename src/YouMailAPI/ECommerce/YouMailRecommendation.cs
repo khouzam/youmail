@@ -19,30 +19,37 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System;
     using System.Xml.Serialization;
 
     public class YouMailRecommendation
     {
         [XmlElement(YMST.c_productName)]
+        [JsonProperty(YMST.c_productName)]
         public string ProductName { get; set; }
 
         [XmlElement(YMST.c_pitch)]
+        [JsonProperty(YMST.c_pitch)]
         public string Pitch { get; set; }
 
         [XmlElement(YMST.c_productType)]
+        [JsonProperty(YMST.c_productType)]
         public int _productTypeInt
         {
             get { return (int)ProductType; }
             set { ProductType = (ProductType)value; }
         }
         [XmlIgnore]
+        [JsonIgnore]
         public ProductType ProductType { get; set; }
 
         [XmlElement(YMST.c_unitPrice)]
+        [JsonProperty(YMST.c_unitPrice)]
         public float UnitPrice { get; set; }
 
         [XmlElement(YMST.c_recommendationType)]
+        [JsonProperty(YMST.c_recommendationType)]
         public string _recommendationTypeString
         {
             get { return RecommendationType.ToString(); }
@@ -55,15 +62,19 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public OrderType RecommendationType { get; set; }
 
         [XmlElement(YMST.c_webProductUrl)]
+        [JsonProperty(YMST.c_webProductUrl)]
         public string WebProductUrl { get; set; }
 
         [XmlElement(YMST.c_mobileProductUrl)]
+        [JsonProperty(YMST.c_mobileProductUrl)]
         public string MobileProductUrl { get; set; }
 
         [XmlElement(YMST.c_productSku)]
+        [JsonProperty(YMST.c_productSku)]
         public string ProductSku { get; set; }
     }
 }

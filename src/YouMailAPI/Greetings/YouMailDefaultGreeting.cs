@@ -19,6 +19,7 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System.Xml.Serialization;
 
     [XmlType(AnonymousType = true)]
@@ -26,6 +27,7 @@ namespace MagikInfo.YouMailAPI
     public class YouMailDefaultGreeting
     {
         [XmlElement(YMST.c_id)]
+        [JsonProperty(YMST.c_id)]
         public int DefaultGreeting;
     }
 }

@@ -20,27 +20,19 @@
 namespace MagikInfo.YouMailAPI.Tests
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System;
     using System.Threading.Tasks;
 
     [TestClass]
     public class YouMailVirtualNumberTests
     {
-        YouMailService Service = YouMailTestService.Service;
+        YouMailService Service = YouMailTestService.MyService;
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public async Task GetVirtualNumbers()
         {
-            try
-            {
-                var numbers = await Service.GetVirtualNumbersAsync();
-                Assert.IsNotNull(numbers);
-                Assert.IsTrue(numbers.Length >= 1);
-            }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine(e.ToString());
-            }
+            var numbers = await Service.GetVirtualNumbersAsync();
+            Assert.IsNotNull(numbers);
+            Assert.IsTrue(numbers.Length >= 1);
         }
     }
 }

@@ -1,5 +1,5 @@
 /*************************************************************************************************
- * Copyright (c) 2018 Gilles Khouzam
+ * Copyright (c) 2021 Gilles Khouzam
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software withou
@@ -23,44 +23,19 @@ namespace MagikInfo.YouMailAPI
     using System.Xml.Serialization;
 
     [XmlType(AnonymousType = true)]
-    [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_additionalPhoneNumbers)]
-    public partial class YouMailPhoneNumbers
+    [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_error)]
+    public class YouMailError
     {
-        [XmlElement(YMST.c_phoneNumber)]
-        [JsonProperty(YMST.c_phoneNumber)]
-        public YouMailPhoneNumber[] PhoneNumbers { get; set; }
-    }
+        [XmlElement(YMST.c_errorCode)]
+        [JsonProperty(YMST.c_errorCode)]
+        public string ErrorCode;
 
-    [XmlType(AnonymousType = true)]
-    [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_phoneNumber)]
-    public class YouMailPhoneNumber
-    {
-        [XmlElement(YMST.c_id)]
-        [JsonProperty(YMST.c_id)]
-        public long ID { get; set; }
+        [XmlElement(YMST.c_longMessage)]
+        [JsonProperty(YMST.c_longMessage)]
+        public string LongMessage;
 
-        [XmlElement(YMST.c_phoneNumber)]
-        [JsonProperty(YMST.c_phoneNumber)]
-        public string PhoneNumber { get; set; }
-
-        [XmlElement(YMST.c_nickName)]
-        [JsonProperty(YMST.c_nickName)]
-        public string NickName { get; set; }
-
-        [XmlElement(YMST.c_carrierId)]
-        [JsonProperty(YMST.c_carrierId)]
-        public int CarriedId { get; set; }
-
-        [XmlElement(YMST.c_autoLoginFlag)]
-        [JsonProperty(YMST.c_autoLoginFlag)]
-        public bool AutoLoginFlag { get; set; }
-
-        [XmlElement(YMST.c_phoneModel)]
-        [JsonProperty(YMST.c_phoneModel)]
-        public string PhoneModel { get; set; }
-
-        [XmlElement(YMST.c_phoneModelId)]
-        [JsonProperty(YMST.c_phoneModelId)]
-        public int PhoneModelId { get; set; }
+        [XmlElement(YMST.c_shortMessage)]
+        [JsonProperty(YMST.c_shortMessage)]
+        public string ShortMessage;
     }
 }

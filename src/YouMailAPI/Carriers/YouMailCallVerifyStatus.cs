@@ -19,7 +19,16 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
+    using System;
     using System.Xml.Serialization;
+
+    public class YouMailTestCallDetails
+    {
+        [XmlElement(YMST.c_testCallDetails)]
+        [JsonProperty(YMST.c_testCallDetails)]
+        public YouMailCallVerifyStatus[] TestCallDetails;
+    }
 
     /// <summary>
     /// A class representing the different alerts
@@ -29,21 +38,55 @@ namespace MagikInfo.YouMailAPI
     public class YouMailCallVerifyStatus
     {
         [XmlElement(YMST.c_userId)]
+        [JsonProperty(YMST.c_userId)]
         public int UserId { get; set; }
 
         [XmlElement(YMST.c_userPhoneNumber)]
+        [JsonProperty(YMST.c_userPhoneNumber)]
         public string UserPhoneNumber { get; set; }
 
         [XmlElement(YMST.c_outboundPhoneNumber)]
+        [JsonProperty(YMST.c_outboundPhoneNumber)]
         public string OutboundPhoneNumber { get; set; }
 
         [XmlElement(YMST.c_status)]
+        [JsonProperty(YMST.c_status)]
         public string Status { get; set; }
 
         [XmlElement(YMST.c_initiatedTime)]
-        public string InitiatedTime { get; set; }
+        [JsonProperty(YMST.c_initiatedTime)]
+        public long _initiatedTime
+        {
+            get
+            {
+                return InitiatedTime.ToMillisecondsFromEpoch();
+            }
+            set
+            {
+                InitiatedTime = value.FromMillisecondsFromEpoch();
+            }
+        }
+
+        [XmlIgnore]
+        [JsonIgnore]
+        public DateTime InitiatedTime { get; set; }
 
         [XmlElement(YMST.c_completedTime)]
-        public string CompletedTime { get; set; }
+        [JsonProperty(YMST.c_completedTime)]
+        public long _completedTime
+        {
+            get
+            {
+                return CompletedTime.ToMillisecondsFromEpoch();
+            }
+            set
+            {
+                CompletedTime = value.FromMillisecondsFromEpoch();
+            }
+        }
+
+        [XmlIgnore]
+        [JsonIgnore]
+        public DateTime CompletedTime { get; set; }
     }
 }

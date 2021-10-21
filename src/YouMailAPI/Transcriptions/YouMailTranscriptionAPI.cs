@@ -19,11 +19,8 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using MagikInfo.XmlSerializerExtensions;
-    using System;
-    using System.Collections.Generic;
+    using global::MagikInfo.XmlSerializerExtensions;
     using System.Net.Http;
-    using System.Text;
     using System.Threading.Tasks;
 
     public partial class YouMailService
@@ -49,12 +46,8 @@ namespace MagikInfo.YouMailAPI
                     string uri = string.Format(YMST.c_messageTranscriptionRequest, id);
                     using (var response = await YouMailApiAsync(uri, null, verb))
                     {
-                        if (response != null)
-                        {
-                            var stream = response.GetResponseStream();
-                            var transcriptionResponse = stream.FromXml<YouMailTranscriptionRequestResponse>();
-                            retVal = transcriptionResponse.TranscriptionState;
-                        }
+                        var transcriptionResponse = DeserializeObject<YouMailTranscriptionRequestResponse>(response.GetResponseStream());
+                        retVal = transcriptionResponse.TranscriptionState;
                     }
                 }
             }
@@ -69,8 +62,6 @@ namespace MagikInfo.YouMailAPI
         /// <summary>
         /// Get the current transcription status for the user
         /// </summary>
-        /// <param name="callback"></param>
-        /// <param name="asyncState"></param>
         /// <returns></returns>
         public async Task<YouMailTranscriptionStatus> GetTranscriptionStatusAsync()
         {
@@ -82,11 +73,9 @@ namespace MagikInfo.YouMailAPI
                 {
                     using (var response = await YouMailApiAsync(YMST.c_transcriptionStatusApi, null, HttpMethod.Get))
                     {
-                        if (response != null)
-                        {
-                            var s = response.GetResponseStream();
-                            returnValue = s.FromXml<YouMailTranscriptionStatus>();
-                        }
+                        // TODO: This only supports XML
+                        //returnValue = DeserializeObject<YouMailTranscriptionStatus>(response.GetResponseStream());
+                        returnValue = response.GetResponseStream().FromXml<YouMailTranscriptionStatus>();
                     }
                 }
             }
@@ -114,11 +103,7 @@ namespace MagikInfo.YouMailAPI
                 {
                     using (var response = await YouMailApiAsync(YMST.c_transcriptionSettingsApi, null, HttpMethod.Get))
                     {
-                        if (response != null)
-                        {
-                            var s = response.GetResponseStream();
-                            returnValue = s.FromXml<TranscriptionSettings>();
-                        }
+                        returnValue = DeserializeObject<TranscriptionSettings>(response.GetResponseStream(), YMST.c_transcriptionSettings);
                     }
                 }
             }

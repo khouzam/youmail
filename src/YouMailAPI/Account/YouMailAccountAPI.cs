@@ -19,7 +19,6 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using MagikInfo.XmlSerializerExtensions;
     using System.Net.Http;
     using System.Threading.Tasks;
 
@@ -30,9 +29,9 @@ namespace MagikInfo.YouMailAPI
         /// </summary>
         /// <param name="phoneNumber">The account to lookup</param>
         /// <returns>YouMailCustomResponse</returns>
-        public async Task<YouMailCustomResponse> AccountRegistrationVerification(string phoneNumber)
+        public async Task<YouMailResponse> AccountRegistrationVerificationAsync(string phoneNumber)
         {
-            YouMailCustomResponse customResponse = null;
+            YouMailResponse youmailResponse = null;
             try
             {
                 AddPendingOp();
@@ -41,7 +40,7 @@ namespace MagikInfo.YouMailAPI
                     string url = string.Format(YMST.c_registrationVerify, phoneNumber);
                     using (var response = await YouMailApiAsync(url, null, HttpMethod.Get))
                     {
-                        customResponse = response.GetResponseStream().FromXml<YouMailCustomResponse>();
+                        youmailResponse = DeserializeObject<YouMailResponse>(response.GetResponseStream());
                     }
                 }
             }
@@ -50,7 +49,7 @@ namespace MagikInfo.YouMailAPI
                 RemovePendingOp();
             }
 
-            return customResponse;
+            return youmailResponse;
         }
 
         /// <summary>
@@ -64,7 +63,7 @@ namespace MagikInfo.YouMailAPI
             AddPendingOp();
             try
             {
-                var result = await AccountRegistrationVerification(phoneNumber);
+                var result = await AccountRegistrationVerificationAsync(phoneNumber);
                 // On Success we found the account;
                 if (result.Properties != null && result.Properties.ContainsKey(YMST.c_registrationStatus))
                 {
@@ -100,7 +99,7 @@ namespace MagikInfo.YouMailAPI
                         AccountTemplate = "Magikinfo"
                     };
 
-                    using (await YouMailApiAsync(YMST.c_createAccountUrl, account.ToXmlHttpContent(), HttpMethod.Post))
+                    using (await YouMailApiAsync(YMST.c_createAccountUrl, SerializeObjectToHttpContent(account), HttpMethod.Post))
                     {
                     }
                 }
@@ -153,11 +152,7 @@ namespace MagikInfo.YouMailAPI
                     string uri = string.Format(YMST.c_accountDetailsUrl, user);
                     using (var response = await YouMailApiAsync(uri, null, HttpMethod.Get))
                     {
-                        if (response != null)
-                        {
-                            var s = response.GetResponseStream();
-                            returnValue = s.FromXml<YouMailUserInfo>();
-                        }
+                        returnValue = DeserializeObject<YouMailUserInfo>(response.GetResponseStream(), YMST.c_account);
                     }
                 }
             }
@@ -182,7 +177,30 @@ namespace MagikInfo.YouMailAPI
                 if (await LoginWaitAsync())
                 {
                     string uri = string.Format(YMST.c_accountDetailsUrl, _username);
-                    using (await YouMailApiAsync(uri, userInfo.ToXmlHttpContent(), HttpMethod.Put))
+                    using (await YouMailApiAsync(uri, SerializeObjectToHttpContent(userInfo), HttpMethod.Put))
+                    {
+                    }
+                }
+            }
+            finally
+            {
+                RemovePendingOp();
+            }
+        }
+
+        /// <summary>
+        /// Change the current user's password. This will invalidate any authTokens that were issued before
+        /// </summary>
+        /// <param name="passwordChange"></param>
+        /// <returns></returns>
+        public async Task ChangePasswordAsync(YouMailPasswordChange passwordChange)
+        {
+            try
+            {
+                AddPendingOp();
+                if (await LoginWaitAsync())
+                {
+                    using (var response = await YouMailApiAsync(YMST.c_changePassword, SerializeObjectToHttpContent(passwordChange, YMST.c_passwordChange), HttpMethod.Put))
                     {
                     }
                 }
@@ -207,13 +225,8 @@ namespace MagikInfo.YouMailAPI
                 {
                     using (var response = await YouMailApiAsync(YMST.c_settingsUserId, null, HttpMethod.Get))
                     {
-                        if (response != null)
-                        {
-                            var s = response.GetResponseStream();
-                            var userId = s.FromXml<YouMailUserId>();
-
-                            returnValue = userId.UserId;
-                        }
+                        var userId = DeserializeObject<YouMailUserId>(response.GetResponseStream(), YMST.c_settings);
+                        returnValue = userId.UserId;
                     }
                 }
             }

@@ -19,24 +19,19 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System.Xml.Serialization;
 
     [XmlType(AnonymousType = true)]
-    [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_virtualNumbers)]
-    public partial class YouMailVirtualNumbers
+    [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_passwordChange)]
+    public class YouMailPasswordChange
     {
-        [XmlElement(YMST.c_virtualNumber)]
-        public YouMailVirtualNumber[] VirtualNumbers;
-    }
+        [XmlElement(YMST.c_currentPassword)]
+        [JsonProperty(YMST.c_currentPassword)]
+        public string CurrentPassword { get; set; }
 
-    [XmlType(AnonymousType = true)]
-    [XmlRoot(Namespace = "", IsNullable = false, ElementName = YMST.c_virtualNumber)]
-    public class YouMailVirtualNumber
-    {
-        [XmlElement(YMST.c_virtualNumber)]
-        public string VirtualNumber { get; set; }
-
-        [XmlElement(YMST.c_nickname)]
-        public string Nickname { get; set; }
+        [XmlElement(YMST.c_newPassword)]
+        [JsonProperty(YMST.c_newPassword)]
+        public string NewPassword { get; set; }
     }
 }

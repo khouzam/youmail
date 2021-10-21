@@ -19,6 +19,7 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System.Xml.Serialization;
 
     [XmlType(AnonymousType = true)]
@@ -26,6 +27,7 @@ namespace MagikInfo.YouMailAPI
     public partial class YouMailMessages
     {
         [XmlElement(YMST.c_entry)]
+        [JsonProperty(YMST.c_entries)]
         public YouMailMessage[] Messages;
     }
 
@@ -35,6 +37,7 @@ namespace MagikInfo.YouMailAPI
     public partial class YouMailMessageResponse
     {
         [XmlElement(YMST.c_entry)]
+        [JsonProperty(YMST.c_entry)]
         public YouMailMessage Message { get; set; }
     }
 
@@ -43,9 +46,11 @@ namespace MagikInfo.YouMailAPI
     public partial class YouMailMessage : YouMailMessageBase
     {
         [XmlIgnore]
+        [JsonIgnore]
         public MessageStatus Status { get; set; }
 
         [XmlElement(YMST.c_status)]
+        [JsonProperty(YMST.c_status)]
         public int _statusInt
         {
             get { return (int)Status; }
@@ -53,12 +58,15 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlElement(YMST.c_folderId)]
+        [JsonProperty(YMST.c_folderId)]
         public int FolderId { get; set; }
 
         [XmlElement(YMST.c_messageDataUrl)]
+        [JsonProperty(YMST.c_messageDataUrl)]
         public string MessageDataUrl { get; set; }
 
         [XmlElement(YMST.c_transcriptionState)]
+        [JsonProperty(YMST.c_transcriptionState)]
         public int _transcriptionStateInt
         {
             get { return (int)TranscriptionState; }
@@ -66,15 +74,19 @@ namespace MagikInfo.YouMailAPI
         }
 
         [XmlIgnore]
+        [JsonIgnore]
         public TranscriptionState TranscriptionState { get; set; }
 
         [XmlElement(YMST.c_flagged)]
+        [JsonProperty(YMST.c_flagged)]
         public bool Flagged { get; set; }
 
         [XmlElement(YMST.c_transcript)]
+        [JsonProperty(YMST.c_transcript)]
         public string Transcription { get; set; }
 
         [XmlElement(YMST.c_preview)]
+        [JsonProperty(YMST.c_preview)]
         public string Preview { get; set; }
 
         public override bool IsSpecialItem

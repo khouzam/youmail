@@ -19,7 +19,6 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using MagikInfo.XmlSerializerExtensions;
     using System;
     using System.Collections.Generic;
     using System.Net.Http;
@@ -55,24 +54,20 @@ namespace MagikInfo.YouMailAPI
                         count = 0;
                         using (response = await YouMailApiAsync(YMST.c_getGreetings + query.GetQueryString(), null, HttpMethod.Get))
                         {
-                            if (response != null)
+                            var greetingResponse = DeserializeObject<YouMailGreetingsResponse>(response.GetResponseStream());
+                            if (greetingResponse != null)
                             {
-                                var stream = response.GetResponseStream();
-                                var greetingResponse = stream.FromXml<YouMailGreetingsResponse>();
-                                if (greetingResponse != null)
+                                count = greetingResponse.Greetings.Length;
+                                if (count > 0)
                                 {
-                                    count = greetingResponse.Greetings.Greetings.Length;
-                                    if (count > 0)
-                                    {
-                                        greetings.AddRange(greetingResponse.Greetings.Greetings);
-                                    }
+                                    greetings.AddRange(greetingResponse.Greetings);
                                 }
+                            }
 
-                                if (lastQueryUpdated == DateTime.MinValue)
-                                {
-                                    var date = response.Headers.Date.ToString();
-                                    lastQueryUpdated = DateTime.Parse(date);
-                                }
+                            if (lastQueryUpdated == DateTime.MinValue)
+                            {
+                                var date = response.Headers.Date.ToString();
+                                lastQueryUpdated = DateTime.Parse(date);
                             }
                         }
                         query.Page++;
@@ -90,33 +85,60 @@ namespace MagikInfo.YouMailAPI
         }
 
         /// <summary>
-        ///
+        /// Get a Greeting by Id
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="description"></param>
-        /// <param name="waveData"></param>
-        public async Task CreateGreetingAsync(string name, string description, byte[] waveData)
+        /// <param name="id">The Id of the Greeting</param>
+        /// <returns>The Greeting</returns>
+        public async Task<YouMailGreeting> GetGreetingAsync(long id)
         {
+            YouMailGreeting greeting = null;
             try
             {
                 AddPendingOp();
                 if (await LoginWaitAsync())
                 {
-                    HttpContent post = null;
+                    using (var response = await YouMailApiAsync(string.Format(YMST.c_getGreeting, id), null, HttpMethod.Get))
+                    {
+                        greeting = DeserializeObject<YouMailGreeting>(response.GetResponseStream(), YMST.c_greeting);
+                    }
+                }
+            }
+            finally
+            {
+                RemovePendingOp();
+            }
+
+            return greeting;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="description"></param>
+        /// <param name="waveData"></param>
+        public async Task<YouMailResponse> CreateGreetingAsync(string name, string description, byte[] waveData)
+        {
+            try
+            {
+                YouMailResponse youmailResponse = null;
+                AddPendingOp();
+                if (await LoginWaitAsync())
+                {
                     var greeting = new YouMailGreeting
                     {
                         Name = name,
                         Description = description,
-                        Data = Convert.ToBase64String(waveData)
+                        AudioData = Convert.ToBase64String(waveData)
                     };
 
-                    // Generate the POST request
-                    post = greeting.ToXmlHttpContent();
-
-                    using (await YouMailApiAsync(YMST.c_getGreetings, post, HttpMethod.Post))
+                    using (var response = await YouMailApiAsync(YMST.c_createGreeting, SerializeObjectToHttpContent(greeting, YMST.c_greeting), HttpMethod.Post))
                     {
+                        youmailResponse = DeserializeObject<YouMailResponse>(response.GetResponseStream());
                     }
                 }
+
+                return youmailResponse;
             }
             finally
             {
@@ -154,14 +176,9 @@ namespace MagikInfo.YouMailAPI
                 AddPendingOp();
                 if (await LoginWaitAsync())
                 {
-
                     using (var response = await YouMailApiAsync(YMST.c_statusGreetings, null, HttpMethod.Get))
                     {
-                        if (response != null)
-                        {
-                            var stream = response.GetResponseStream();
-                            statuses = stream.FromXml<YouMailGreetingStatuses>();
-                        }
+                        statuses = DeserializeObject<YouMailGreetingStatuses>(response.GetResponseStream());
                     }
                 }
             }

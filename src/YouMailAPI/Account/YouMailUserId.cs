@@ -19,6 +19,7 @@
 
 namespace MagikInfo.YouMailAPI
 {
+    using Newtonsoft.Json;
     using System.Xml.Serialization;
 
     [XmlType(AnonymousType = true)]
@@ -26,6 +27,7 @@ namespace MagikInfo.YouMailAPI
     public class YouMailUserId
     {
         [XmlElement(YMST.c_userId)]
+        [JsonProperty(YMST.c_userId)]
         public string UserId { get; set; }
     }
 }

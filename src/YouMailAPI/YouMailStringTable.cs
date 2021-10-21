@@ -46,7 +46,7 @@ namespace MagikInfo.YouMailAPI
         public const string c_authToken = "authToken";
         public const string c_authorization = "Authorization";
         public const string c_disableCodes = "disableCodes";
-        public const string c_phoneForwardingInstructions = "phoneForwardingInstruction";
+        public const string c_phoneForwardingInstruction = "phoneForwardingInstruction";
         public const string c_enableCodes = "enableCodes";
         public const string c_enableMessage = "enableMessage";
         public const string c_disableMessage = "disableMessage";
@@ -87,8 +87,11 @@ namespace MagikInfo.YouMailAPI
         public const string c_ids = "ids";
         public const string c_data = "data";
         public const string c_dataUrl = "dataUrl";
+        public const string c_audioData = "audioData";
         public const string c_name = "name";
+        public const string c_ackEntryCount = "ackEntryCount";
         public const string c_newEntryCount = "newEntryCount";
+        public const string c_visibleEntryCount = "visibleEntryCount";
         public const string c_folder = "folder";
         public const string c_folders = "folders";
         public const string c_entries = "entries";
@@ -100,6 +103,7 @@ namespace MagikInfo.YouMailAPI
         public const string c_duration = "duration";
         public const string c_greeting = "greeting";
         public const string c_greetings = "greetings";
+        public const string c_greetingId = "greetingId";
         public const string c_recommendation = "recommendation";
         public const string c_mobileProductUrl = "mobileProductUrl";
         public const string c_pitch = "pitch";
@@ -149,6 +153,7 @@ namespace MagikInfo.YouMailAPI
         public const string c_created = "created";
         public const string c_updated = "updated";
         public const string c_messageData = "messageData";
+        public const string c_messageDataType = "messageDataType";
         public const string c_messageDataUrl = "messageDataUrl";
         public const string c_folderId = "folderId";
         public const string c_imageUrl = "imageUrl";
@@ -175,6 +180,7 @@ namespace MagikInfo.YouMailAPI
         public const string c_playType = "playType";
         public const string c_statusType = "statusType";
         public const string c_system = "system";
+        public const string c_messageTypes = "messageTypes";
 
 
         public const string c_createdsince = "createdsince";
@@ -214,6 +220,9 @@ namespace MagikInfo.YouMailAPI
         public const string c_displayName = "displayName";
         public const string c_email = "emailAddress";
         public const string c_password = "password";
+        public const string c_passwordChange = "passwordChange";
+        public const string c_currentPassword = "currentPassword";
+        public const string c_newPassword = "newPassword";
         public const string c_pin = "pin";
         public const string c_phoneModel = "phoneModel";
         public const string c_phoneModelWP7 = "51224";
@@ -243,10 +252,10 @@ namespace MagikInfo.YouMailAPI
         public const string c_state = "state";
         public const string c_country = "country";
         public const string c_contact = "contact";
+        public const string c_contactId = "contactId";
         public const string c_defaultImage = "defaultImage";
         public const string c_baseImage = "baseImage";
         public const string c_contacts = "contacts";
-        public const string c_greetingId = "greetingId";
         public const string c_actionType = "actionType";
         public const string c_phonebookSourceType = "phonebookSourceType";
         public const string c_phonebookSourceId = "phonebookSourceId";
@@ -309,7 +318,7 @@ namespace MagikInfo.YouMailAPI
         public const string c_accountExists = "AccountExists";
         public const string c_validationError = "ValidationError";
         public const string c_virtualNumber = "virtualNumber";
-        public const string c_virtualNumbers = "virtualNumbers";
+        public const string c_virtualNumberSettingsList = "virtualNumberSettingsList";
         public const string c_nickname = "nickname";
         public const string c_nickName = "nickName";
         public const string c_additionalPhoneNumbers = "additionalPhoneNumbers";
@@ -321,6 +330,13 @@ namespace MagikInfo.YouMailAPI
         public const string c_createTime = "createTime";
         public const string c_includeList = "includeList";
         public const string c_trash = "trash";
+        public const string c_error = "error";
+        public const string c_errors = "errors";
+        public const string c_errorCode = "errorCode";
+        public const string c_callSetUuid = "callSetUuid";
+        public const string c_testCallDetails = "testCallDetails";
+        public const string c_accessPointInfo = "accessPointInfo";
+
 
         public const string c_greetingImageUrl = "http://www.ymstat.com/dyn/community/img/{0}.png";
 
@@ -332,13 +348,14 @@ namespace MagikInfo.YouMailAPI
         public const string c_messageboxFlagUrl = c_server + "/api/v4/messagebox/entry/flag/{0}/{1}";
         public const string c_historyClearMessage = c_server + "/api/v4/messagebox/entry/history/clear/{0}";
         public const string c_messageBoxEntryQuery = c_server + "/api/v4/messagebox/entry/query";
+        public const string c_messageBoxEntryCreate = c_server + "/api/v4/messagebox/entry/create";
         public const string c_messageBoxEntryDetails = c_server + "/api/v4/messagebox/entry/{0}/details";
         public const string c_messageBoxHistoryQuery = c_server + "/api/v4/messagebox/entry/history/query";
         public const string c_messageTranscriptionRequest = c_server + "/api/v4/messagebox/entry/{0}/transcript/request";
         public const string c_alertSettingsUrl = c_server + "/api/v4/settings/alertSettings";
         public const string c_setAlertSettingUrl = c_server + "/api/v4/settings/alertSettings/{0}/{1}";
         public const string c_getForwardingInstructions = c_server + "/api/v4/accounts/forwardinginstructions/phonenumber/{0}"; // {phonenumber}
-        public const string c_accesspoint = c_server + "/api/v4/accounts/accesspoint/phone/{0}"; // {phonenumber}
+        public const string c_accesspoint = c_server + "/api/v4/accounts/accesspoint/{0}"; // {phonenumber}
         public const string c_getCarrierInfo = c_server + "/api/v4/accounts/carrier/{0}"; // {phonenumber}
         public const string c_setCarrierInfo = c_server + "/api/v4/accounts/carrier/{0}/{1}"; // {phonenumber}/{newcarrierid}
         public const string c_getSupportedCarriers = c_server + "/api/v4/lookup/carrier/all/supported";
@@ -351,13 +368,17 @@ namespace MagikInfo.YouMailAPI
         public const string c_getOrCreateContact = c_server + "/api/v4/contacts/getorcreate/{0}";
         public const string c_uploadContacts = c_server + "/api/v4/contacts/upload";
         public const string c_uploadContactsStatus = c_server + "/api/v4/contacts/upload/status";
+        public const string c_uploadContactsSummary = c_server + "/api/v4/contacts/upload/summary";
 
         public const string c_getGreetings = c_server + "/api/v4/greetings/query";
+        public const string c_getGreeting = c_server + "/api/v4/greetings/{0}";
         public const string c_deleteGreeting = c_server + "/api/v4/greetings/{0}";
+        public const string c_createGreeting = c_server + "/api/v4/greetings";
         public const string c_statusGreetings = c_server + "/api/v4/greetings/status";
         public const string c_registrationVerify = c_server + "/api/v4/accounts/registration/verify/{0}";
         public const string c_createAccountUrl = c_server + "/api/v4/accounts";
         public const string c_accountDetailsUrl = c_server + "/api/v4/accounts/phone/{0}";
+        public const string c_changePassword = c_server + "/api/v4/accounts/password";
         public const string c_settingsUserId = c_server + "/api/v4/settings/";
 
         public const string c_ecommerce = c_server + "/api/v4/status/accountStatus/ecommerceStatus";
@@ -370,6 +391,8 @@ namespace MagikInfo.YouMailAPI
         public const string c_createVoicemail = c_server + "/api/v4/messagebox/entry/create";
         public const string c_createFolder = c_server + "/api/v4/messagebox/folders";
         public const string c_getFolder = c_server + "/api/v4/messagebox/folders";
+        public const string c_moveAllMessagesFromFolder = c_server + "/api/v4/messagebox/{0}/moveentries/{1}";
+        public const string c_deleteFolder = c_server + "/api/v4/messagebox/folders/{0}";
 
         public const string c_createContact = c_server + "/api/v4/contacts";
         public const string c_updateContact = c_server + "/api/v4/contacts/{0}";
@@ -379,17 +402,17 @@ namespace MagikInfo.YouMailAPI
         public const string c_deviceUpdateRegistration = c_server + "/api/v4/settings/alertSettings/pushRegistrations/{0}/renew/{1}";
 
         public const string c_verifyCallSetupInitiate = c_server + "/api/v4/tui/call/?phoneNumber={0}";
-        public const string c_verifyCallSetupValidate = c_server + "/api/v4/tui/call/result/mostrecent";
+        public const string c_verifyCallSetupValidate = c_server + "/api/v4/tui/call/result/{0}/callset/{1}?maxResults=1";
 
         public const string c_confirmTextMessages = c_server + "/api/v4/accounts/confirmation/{0}";
         public const string c_confirmTextMessagesValidation = c_server + "/api/v4/accounts/confirmation/{0}/{1}";
 
-        public const string c_directoryLookup = "www.youmail.com/phone-lookup/number/{0}?xml";
+        public const string c_directoryLookup = "directory.youmail.com/directory/phone/{0}?xml";
 
         public const string c_spamSettings = c_server + "/api/v4/messagebox/settings/spam";
         public const string c_spamSettingsSet = c_server + "/api/v4/messagebox/settings/spam/{0}";
 
-        public const string c_extraLines = c_server + "/api/v4/virtualnumbers";
+        public const string c_virtualNumbersSettings = c_server + "/api/v4/virtualnumbers/settings";
         public const string c_getVirtualNumber = c_server + "/api/v4/virtualnumbers/phone/{0}"; // {phonenumber}
 
         #endregion API URLs
@@ -401,30 +424,43 @@ namespace MagikInfo.YouMailAPI
         public const string c_storeUrl = "https://store.youmail.com/store/home.do?auth={0}";
         public const string c_storeProductUrl = "https://store.youmail.com/store/cart/productAddCart.do?sku={0}&auth={1}";
         public const string c_recoverUrl = "https://www.youmail.com/login/user/password/recover";
-        public const string c_receiptsUrl = "https://www.youmail.com/youmail/user/autoreply?auth={0}";
-        public const string c_spamUrl = "https://www.youmail.com/youmail/user/spam/edit?auth={0}";
+        public const string c_receiptsUrl = "https://dashboard.youmail.com/settings/auto-reply?auth={0}";
+        public const string c_spamUrl = "https://dashboard.youmail.com/settings/call-protection?auth={0}";
         public const string c_TOSUrl = "http://www.youmail.com/termsofuse.html";
         public const string c_PrivacyUrl = "http://www.youmail.com/home/corp/privacy";
         public const string c_greetingStatus = "https://www.youmail.com/youmail/greeting/status/edit?auth={0}";
-        public const string c_changePin = "https://www.youmail.com/youmail/user/password/edit?auth={0}";
-        public const string c_userProfile = "https://www.youmail.com/youmail/user/personal?auth={0}";
-        public const string c_userPhones = "https://www.youmail.com/youmail/user/phones?auth={0}";
+        public const string c_changePin = "https://dashboard.youmail.com/settings/security?auth={0}";
+        public const string c_userProfile = "https://dashboard.youmail.com/settings/information?auth={0}";
+        public const string c_userPhones = "https://dashboard.youmail.com/settings/phones?auth={0}";
         public const string c_webLinkVirtualNumbers = "https://www.youmail.com/youmail/user/virtual-numbers?auth={0}";
         public const string c_paymentMethods = "https://store.youmail.com/store/cart/payment?auth={0}&r=/youmail/user/statements";
+        public const string c_ordersUrl = "https://go.youmail.com/vieworders?auth={0}";
         #endregion
 
         public const string c_ditchedCall = "ditchedCall";
         public const string c_ditchedCallMask = "ditchedCallMask";
+        public const string c_ditchedCallAlertEmail = "ditchedCallAlertEmail";
+        public const string c_ditchedCallAlertTxt = "ditchedCallAlertTxt";
+        public const string c_ditchedCallAlertPush = "ditchedCallAlertPush";
         public const string c_emailAttachment = "emailAttachment";
         public const string c_emailAttachmentType = "emailAttachmentType";
         public const string c_emailCustomFormat = "emailCustomFormat";
         public const string c_emailFormat = "emailFormat";
         public const string c_missedCall = "missedCall";
         public const string c_missedCallMask = "missedCallMask";
+        public const string c_missedCallAlertEmail = "missedCallAlertEmail";
+        public const string c_missedCallAlertTxt = "missedCallAlertTxt";
+        public const string c_missedCallAlertPush = "missedCallAlertPush";
         public const string c_newMessage = "newMessage";
         public const string c_newMessageMask = "newMessageMask";
+        public const string c_messageAlertEmail = "messageAlertEmail";
+        public const string c_messageAlertTxt = "messageAlertTxt";
+        public const string c_messageAlertPush = "messageAlertPush";
         public const string c_newSpamMessage = "newSpamMessage";
         public const string c_newSpamMessageMask = "newSpamMessageMask";
+        public const string c_spamMessageAlertEmail = "spamMessageAlertEmail";
+        public const string c_spamMessageAlertTxt = "spamMessageAlertTxt";
+        public const string c_spamMessageAlertPush = "spamMessageAlertPush";
         public const string c_pushConditions = "pushConditions";
         public const string c_emailCCEnabled = "emailCCEnabled";
         public const string c_emailCCList = "emailCCList";

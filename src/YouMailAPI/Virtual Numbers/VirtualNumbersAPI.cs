@@ -1,5 +1,5 @@
 /*************************************************************************************************
- * Copyright (c) 2018 Gilles Khouzam
+ * Copyright (c) 2021 Gilles Khouzam
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software withou
@@ -19,14 +19,34 @@
 
 namespace MagikInfo.YouMailAPI
 {
-    using System;
+    using System.Net.Http;
+    using System.Threading.Tasks;
 
-    [Flags]
-    public enum SpamMessage
+    public partial class YouMailService
     {
-        None = 0,
-        SendEmail = 1,
-        SendText = 2,
-        SendPush = 8,
+        /// <summary>
+        /// Get the list of virtual numbers for the user
+        /// </summary>
+        /// <returns></returns>
+        public async Task<YouMailVirtualNumber[]> GetVirtualNumbersAsync()
+        {
+            YouMailVirtualNumber[] returnValue = null;
+            try
+            {
+                AddPendingOp();
+                if (await LoginWaitAsync())
+                {
+                    using (var response = await YouMailApiAsync(YMST.c_virtualNumbersSettings, null, HttpMethod.Get))
+                    {
+                        returnValue = DeserializeObject<YouMailVirtualNumber[]>(response.GetResponseStream(), YMST.c_virtualNumberSettingsList);
+                    }
+                }
+                return returnValue;
+            }
+            finally
+            {
+                RemovePendingOp();
+            }
+        }
     }
 }

@@ -20,6 +20,7 @@
 namespace MagikInfo.YouMailAPI.Tests
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using System;
 
     [TestClass]
     public class YouMailTestService
@@ -36,7 +37,10 @@ namespace MagikInfo.YouMailAPI.Tests
             _myAuth = context.Properties["RealAuthToken"].ToString();
             _privateUser = context.Properties["PrivateUsername"].ToString();
             _privatePwd = context.Properties["PrivatePassword"].ToString();
+            _privateAuth = context.Properties["PrivateAuthToken"].ToString();
             UserAgent = context.Properties["DefaultUserAgent"].ToString();
+
+            Enum.TryParse<ResponseFormat>(context.Properties["ResponseFormat"].ToString(), true, out _responseFormat);
         }
 
         private static YouMailService _service = null;
@@ -47,11 +51,14 @@ namespace MagikInfo.YouMailAPI.Tests
         private static string _myAuth;
         private static string _privateUser;
         private static string _privatePwd;
+        private static string _privateAuth;
+        private static ResponseFormat _responseFormat = ResponseFormat.JSON;
 
         public static string TestUser { get; private set; }
         public static string TestPassword { get; private set; }
         public static string TestFullName { get; private set; }
         public static string UserAgent { get; private set; }
+        public static ResponseFormat ResponseFormat { get { return _responseFormat; } }
 
         public static YouMailService Service
         {
@@ -71,14 +78,14 @@ namespace MagikInfo.YouMailAPI.Tests
             {
                 if (_myService == null)
                 {
-                    _myService = new YouMailService(_myUser, _myPwd, _myAuth, UserAgent, true);
+                    _myService = new YouMailService(_myUser, _myPwd, _myAuth, UserAgent, _responseFormat);
                 }
 
                 return _myService;
             }
         }
 
-        public static YouMailService PrivateService => new YouMailService(_privateUser, _privatePwd, null, UserAgent);
+        public static YouMailService PrivateService => new YouMailService(_privateUser, _privatePwd, _privateAuth, UserAgent, _responseFormat);
 
         /// <summary>
         /// Provide a new service that is not the global one.
@@ -87,14 +94,14 @@ namespace MagikInfo.YouMailAPI.Tests
         {
             get
             {
-                var service = new YouMailService(TestUser, TestPassword, _testAuth, UserAgent, true);
+                var service = new YouMailService(TestUser, TestPassword, _testAuth, UserAgent, _responseFormat);
                 service.AuthenticationChanged += OnTestServiceAuthenticationChanged;
                 return service;
             }
         }
         private static void ResetService()
         {
-            _service = new YouMailService(TestUser, TestPassword, _testAuth, UserAgent, true);
+            _service = new YouMailService(TestUser, TestPassword, _testAuth, UserAgent, _responseFormat);
             _service.AuthenticationChanged += OnTestServiceAuthenticationChanged;
         }
 
