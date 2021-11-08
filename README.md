@@ -2,7 +2,7 @@
 
 ## Copyright (c) Gilles Khouzam 2018 ##
 
-### Licenced under the [MIT License](https://opensource.org/licenses/MIT)
+### Licensed under the [MIT License](https://opensource.org/licenses/MIT)
 
 This is a .NET implementation of a [YouMail](https://www.youmail.com) client library. Current support is for .NETCore 2.1, .NETStandard 2.0 and .NET 4.5.
 
