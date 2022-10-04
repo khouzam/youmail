@@ -172,8 +172,15 @@ namespace MagikInfo.YouMailAPI
         [JsonProperty(YMST.c_emailAttachmentType)]
         public string EmailAttachmentType { get; set; }
 
+        // The XML version is wrapped in an object
         [XmlElement(YMST.c_additionalPhoneNumbers)]
+        public YouMailPhoneNumbers _additionalNumbers
+        {
+            get => new YouMailPhoneNumbers { PhoneNumbers = this.AdditionalPhoneNumbers };
+            set => AdditionalPhoneNumbers = value.PhoneNumbers;
+        }
+
         [JsonProperty(YMST.c_additionalPhoneNumbers)]
-        public YouMailPhoneNumbers AdditionalPhoneNumbers;
+        public YouMailPhoneNumber[] AdditionalPhoneNumbers;
     }
 }
